@@ -1,34 +1,37 @@
 (ns build
-  (:require
-    [clojure.tools.build.api :as b]
-    [shadow.cljs.devtools.api :as shadow]))
+  (:require [clojure.tools.build.api :as b]
+            [shadow.cljs.devtools.api :as shadow]))
 
-(def class-dir "target/classes")
-(def uber-file "target/fulcro-prototype.jar")
-(def basis (b/create-basis {:project "deps.edn"}))
-(def main 'fulcro-prototype.server.main)
+(def target-dir "target")
+(def uber-file (str target-dir "/fulcro-prototype.jar"))
+(def main 'server.main)
 
-(defn uberjar [_]
+(defn cljs [_]
+
+  (println (str "\nCompiling front-end...."))
+  (shadow/release :frontend {:verbose false})
+  )
+(defn uber-jar [_]
   (println "\nCleaning previous build...")
   (b/delete {:path "target"})
-  (println "\nCleaning cljs-compiler output")
-  (b/delete {:path "resources/public/js"})
-  (println (str "\nCompiling front-end...\n"))
+
+  (println (str "\nCompiling front-end..."))
   (shadow/release :frontend)
-  (println "\nBundling sources")
-  (b/copy-dir
-    {:src-dirs ["src" "resources"]
-     :target-dir class-dir})
-  (println "\nCompiling back-end...\n")
-  (b/compile-clj
-    {:basis basis
-     :src-dirs ["src"]
-     :ns-compile '[fulcro-prototype.server.main]
-     :class-dir class-dir})
-  (println "\nBuilding uberjar...")
-  (b/uber
-    {:class-dir class-dir
-     :uber-file uber-file
-     :basis basis
-     :main main})
-  (println "\nFinished building: " uber-file))
+
+  (println "\nCopying static-resources...")
+  (b/copy-dir {:src-dirs ["resources"] :target-dir target-dir})
+
+  (println "\nCopying back-end files...")
+  (b/copy-dir {:src-dirs ["src/server"] :target-dir (str target-dir "/server")})
+
+  #_(println (str "\nCompiling back-end..."))
+  #_(b/compile-clj opts)
+
+  (println "\nBuilding JAR...")
+  (b/uber {:uber-file uber-file
+           :basis (b/create-basis {})
+           :class-dir target-dir})
+
+  (println "\nFinished building: " uber-file)
+
+  (println (format "\nRun with: java -cp target/fulcro-prototype.jar clojure.main -m %s" main)) )

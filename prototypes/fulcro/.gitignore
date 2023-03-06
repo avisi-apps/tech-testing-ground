@@ -1,0 +1,5 @@
+/resources/public/js
+/node_modules/
+/.shadow-cljs/
+/target/
+/package-lock.json
