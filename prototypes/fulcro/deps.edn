@@ -1,29 +1,7 @@
-{:paths ["src" "resources"]
- :deps {; internal deps
-        prototypes/shared-core {:local/root "../shared_core"}
-        prototypes/server {:local/root "../server"}
-        ;fulcro
-        com.fulcrologic/fulcro {:mvn/version "3.5.9"}
-        com.wsscode/pathom3 {:mvn/version "2023.01.31-alpha"}
-        ;logging
-        com.taoensso/timbre {:mvn/version "4.10.0"}
-        ; dev-time state management
-        mount/mount {:mvn/version "0.1.16"}}
- :aliases {:cljs {;; The cljs path needs to be added here so that -T:shadow-cljs:build sees the frontend source
-                         ; taken from packaging-clojure example: https://github.com/metosin/packaging-clojure-examples/blob/master/deps-uberjar/deps.edn
-                         :replace-deps {;; frontend deps
-                                        thheller/shadow-cljs {:mvn/version "2.17.8"}
-                                        org.clojure/clojurescript {:mvn/version "1.11.4"}
-                                        com.fulcrologic/fulcro {:mvn/version "3.5.9"}}
-                         ;:main-opts ["-m" "shadow.cljs.devtools.cli"]
-                         }
-           :build {:paths ["src" "resources"]
-                   :deps {io.github.clojure/tools.build
-                          {:git/tag "v0.9.2" :git/sha "fe6b140"}}
-                   :ns-default build}
-           :dev {:extra-paths ["dev"]
+{:paths ["src"]
+ :deps {com.fulcrologic/fulcro {:mvn/version "3.5.9"}}
+ :aliases {:dev {:extra-paths ["src/dev"]
                  :extra-deps {org.clojure/clojurescript {:mvn/version "1.10.914"}
                               thheller/shadow-cljs {:mvn/version "2.16.9"}
                               binaryage/devtools {:mvn/version "1.0.4"}
-                              org.clojure/tools.namespace {:mvn/version "0.2.11"}
                               cider/cider-nrepl {:mvn/version "0.27.4"}}}}}

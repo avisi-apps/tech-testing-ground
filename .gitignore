@@ -1,13 +1,7 @@
-.clj-kondo
-.adr-dir
+.clj-kondo/.cache
 .cpcache
 .lsp/.cache
 .nrepl-port
-.shadow-cljs
-.idea
+/.idea
+/target
 *.iml
-.DS_Store
-target
-node_modules
-
-prototypes/*/resources/public/js
