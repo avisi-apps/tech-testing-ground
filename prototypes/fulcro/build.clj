@@ -6,11 +6,6 @@
 (def uber-file (str target-dir "/fulcro-prototype.jar"))
 (def main 'server.main)
 
-(defn cljs [_]
-
-  (println (str "\nCompiling front-end...."))
-  (shadow/release :frontend {:verbose false})
-  )
 (defn uber-jar [_]
   (println "\nCleaning previous build...")
   (b/delete {:path "target"})
