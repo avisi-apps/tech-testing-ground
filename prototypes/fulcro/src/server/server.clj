@@ -14,7 +14,6 @@
 
 (defn- wrap-default-index [next-handler]
   (fn [request]
-    (prn (:uri request))
     (next-handler
       (if (= "/" (:uri request))
         (assoc request :uri "/index.html" :content-type "text/html")
