@@ -29,7 +29,7 @@
     wrap-content-type
     (wrap-default-index)))
 (defn start-server []
-  (reset! server (jetty/run-jetty app {:port 3000
+  (reset! server (jetty/run-jetty app {:port 3002
                                        ;; avoids blocking the main thread
                                        :join? false})))
 (defn stop-server []

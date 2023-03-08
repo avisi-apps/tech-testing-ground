@@ -17,6 +17,12 @@
   {:status 404
    :headers {"Content-Type" "text/plain"}
    :body "Not Found"})
+(defn- wrap-default-index [next-handler]
+  (fn [request]
+    (next-handler
+      (if (= "/" (:uri request))
+        (assoc request :uri "/hello-world")
+        request))))
 (defn- catch-req-middleware [next-handler]
   (fn [request]
     (def _req request)
@@ -29,9 +35,10 @@
     (catch-req-middleware)
     (wrap-params)
     (wrap-resource "public")
-    (wrap-content-type)))
+    (wrap-content-type)
+    (wrap-default-index)))
 (defn start-server []
-  (reset! server (jetty/run-jetty (app) {:port 3000
+  (reset! server (jetty/run-jetty (app) {:port 3001
                                          ;; avoids blocking the main thread
                                          :join? false})))
 (defn stop-server []
