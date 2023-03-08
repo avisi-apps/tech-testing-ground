@@ -1,10 +1,15 @@
 {:paths ["src" "resources"]
  :deps {prototypes/shared-core {:local/root "../shared_core"}
-        prototypes/server {:local/root "../server"}
+        ;prototypes/server {:local/root "../server"}
 
         hiccup/hiccup {:mvn/version "2.0.0-alpha2"}
 
-        ctmx/ctmx {:mvn/version "1.4.8"}}
+        ctmx/ctmx {:mvn/version "1.4.8"}
+
+        ring/ring-core {:mvn/version "1.9.6"}
+        ring/ring-jetty-adapter {:mvn/version "1.9.6"}
+        metosin/reitit {:mvn/version "0.5.9"}
+        }
  :aliases {:build {:paths ["src"]
                    :deps {io.github.clojure/tools.build
                           {:git/tag "v0.9.2" :git/sha "fe6b140"}}
