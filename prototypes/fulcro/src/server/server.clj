@@ -1,11 +1,12 @@
 (ns server.server
   (:require
     [server.parser :refer [api-parser]]
-    [org.httpkit.server :as http]
     [com.fulcrologic.fulcro.server.api-middleware :as server]
     [ring.middleware.content-type :refer [wrap-content-type]]
-    [ring.middleware.resource :refer [wrap-resource]]))
+    [ring.middleware.resource :refer [wrap-resource]]
+    [ring.adapter.jetty :as jetty]))
 
+(def server (atom nil))
 (def ^:private not-found-handler
   (fn [req]
     {:status 404
@@ -18,7 +19,7 @@
       (if (= "/" (:uri request))
         (assoc request :uri "/index.html" :content-type "text/html")
         request))))
-(def middleware
+(def app
   (-> not-found-handler
     (server/wrap-api {:uri "/api"
                       :parser api-parser})
@@ -27,13 +28,21 @@
     (wrap-resource "public")
     wrap-content-type
     (wrap-default-index)))
+(defn start-server []
+  (reset! server (jetty/run-jetty app {:port 3000
+                                       ;; avoids blocking the main thread
+                                       :join? false})))
+(defn stop-server []
+  (when-some [s @server]
+    (.stop s)
+    (reset! server nil)))
 
-(defonce stop-fn (atom nil))
+(defn restart-server []
+  (stop-server)
+  (start-server))
 
-(defn start [opts]
-  (reset! stop-fn (http/run-server middleware opts)))
+(comment
 
-(defn stop []
-  (when @stop-fn
-    (@stop-fn)
-    (reset! stop-fn nil)))
+  (restart-server)
+
+  )
