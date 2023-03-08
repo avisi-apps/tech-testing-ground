@@ -2,8 +2,7 @@
   (:require
     #?(:clj [shared.core :as shared])
     [hyperfiddle.electric :as e]
-    [hyperfiddle.electric-dom2 :as dom]
-    [hyperfiddle.electric-ui4 :as ui]))
+    [hyperfiddle.electric-dom2 :as dom]))
 
 (e/defn HelloWorld []
   (e/client
