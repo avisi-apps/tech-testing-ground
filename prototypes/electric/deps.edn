@@ -1,1 +1,38 @@
-{}
+; base of config is copied from electric-start-app
+; https://github.com/hyperfiddle/electric-starter-app/blob/main/deps.edn
+{:paths ["src"]
+ :deps {
+        ;internal deps
+        prototypes/shared-core {:local/root "../shared_core"}
+        ; clojure
+        org.clojure/clojure {:mvn/version "1.11.1"}
+        org.clojure/clojurescript {:mvn/version "1.11.60"}
+        ; logging
+        org.clojure/tools.logging {:mvn/version "1.2.4"}
+        ch.qos.logback/logback-classic {:mvn/version "1.2.11"}
+        ; electric
+        com.hyperfiddle/electric {:mvn/version "v2-alpha-123-ga7fa624f"}
+        com.hyperfiddle/rcf {:mvn/version "20220926-202227"}
+        missionary/missionary {:mvn/version "b.27-SNAPSHOT"}
+        ;server
+        info.sunng/ring-jetty9-adapter {:mvn/version "0.14.3"
+                                        :exclusions [org.slf4j/slf4j-api
+                                                     info.sunng/ring-jetty9-adapter-http3]}}
+ :aliases {:dev
+           {:extra-deps
+            {binaryage/devtools {:mvn/version "1.0.6"}
+             thheller/shadow-cljs {:mvn/version "2.20.1"}}
+            :jvm-opts
+            ["-Xss2m"                                       ; https://github.com/hyperfiddle/photon/issues/11
+             "-Dclojure.tools.logging.factory=clojure.tools.logging.impl/slf4j-factory"
+             "-Dlogback.configurationFile=src/logback.xml"
+             "-XX:-OmitStackTraceInFastThrow"               ;; RCF
+             "-XX:+UnlockDiagnosticVMOptions"
+             "-XX:+DebugNonSafepoints"]
+            :exec-fn user/main
+            :exec-args {}}
+           :build {:paths ["src" "resources"]
+                   :deps {io.github.clojure/tools.build
+                          {:git/tag "v0.9.2" :git/sha "fe6b140"}}
+                   :ns-default build}}
+ }
