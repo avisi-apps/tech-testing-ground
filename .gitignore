@@ -1,4 +1,5 @@
 .clj-kondo/.cache
+.adr-dir
 .cpcache
 .lsp/.cache
 .nrepl-port
