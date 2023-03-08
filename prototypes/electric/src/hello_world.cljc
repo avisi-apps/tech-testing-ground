@@ -8,4 +8,4 @@
 (e/defn HelloWorld []
   (e/client
     (dom/text
-      (e/server (shared/hello-from "Electrics server")))))
+      (e/server (shared/hello-from "electric")))))

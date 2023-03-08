@@ -4,15 +4,12 @@
     [formats]
     [shared.core :as shared]))
 
-(ctmx/defcomponent ^:endpoint hello [{:keys [form-params]} name]
-  [:div#hello  (shared/hello-from (or (get form-params "name") name))])
+(ctmx/defcomponent ^:endpoint hello-world [_ name]
+  [:div#hello  (shared/hello-from name)])
 
 (defn routes []
   (ctmx/make-routes
-    "/demo"
+    "/hello-world"
     (fn [req]
       (formats/page
-        [:div
-         [:label "From where are you greeting?"]
-         [:input {:name "name" :hx-patch "hello" :hx-target "#hello"}]
-         (hello req "HTMX")]))))
+        (hello-world req "htmx")))))

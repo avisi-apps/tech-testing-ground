@@ -9,7 +9,9 @@
    :body
    (page/html5
      [:head
-      [:link {:rel "stylesheet"
+      [:title "htmx-prototype"]
+      #_[:link {:rel "icon" :type "image/x-icon" :href "favicon.ico"}]
+      #_[:link {:rel "stylesheet"
               :href "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css"}]]
      [:body
       (render/walk-attrs content)
