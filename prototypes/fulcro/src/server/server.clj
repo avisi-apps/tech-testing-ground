@@ -1,7 +1,7 @@
 (ns server.server
   (:require
     [com.wsscode.pathom3.interface.eql :as p.eql]
-    [server.parser :refer [env]]
+    [server.parser :as parser]
     [com.wsscode.pathom3.connect.operation.transit :as pcot]
     [ring.middleware.content-type :refer [wrap-content-type]]
     [ring.middleware.resource :refer [wrap-resource]]
@@ -10,7 +10,7 @@
     [muuntaja.core :as muuntaja]
     [muuntaja.middleware :as middleware]))
 
-(def server (atom nil))
+(defonce server (atom nil))
 (def not-found-response
   {:status 404
    :headers {"Content-Type" "text/plain"}
@@ -26,10 +26,10 @@
         (assoc request :uri "/index.html" :content-type "text/html")
         request))))
 
-(def pathom (p.eql/boundary-interface env))
 (defn pathom-query-handler [{:keys [body-params]}]
   {:status 200
-   :body (pathom body-params)})
+   :accept "application/transit+json"
+   :body (parser/api-parser body-params)})
 
 (def muuntaja-options
   (update-in
@@ -38,33 +38,20 @@
     merge {:decoder-opts {:handlers pcot/read-handlers}
            :encoder-opts {:handlers pcot/write-handlers}}))
 
-(comment
-
-  ((->
-     pathom-query-handler
-     (middleware/wrap-format muuntaja-options)) _req)
-
-  )
-
-(defn update-headers [next-handler]
-  (fn [req]
-    (next-handler
-      (assoc-in req [:headers "accept"] "application/transit+json"))))
-(def app
+(defn app []
   (->
     (ring/ring-handler
       (ring/router ["/api" {:post {:handler pathom-query-handler}}])
       (constantly not-found-response))
     (catch-req-middleware)
     (middleware/wrap-format muuntaja-options)
-    (update-headers)
     (wrap-resource "public")
-    #_wrap-content-type
+    wrap-content-type
     (wrap-default-index)))
 (defn start-server []
-  (reset! server (jetty/run-jetty app {:port 3002
-                                       ;; avoids blocking the main thread
-                                       :join? false})))
+  (reset! server (jetty/run-jetty (app) {:port 3002
+                                         ;; avoids blocking the main thread
+                                         :join? false})))
 (defn stop-server []
   (when-some [s @server]
     (.stop s)
