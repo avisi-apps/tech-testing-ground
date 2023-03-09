@@ -4,12 +4,12 @@
     [formats]
     [shared.core :as shared]))
 
-(ctmx/defcomponent ^:endpoint hello-world [_ name]
-  [:div#hello  (shared/hello-from name)])
+(ctmx/defcomponent ^:endpoint hello-world [_ _]
+  [:div#hello  (shared/hello-from "htmx")])
 
 (defn routes []
   (ctmx/make-routes
     "/hello-world"
     (fn [req]
       (formats/page
-        (hello-world req "htmx")))))
+        (hello-world req)))))

@@ -1,57 +1,30 @@
 (ns server
   (:require
     [hello-world]
-    [ring.adapter.jetty :as jetty]
-    [reitit.ring :as ring]
-    [ring.middleware.params :refer [wrap-params]]
-    [ring.middleware.resource :refer [wrap-resource]]
-    [ring.middleware.content-type :refer [wrap-content-type]]
-    ))
+    [server.core :as server]
+    [mount.core :as mount :refer [defstate]]))
 
-(defonce server (atom nil))
-
-(defn routes []
+(def routes
   (hello-world/routes))
 
-(def not-found-response
-  {:status 404
-   :headers {"Content-Type" "text/plain"}
-   :body "Not Found"})
-(defn- wrap-default-index [next-handler]
-  (fn [request]
-    (next-handler
-      (if (= "/" (:uri request))
-        (assoc request :uri "/hello-world")
-        request))))
-(defn- catch-req-middleware [next-handler]
-  (fn [request]
-    (def _req request)
-    (next-handler request)))
-(defn app []
-  (->
-    (ring/ring-handler
-      (ring/router (routes))
-      (constantly not-found-response))
-    (catch-req-middleware)
-    (wrap-params)
-    (wrap-resource "public")
-    (wrap-content-type)
-    (wrap-default-index)))
-(defn start-server []
-  (reset! server (jetty/run-jetty (app) {:port 3001
-                                         ;; avoids blocking the main thread
-                                         :join? false})))
-(defn stop-server []
-  (when-some [s @server]
-    (.stop s)
-    (reset! server nil)))
+(def server-config {:port 3001
+                    :routes routes})
 
-(defn restart-server []
-  (stop-server)
-  (start-server))
+(defstate htmx-server
+  :start (server/start-server server-config)
+  :stop (.stop htmx-server))
 
 (comment
 
-  (restart-server)
+  (type htmx-server)
+
+  (mount/start )
+
+  (mount/stop)
+
+  (mount/running-states)
 
   )
+
+
+
