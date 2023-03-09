@@ -11,6 +11,8 @@
         ring/ring-jetty-adapter {:mvn/version "1.9.6"}
         metosin/reitit {:mvn/version "0.5.9"}
         metosin/muuntaja {:mvn/version "0.6.7"}
+        ; dev-time state management
+        mount/mount {:mvn/version "0.1.16"}
         }
  :aliases {:shadow-cljs {;; The cljs path needs to be added here so that -T:shadow-cljs:build sees the frontend source
                          ; taken from packaging-clojure example: https://github.com/metosin/packaging-clojure-examples/blob/master/deps-uberjar/deps.edn

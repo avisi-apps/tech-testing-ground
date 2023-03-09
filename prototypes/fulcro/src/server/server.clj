@@ -1,6 +1,5 @@
 (ns server.server
   (:require
-    [com.wsscode.pathom3.interface.eql :as p.eql]
     [server.parser :as parser]
     [com.wsscode.pathom3.connect.operation.transit :as pcot]
     [ring.middleware.content-type :refer [wrap-content-type]]
@@ -8,9 +7,9 @@
     [ring.adapter.jetty :as jetty]
     [reitit.ring :as ring]
     [muuntaja.core :as muuntaja]
-    [muuntaja.middleware :as middleware]))
+    [muuntaja.middleware :as middleware]
+    [mount.core :as mount :refer [defstate]]))
 
-(defonce server (atom nil))
 (def not-found-response
   {:status 404
    :headers {"Content-Type" "text/plain"}
@@ -38,10 +37,16 @@
     merge {:decoder-opts {:handlers pcot/read-handlers}
            :encoder-opts {:handlers pcot/write-handlers}}))
 
-(defn app []
+(def routes
+  [["/api" {:post {:handler pathom-query-handler}}]
+   ["/ping" {:get {:handler (fn [_] {:status 200
+                                     :headers {"Content-Type" "text/plain"}
+                                     :body "pong"})}}]])
+
+(def app
   (->
     (ring/ring-handler
-      (ring/router ["/api" {:post {:handler pathom-query-handler}}])
+      (ring/router routes)
       (constantly not-found-response))
     (catch-req-middleware)
     (middleware/wrap-format muuntaja-options)
@@ -49,20 +54,16 @@
     wrap-content-type
     (wrap-default-index)))
 (defn start-server []
-  (reset! server (jetty/run-jetty (app) {:port 3002
-                                         ;; avoids blocking the main thread
-                                         :join? false})))
-(defn stop-server []
-  (when-some [s @server]
-    (.stop s)
-    (reset! server nil)))
-
-(defn restart-server []
-  (stop-server)
-  (start-server))
-
+  (jetty/run-jetty app {:port 3002
+                        ;; avoids blocking the main thread
+                        :join? false}))
+(defstate server
+  :start (start-server)
+  :stop (.stop server))
 (comment
 
-  (restart-server)
+  (mount/start)
+
+  (mount/stop)
 
   )
