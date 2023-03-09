@@ -16,10 +16,6 @@
 
 (comment
 
-  @htmx-server
-
-  (type htmx-server)
-
   (mount/start)
 
   (mount/stop)
