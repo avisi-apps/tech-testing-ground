@@ -1,29 +1,25 @@
 (ns server.parser
   (:require
-    [com.wsscode.pathom.core :as p]
-    [com.wsscode.pathom.connect :as pc]
+    [com.wsscode.pathom3.connect.indexes :as pci]
+    [com.wsscode.pathom3.interface.eql :as p.eql]
+    [com.wsscode.pathom3.connect.planner :as pcp]
     [taoensso.timbre :as log]
     [server.resolvers :as resolvers]))
 
-(def pathom-parser
-  (p/parser {::p/env {::p/reader [p/map-reader
-                                  pc/reader2
-                                  pc/ident-reader
-                                  pc/index-reader]
-                      ::pc/mutation-join-globals [:tempids]}
-             ::p/mutate pc/mutate
-             ::p/plugins [(pc/connect-plugin {::pc/register resolvers/resolvers})
-                          p/error-handler-plugin
-                          ;; or p/elide-special-outputs-plugin
-                          (p/post-process-parser-plugin p/elide-not-found)]}))
+(defonce plan-cache* (atom {}))
+
+(def env
+  (-> {::pcp/plan-cache* plan-cache*}
+    (pci/register
+      [resolvers/resolvers])))
 
 (defn api-parser [query]
   (log/info "Process" query)
-  (pathom-parser {} query))
+  (p.eql/process env query))
+
 
 (comment
 
-  (api-parser [{:root [:hello-world/message]}])
-
+  (api-parser [{:hello-world [:message]}])
 
   )
