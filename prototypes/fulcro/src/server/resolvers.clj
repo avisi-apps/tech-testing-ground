@@ -1,8 +1,8 @@
 (ns server.resolvers
-  (:require [com.wsscode.pathom.connect :as pc]
+  (:require [com.wsscode.pathom3.connect.operation :as pco]
             [shared.core :as shared]))
 
-(pc/defresolver hello-world-resolver [_ _]
-  {::pc/output [{:hello-world [:message]}]}
+(pco/defresolver hello-world-resolver [_ _]
+  {::pco/output [{:hello-world [:message]}]}
   {:hello-world {:message (shared/hello-from "fulcro")}})
 (def resolvers [hello-world-resolver])
