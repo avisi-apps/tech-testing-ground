@@ -26,11 +26,10 @@
   :stop (.stop fulcro-server))
 (comment
 
-  (type fulcro-server)
-
-  (mount/start )
+  (mount/start)
 
   (mount/stop)
 
   (mount/running-states)
+
   )
