@@ -1,4 +1,4 @@
-(ns server
+(ns htmx.server
   (:require
     [hello-world]
     [server.core :as server]
@@ -16,9 +16,11 @@
 
 (comment
 
+  @htmx-server
+
   (type htmx-server)
 
-  (mount/start )
+  (mount/start)
 
   (mount/stop)
 
