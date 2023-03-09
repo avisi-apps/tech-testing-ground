@@ -2,11 +2,15 @@
   (:require
     [com.fulcrologic.fulcro.application :as app]
     [com.fulcrologic.fulcro.components :as comp]
-    [com.fulcrologic.fulcro.networking.http-remote :as http]
+    [com.fulcrologic.fulcro.networking.http-remote :as http-remote]
     [com.fulcrologic.fulcro.data-fetch :as df]
     [client.hello-world :as root]))
 
-(defonce app (app/fulcro-app {:remotes {:remote (http/fulcro-http-remote {})}}))
+(defonce app (app/fulcro-app {:remotes
+                              {:remote (http-remote/fulcro-http-remote
+                                         {:request-middleware (->
+                                                                (http-remote/wrap-fulcro-request
+                                                                  (fn [req] (assoc-in req [:headers "Accept"] "application/transit+json"))))})}}))
 (defn ^:export init
   "Shadow-cljs sets this up to be our entry-point function. See shadow-cljs.edn `:init-fn` in the modules of the main build."
   []
