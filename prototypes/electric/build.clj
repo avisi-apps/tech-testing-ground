@@ -2,10 +2,8 @@
   "build electric.jar library artifact and demos"
   (:require [clojure.tools.build.api :as b]
             [shadow.cljs.devtools.api :as shadow-api]       ; so as not to shell out to NPM for shadow
-            [shadow.cljs.devtools.server :as shadow-server]
-            ))
+            [shadow.cljs.devtools.server :as shadow-server]))
 
-;(def lib 'com.hyperfiddle/electric)
 (def version (b/git-process {:git-args "describe --tags --long --always --dirty"}))
 (def basis (b/create-basis {:project "deps.edn"}))
 
@@ -43,13 +41,13 @@
   (println "\nCompiling server. Version:" version "\n")
   (b/compile-clj {:basis basis
                   :src-dirs ["src"]
-                  :ns-compile '[main]
+                  :ns-compile '[electric.main]
                   :class-dir class-dir})
 
   (println "\nBuilding uberjar")
   (b/uber {:class-dir class-dir
            :uber-file default-jar-name
            :basis basis
-           :main 'main}))
+           :main 'electric.main}))
 
 (defn noop [_])                                             ; run to preload mvn deps

@@ -1,6 +1,6 @@
-(ns main
+(ns electric.main
   (:gen-class)
-  (:require hello-world ; in prod, load app into server so it can accept clients
+  (:require [electric.hello-world :as hello-world] ; in prod, load app into server so it can accept clients
             hyperfiddle.electric-jetty-server))
 
 (def electric-server-config
