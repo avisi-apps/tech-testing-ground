@@ -1,4 +1,4 @@
-(ns electric.hello-world
+(ns electric-prototype.hello-world
   (:require
     #?(:clj [shared.core :as shared])
     [hyperfiddle.electric :as e]

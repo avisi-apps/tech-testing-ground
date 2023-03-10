@@ -3,7 +3,7 @@
 
 (def target-dir "target/source")
 (def uber-file (str target-dir "/htmx-prototype.jar"))
-(def main 'htmx.main)
+(def main 'htmx-prototype.main)
 
 (defn uberjar [_]
 

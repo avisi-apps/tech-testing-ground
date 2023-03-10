@@ -1,4 +1,4 @@
-(ns server.resolvers
+(ns fulcro-prototype.server.resolvers
   (:require [com.wsscode.pathom3.connect.operation :as pco]
             [shared.core :as shared]))
 

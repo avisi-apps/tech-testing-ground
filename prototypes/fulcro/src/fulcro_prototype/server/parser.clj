@@ -1,4 +1,4 @@
-(ns server.parser
+(ns fulcro-prototype.server.parser
   (:require
     [com.wsscode.pathom3.connect.indexes :as pci]
     [com.wsscode.pathom3.interface.eql :as p.eql]
