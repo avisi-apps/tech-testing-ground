@@ -5,7 +5,10 @@
 .nrepl-port
 .shadow-cljs
 package-lock.json
-/.idea
-/prototypes/*/target
+.idea
 *.iml
 .DS_Store
+target
+node_modules
+
+prototypes/*/resources/public/js
