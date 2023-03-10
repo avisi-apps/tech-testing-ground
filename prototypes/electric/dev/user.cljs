@@ -1,6 +1,6 @@
 (ns ^:dev/always user ; Electric currently needs to rebuild everything when any file changes. Will fix
   (:require
-    hello-world
+    [electric.hello-world  :as hello-world]
     hyperfiddle.electric
     hyperfiddle.electric-dom2))
 
