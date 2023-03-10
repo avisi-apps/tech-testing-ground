@@ -9,6 +9,5 @@
         ; dev-time state management
         mount/mount {:mvn/version "0.1.16"}}
  :aliases {:build {:paths ["src"]
-                   :deps {io.github.clojure/tools.build
-                          {:git/tag "v0.9.2" :git/sha "fe6b140"}}
+                   :deps {io.github.clojure/tools.build {:git/tag "v0.9.2" :git/sha "fe6b140"}}
                    :ns-default build}}}

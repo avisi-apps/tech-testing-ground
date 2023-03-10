@@ -1,4 +1,4 @@
-.clj-kondo/.cache
+.clj-kondo
 .adr-dir
 .cpcache
 .lsp/.cache
@@ -6,6 +6,6 @@
 .shadow-cljs
 package-lock.json
 /.idea
-/target
+/prototypes/*/target
 *.iml
 .DS_Store
