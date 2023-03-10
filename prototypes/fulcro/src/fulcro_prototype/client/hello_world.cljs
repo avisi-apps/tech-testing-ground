@@ -1,4 +1,4 @@
-(ns client.hello-world
+(ns fulcro-prototype.client.hello-world
   (:require
     [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
     [com.fulcrologic.fulcro.dom :as dom]))

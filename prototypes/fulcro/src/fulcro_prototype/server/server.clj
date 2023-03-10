@@ -1,4 +1,4 @@
-(ns server.server
+(ns fulcro-prototype.server.server
   (:require
     [server.core :as server]
     [server.parser :as parser]

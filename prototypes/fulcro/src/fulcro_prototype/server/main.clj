@@ -1,4 +1,4 @@
-(ns server.main
+(ns fulcro-prototype.server.main
   (:require [server.server :as server])
   (:gen-class))
 

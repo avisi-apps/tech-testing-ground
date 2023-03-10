@@ -4,7 +4,7 @@
 
 (def target-dir "target")
 (def uber-file (str target-dir "/fulcro-prototype.jar"))
-(def main 'server.main)
+(def main 'fulcro-prototype.server.main)
 
 (defn uberjar [_]
 

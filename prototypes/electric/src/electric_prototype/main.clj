@@ -1,4 +1,4 @@
-(ns electric.main
+(ns electric-prototype.main
   (:gen-class)
   (:require [electric.hello-world :as hello-world] ; in prod, load app into server so it can accept clients
             hyperfiddle.electric-jetty-server))

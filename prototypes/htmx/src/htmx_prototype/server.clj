@@ -1,4 +1,4 @@
-(ns htmx.server
+(ns htmx-prototype.server
   (:require
     [htmx.hello-world :as hello-world]
     [server.core :as server]

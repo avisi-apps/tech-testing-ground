@@ -1,4 +1,4 @@
-(ns client.current-app
+(ns fulcro-prototype.client.current-app
   (:require
     [com.fulcrologic.fulcro.application :as app]
     [com.fulcrologic.fulcro.components :as comp]

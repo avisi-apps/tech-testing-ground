@@ -1,4 +1,4 @@
-(ns htmx.hello-world
+(ns htmx-prototype.hello-world
   (:require
     [ctmx.core :as ctmx]
     [htmx.formats :as formats]
