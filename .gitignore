@@ -1,0 +1,14 @@
+.clj-kondo
+.adr-dir
+.cpcache
+.lsp/.cache
+.nrepl-port
+.shadow-cljs
+package-lock.json
+.idea
+*.iml
+.DS_Store
+target
+node_modules
+
+prototypes/*/resources/public/js
