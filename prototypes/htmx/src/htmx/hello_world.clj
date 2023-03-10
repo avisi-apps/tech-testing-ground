@@ -1,7 +1,7 @@
-(ns hello-world
+(ns htmx.hello-world
   (:require
     [ctmx.core :as ctmx]
-    [formats]
+    [htmx.formats :as formats]
     [shared.core :as shared]))
 
 (ctmx/defcomponent ^:endpoint hello-world [_ _]

@@ -6,17 +6,18 @@
 (def uber-file (str target-dir "/fulcro-prototype.jar"))
 (def main 'server.main)
 
-(defn uber-jar [_]
+(defn uberjar [_]
+
   (println "\nCleaning previous build...")
   (b/delete {:path "target"})
 
-  (println (str "\nCompiling front-end..."))
+  (println (str "\nCompiling front-end...\n"))
   (shadow/release :frontend)
 
   (println "\nCopying static-resources...")
   (b/copy-dir {:src-dirs ["resources"] :target-dir target-dir})
 
-  (println "\nCopying back-end files...")
+  (println "\nCopying back-end files..")
   (b/copy-dir {:src-dirs ["src/server"] :target-dir (str target-dir "/server")})
 
   #_(println (str "\nCompiling back-end..."))

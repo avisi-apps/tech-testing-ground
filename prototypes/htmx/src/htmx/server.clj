@@ -1,6 +1,6 @@
 (ns htmx.server
   (:require
-    [hello-world]
+    [htmx.hello-world :as hello-world]
     [server.core :as server]
     [mount.core :as mount :refer [defstate]]))
 
@@ -10,8 +10,11 @@
 (def server-config {:port 3001
                     :routes routes})
 
+(defn start-server []
+  (server/start-server server-config))
+
 (defstate htmx-server
-  :start (server/start-server server-config)
+  :start (start-server)
   :stop (.stop htmx-server))
 
 (comment

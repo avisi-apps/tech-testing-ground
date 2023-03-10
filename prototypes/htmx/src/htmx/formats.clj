@@ -1,4 +1,4 @@
-(ns formats
+(ns htmx.formats
   (:require
     [ctmx.render :as render]
     [hiccup.page :as page]))

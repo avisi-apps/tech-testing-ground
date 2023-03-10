@@ -21,8 +21,11 @@
                     :routes routes
                     :custom-content-negotiation pathom-content-negotiation})
 
+(defn start-server []
+  (server/start-server server-config))
+
 (defstate fulcro-server
-  :start (server/start-server server-config)
+  :start (start-server)
   :stop (.stop fulcro-server))
 (comment
 
