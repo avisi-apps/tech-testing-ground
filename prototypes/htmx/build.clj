@@ -3,14 +3,15 @@
 
 (def target-dir "target/source")
 (def uber-file (str target-dir "/htmx-prototype.jar"))
-(def main 'main)
+(def main 'htmx.main)
 
-(defn uber-jar [_]
+(defn uberjar [_]
+
   (println "\nCleaning previous build...")
   (b/delete {:path "target"})
 
-  ;(println "\nCopying static-resources...")
-  ;(b/copy-dir {:src-dirs ["resources"] :target-dir target-dir})
+  (println "\nCopying static-resources...")
+  (b/copy-dir {:src-dirs ["resources"] :target-dir target-dir})
 
   (println "\nCopying back-end files...")
   (b/copy-dir {:src-dirs ["src"] :target-dir target-dir})

@@ -17,7 +17,7 @@
 
 (defn build-client [{:keys [optimize debug verbose version]
                      :or {optimize true, debug false, verbose false, version version}}]
-  (println "\nBuilding client. Version:" version)
+  (println "\nBuilding client. Version:" version "\n")
   (shadow-server/start!)
   (shadow-api/release :prod {:debug debug,
                              :verbose verbose,
@@ -40,7 +40,7 @@
   (b/copy-dir {:src-dirs ["src" "resources"]
                :target-dir class-dir})
 
-  (println "\nCompiling server. Version:" version)
+  (println "\nCompiling server. Version:" version "\n")
   (b/compile-clj {:basis basis
                   :src-dirs ["src"]
                   :ns-compile '[main]

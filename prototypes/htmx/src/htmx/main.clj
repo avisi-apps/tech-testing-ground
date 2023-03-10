@@ -1,6 +1,6 @@
-(ns main
+(ns htmx.main
   (:require
-    [server]))
+    [htmx.server :as server]))
 (defn -main
   [& args]
   (server/start-server))

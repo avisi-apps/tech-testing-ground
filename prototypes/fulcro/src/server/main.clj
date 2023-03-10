@@ -4,5 +4,5 @@
 
 (defn -main
   [& args]
-  (println "Starting server on port 3003...")
+  (println "Starting server on port 3002...")
   (server/start-server))
