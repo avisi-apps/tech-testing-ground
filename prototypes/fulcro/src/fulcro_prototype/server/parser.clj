@@ -4,7 +4,7 @@
     [com.wsscode.pathom3.interface.eql :as p.eql]
     [com.wsscode.pathom3.connect.planner :as pcp]
     [taoensso.timbre :as log]
-    [server.resolvers :as resolvers]))
+    [fulcro-prototype.server.resolvers :as resolvers]))
 
 (defonce plan-cache* (atom {}))
 

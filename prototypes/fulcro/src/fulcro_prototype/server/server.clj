@@ -1,7 +1,7 @@
 (ns fulcro-prototype.server.server
   (:require
     [server.core :as server]
-    [server.parser :as parser]
+    [fulcro-prototype.server.parser :as parser]
     [com.wsscode.pathom3.connect.operation.transit :as pcot]
     [mount.core :as mount :refer [defstate]]))
 

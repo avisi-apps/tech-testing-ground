@@ -4,7 +4,6 @@
 .lsp/.cache
 .nrepl-port
 .shadow-cljs
-package-lock.json
 .idea
 *.iml
 .DS_Store

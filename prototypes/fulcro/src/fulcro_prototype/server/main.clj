@@ -1,5 +1,5 @@
 (ns fulcro-prototype.server.main
-  (:require [server.server :as server])
+  (:require [fulcro-prototype.server.server :as server])
   (:gen-class))
 
 (defn -main

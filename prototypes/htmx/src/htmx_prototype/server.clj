@@ -1,6 +1,6 @@
 (ns htmx-prototype.server
   (:require
-    [htmx.hello-world :as hello-world]
+    [htmx-prototype.hello-world :as hello-world]
     [server.core :as server]
     [mount.core :as mount :refer [defstate]]))
 
