@@ -11,28 +11,18 @@
    :body (parser/api-parser body-params)})
 
 (def pathom-content-negotiation
-  {"application/transit+json" {:decoder-opts {:handlers pcot/read-handlers}
-                               :encoder-opts {:handlers pcot/write-handlers}}})
+  {"application/transit+json"
+     {:decoder-opts {:handlers pcot/read-handlers}
+      :encoder-opts {:handlers pcot/write-handlers}}})
 
-(def routes
-  [["/api" {:post {:handler pathom-query-handler}}]])
+(def routes [["/api" {:post {:handler pathom-query-handler}}]])
 
-(def server-config {:port 3002
-                    :routes routes
-                    :custom-content-negotiation pathom-content-negotiation})
+(def server-config
+  {:port 3002
+   :routes routes
+   :custom-content-negotiation pathom-content-negotiation})
 
-(defn start-server []
-  (server/start-server server-config))
+(defn start-server [] (server/start-server server-config))
 
-(defstate fulcro-server
-  :start (start-server)
-  :stop (.stop fulcro-server))
-(comment
-
-  (mount/start)
-
-  (mount/stop)
-
-  (mount/running-states)
-
-  )
+(defstate fulcro-server :start (start-server) :stop (.stop fulcro-server))
+(comment (mount/start) (mount/stop) (mount/running-states))
