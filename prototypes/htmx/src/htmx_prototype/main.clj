@@ -1,6 +1,7 @@
 (ns htmx-prototype.main
+  (:gen-class)
   (:require
-    [htmx.server :as server]))
+    [htmx-prototype.server :as server]))
 (defn -main
   [& args]
   (server/start-server))
