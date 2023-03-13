@@ -4,7 +4,7 @@ Date: 2023-03-08
 
 ## Status
 
-Superceded by [3. backend runtime](0003-backend-runtime.md)
+Approved
 
 ## Context
 
