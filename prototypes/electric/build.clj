@@ -29,7 +29,7 @@
   (println "\nCleaning previous build...")
   (b/delete {:path "target"})
 
-  (println "\nCleaning cljs compiler output")
+  (println "\nCleaning cljs compiler output...")
   (clean-cljs nil)
 
   (build-client {:optimize optimize, :debug debug, :verbose verbose, :version version})
