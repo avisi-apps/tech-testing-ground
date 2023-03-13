@@ -4,7 +4,7 @@
     [com.fulcrologic.fulcro.components :as comp]
     [com.fulcrologic.fulcro.networking.http-remote :as http-remote]
     [com.fulcrologic.fulcro.data-fetch :as df]
-    [client.hello-world :as root]))
+    [fulcro-prototype.client.hello-world :as root]))
 
 (defonce app (app/fulcro-app {:remotes
                               {:remote (http-remote/fulcro-http-remote

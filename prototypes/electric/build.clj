@@ -48,6 +48,8 @@
   (b/uber {:class-dir class-dir
            :uber-file default-jar-name
            :basis basis
-           :main 'electric.main}))
+           :main 'electric.main})
+
+  )
 
 (defn noop [_])                                             ; run to preload mvn deps
