@@ -2,14 +2,18 @@
   (:require
     [clojure.tools.build.api :as b]))
 
+#_(def builds { })
 (def class-dir "target/classes")
 (def uber-file "target/htmx-prototype.jar")
 (def basis (b/create-basis {:project "deps.edn"}))
 (def main 'htmx-prototype.main)
 
-(defn uberjar [_]
+(defn append-prototype-root [prototype dir]
+  (str "/prototypes/" prototype "/" dir))
+
+(defn uberjar [{:keys [build]}]
   (println "\nCleaning previous build...")
-  (b/delete {:path "target"})
+  (b/delete {:path (str "target/" build)})
   (println "\nBundling sources...")
   (b/copy-dir
     {:src-dirs ["src" "resources"]
