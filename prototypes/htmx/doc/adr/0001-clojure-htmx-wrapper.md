@@ -8,7 +8,7 @@ Pending
 
 ## Context
 
-HTMX isn't a clojure specific technologie, but it mainly works by adding tags to regular html and making sure the expected end-points exist on the back-end (see [htmx in a nutshell](https://htmx.org/docs/#introduction), this can be done from any stack. A clojure-wrapper exists which aims to make working with htmx more convenient by doing the heavy-lifting regarding the generation of the routes and correct id's etc. (see [ctmx basic usage](https://github.com/whamtet/ctmx#usage)).
+HTMX isn't a clojure specific technology, but it mainly works by adding tags to regular html and making sure the expected end-points exist on the back-end (see [htmx in a nutshell](https://htmx.org/docs/#introduction), this can be done from any stack. A clojure-wrapper exists which aims to make working with htmx more convenient by doing the heavy-lifting regarding the generation of the routes and correct id's etc. (see [ctmx basic usage](https://github.com/whamtet/ctmx#usage)).
 
 ## Considered
 
