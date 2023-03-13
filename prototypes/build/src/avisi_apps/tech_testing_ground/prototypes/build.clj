@@ -1,7 +1,7 @@
 (ns avisi-apps.tech-testing-ground.prototypes.build
   (:require
-    [clojure.tools.build.api :as b]
-    #_[shadow.cljs.devtools.api :as shadow]))
+    [clojure.tools.build.api :as b]))
+
 (def class-dir "target/classes")
 (defn uber-file [tech-name] (str "target/" tech-name "-prototype.jar"))
 (def basis (b/create-basis {:project "deps.edn"}))
@@ -36,4 +36,4 @@
      :basis basis
      :main main})
 
-  (println "\nFinished building: " uber-file))
+  (println "\nFinished building: " (uber-file tech-name)))

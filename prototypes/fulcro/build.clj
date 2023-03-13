@@ -2,7 +2,8 @@
   (:require
     [avisi-apps.tech-testing-ground.prototypes.build :as build]))
 
+(def build-config {:tech-name "fulcro"
+                   :main 'fulcro-prototype.server.main
+                   :cljs true})
 (defn uberjar [_]
-  (build/uberjar {:tech-name "fulcro"
-                  :main 'fulcro-prototype.server.main
-                  :cljs true}))
+  (build/uberjar build-config))
