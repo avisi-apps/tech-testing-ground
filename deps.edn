@@ -1,0 +1,5 @@
+{:aliases
+ {:lint {:extra-deps {avisi-apps/fmt {:git/url "git@github.com:avisi-apps/fmt"
+                                      :sha "005c6d06c98fd4d640e4d67dac8baa3b51cb2d85"}}
+         :main-opts ["-m" "avisi-apps.fmt.main" "check"]}
+  :fix {:main-opts ["-m" "avisi-apps.fmt.main" "fix"]}}}
