@@ -2,6 +2,7 @@
  :deps {; internal deps
         prototypes/shared-core {:local/root "../shared_core"}
         prototypes/server {:local/root "../server"}
+        prototypes/build {:local/root "../build"}
         ; html-templating
         hiccup/hiccup {:mvn/version "2.0.0-alpha2"}
         ; clojure-wrapper htmx
