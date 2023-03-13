@@ -2,6 +2,4 @@
   (:gen-class)
   (:require
     [htmx-prototype.server :as server]))
-(defn -main
-  [& args]
-  (server/start-server))
+(defn -main [& args] (server/start-server))

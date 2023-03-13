@@ -9,17 +9,11 @@
 (defonce plan-cache* (atom {}))
 
 (def env
-  (-> {::pcp/plan-cache* plan-cache*}
-    (pci/register
-      [resolvers/resolvers])))
+  (->
+    {::pcp/plan-cache* plan-cache*}
+    (pci/register [resolvers/resolvers])))
 
-(defn api-parser [query]
-  (log/info "Process" query)
-  (p.eql/process env query))
+(defn api-parser [query] (log/info "Process" query) (p.eql/process env query))
 
 
-(comment
-
-  (api-parser [{:hello-world [:message]}])
-
-  )
+(comment (api-parser [{:hello-world [:message]}]))
