@@ -9,14 +9,12 @@
         com.taoensso/timbre {:mvn/version "4.10.0"}
         ; dev-time state management
         mount/mount {:mvn/version "0.1.16"}}
- :aliases {:cljs {;; The cljs path needs to be added here so that -T:shadow-cljs:build sees the frontend source
-                  ; taken from packaging-clojure example: https://github.com/metosin/packaging-clojure-examples/blob/master/deps-uberjar/deps.edn
+ :aliases {:cljs {:paths ["src"]
                   :replace-deps {;; frontend deps
                                  thheller/shadow-cljs {:mvn/version "2.17.8"}
                                  org.clojure/clojurescript {:mvn/version "1.11.4"}
                                  com.fulcrologic/fulcro {:mvn/version "3.5.9"}}}
-           :build {:paths ["src" "resources"]
-                   :deps {prototypes/build {:local/root "../build"}}
+           :build {:deps {prototypes/build {:local/root "../build"}}
                    :ns-default build}
            :dev {:extra-paths ["dev"]
                  :extra-deps {binaryage/devtools {:mvn/version "1.0.4"}

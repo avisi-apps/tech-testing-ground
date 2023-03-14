@@ -7,8 +7,7 @@
         ch.qos.logback/logback-classic {:mvn/version "1.2.11"}
         ;; using the newer version of electric enables working builds, but breaks the dev setup
         ;; using the older version during development until there's a fix
-        ;; com.hyperfiddle/electric {:mvn/version "v2-alpha-167-gbd475584"}
-        com.hyperfiddle/electric {:mvn/version "v2-alpha-123-ga7fa624f"}
+        com.hyperfiddle/electric {:mvn/version "v2-alpha-167-gbd475584"}
         com.hyperfiddle/rcf {:mvn/version "20220926-202227"}
         info.sunng/ring-jetty9-adapter
         {:mvn/version "0.14.3"                              ; (Jetty 9) is Java 8 compatible;
@@ -33,10 +32,10 @@
             :exec-fn user/main
             :exec-args {}}
            :build
-           {:extra-paths ["."]
+           {:extra-paths ["." "dev"]
             :ns-default build
-            :extra-deps {io.github.clojure/tools.build {:git/tag "v0.8.2" :git/sha "ba1a2bf"}
-                         thheller/shadow-cljs {:mvn/version "2.20.1"}}
+            :extra-deps {thheller/shadow-cljs {:mvn/version "2.20.1"}
+                         prototypes/build {:local/root "../build"}}
             :jvm-opts ["-Xss2m"
                        "-Dclojure.tools.logging.factory=clojure.tools.logging.impl/slf4j-factory"
                        "-Dlogback.configurationFile=src/logback.xml"]}}

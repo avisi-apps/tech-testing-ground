@@ -8,7 +8,7 @@
 (def electric-server-config
   {:host "0.0.0.0"
    :port 3003
-   :resources-path "resources/public"})
+   :resources-path "public"})
 
 (defn main [& args]
   (println "Starting Electric compiler and server...")

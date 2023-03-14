@@ -6,16 +6,16 @@
 (defn uber-file [tech-name] (str "target/" tech-name "-prototype.jar"))
 (def basis (b/create-basis {:project "deps.edn"}))
 
-(defn uberjar [{:keys [tech-name main cljs] :or {cljs false}}]
+(defn uberjar [{:keys [tech-name main cljs]}]
 
   (println "\nCleaning previous build...")
   (b/delete {:path "target"})
 
-  (when cljs
+  (when-let [{:keys [build]} cljs]
     (println "\nCleaning cljs-compiler output")
     (b/delete {:path "resources/public/js"})
     (println (str "\nCompiling front-end...\n"))
-    ((requiring-resolve 'shadow.cljs.devtools.api/release) :frontend))
+    ((requiring-resolve 'shadow.cljs.devtools.api/release) build))
 
   (println "\nBundling sources")
   (b/copy-dir

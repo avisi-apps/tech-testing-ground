@@ -4,6 +4,6 @@
 
 (def build-config {:tech-name "fulcro"
                    :main 'fulcro-prototype.server.main
-                   :cljs true})
+                   :cljs {:build :frontend}})
 (defn uberjar [_]
   (build/uberjar build-config))
