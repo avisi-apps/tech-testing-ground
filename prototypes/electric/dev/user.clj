@@ -1,5 +1,6 @@
 (ns user
-  (:require [avisi.apps.tech-testing-ground.prototypes.shared.server :as server])); Must be ".clj" file, Clojure doesn't auto-load user.cljc
+  (:require
+    [avisi.apps.tech-testing-ground.prototypes.shared.server :as server])); Must be ".clj" file, Clojure doesn't auto-load user.cljc
 
 ; lazy load dev stuff - for faster REPL startup and cleaner dev classpath
 (def start-electric-server! (delay @(requiring-resolve 'hyperfiddle.electric-jetty-server/start-server!)))

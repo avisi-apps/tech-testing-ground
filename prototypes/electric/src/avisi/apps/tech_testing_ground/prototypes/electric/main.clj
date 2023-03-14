@@ -1,7 +1,8 @@
 (ns avisi.apps.tech-testing-ground.prototypes.electric.main
   (:gen-class)
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.electric.hello-world :as hello-world] ; in prod, load app into server so it can accept clients
+    [avisi.apps.tech-testing-ground.prototypes.electric.hello-world :as hello-world] ; in prod, load app into server so
+                                                                                     ; it can accept clients
     [avisi.apps.tech-testing-ground.prototypes.shared.server :as server]
     hyperfiddle.electric-jetty-server))
 
