@@ -1,4 +1,5 @@
-{:deps {; server
+{:paths ["src" "resources"]
+ :deps {; server
         ring/ring-core {:mvn/version "1.9.6"}
         ring/ring-jetty-adapter {:mvn/version "1.9.6"}
         metosin/reitit {:mvn/version "0.5.9"}
