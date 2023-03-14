@@ -1,7 +1,7 @@
 {:paths ["src" "resources"]
  :deps {; internal deps
-        prototypes/shared-core {:local/root "../shared_core"}
-        prototypes/server {:local/root "../server"}
+        shared/core {:local/root "../shared/core"}
+        shared/server {:local/root "../shared/server"}
         ;fulcro
         com.fulcrologic/fulcro {:mvn/version "3.5.9"}
         com.wsscode/pathom3 {:mvn/version "2023.01.31-alpha"}
@@ -14,7 +14,7 @@
                                  thheller/shadow-cljs {:mvn/version "2.17.8"}
                                  org.clojure/clojurescript {:mvn/version "1.11.4"}
                                  com.fulcrologic/fulcro {:mvn/version "3.5.9"}}}
-           :build {:deps {prototypes/build {:local/root "../build"}}
+           :build {:deps {prototypes/build {:local/root "../shared/build"}}
                    :ns-default build}
            :dev {:extra-paths ["dev"]
                  :extra-deps {binaryage/devtools {:mvn/version "1.0.4"}

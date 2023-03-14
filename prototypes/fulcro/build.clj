@@ -3,7 +3,7 @@
     [avisi-apps.tech-testing-ground.prototypes.build :as build]))
 
 (def build-config {:tech-name "fulcro"
-                   :main 'fulcro-prototype.server.main
+                   :main 'avisi.apps.tech-testing-ground.prototypes.fulcro.server.main
                    :cljs {:build :frontend}})
 (defn uberjar [_]
   (build/uberjar build-config))
