@@ -1,5 +1,6 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.server
   (:require
+    [avisi.apps.tech-testing-ground.prototypes.shared.atlassian-connect :as atlassian-connect]
     [reitit.ring :as ring]
     [ring.adapter.jetty :as jetty]
     [ring.middleware.params :refer [wrap-params]]
@@ -26,12 +27,13 @@
       (ring/ring-handler
         (ring/router
           [routes
+           atlassian-connect/routes
            ["/ping"
             {:get
                {:handler
                   (fn [_]
                     {:status 200
-                     :headers {"Content-Type" "text/plain"}
+                     :headers {"content-type" "text/plain"}
                      :body "pong"})}}]])
         (constantly not-found-response))
       (middleware/wrap-format content-negotiation)

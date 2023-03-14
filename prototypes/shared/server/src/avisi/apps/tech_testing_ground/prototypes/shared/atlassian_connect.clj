@@ -1,9 +1,7 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.atlassian-descriptor
-  (:require
-    [clojure.data.json :as json]))
+(ns avisi.apps.tech-testing-ground.prototypes.shared.atlassian-connect)
 
 (def descriptor
-  (let [base-url ""]
+  (let [base-url "https://jaamaask.eu.ngrok.io"]
     {:name "MondayJiraSync"
      :key "nl.avisi.jira.plugins.monday-jira-sync"
      :description "Plugin for syncing monday and jira boards"
@@ -11,11 +9,11 @@
      :vendor
      {:name "Avisi"
       :url "http://www.avisi.com"}
-     :baseUrl "https://baseurl.com"
+     :baseUrl base-url
      :lifecycle
      {:installed "/atlassian/lifecycle/installed"
       :uninstalled "/atlassian/lifecycle/uninstalled"}
-     :links {:self "https://baseurl.com/connect/jira/atlassian-connect.json"}
+     :links {:self (str base-url "/connect/jira/atlassian-connect.json")}
      :enableLicensing false
      :scopes ["read" "write" "delete" "act_as_user"]
      :modules
@@ -34,8 +32,10 @@
          :url "/jira-issue-panel"}
         }]}}))
 
-(comment
-
-  (json/write-str descriptor)
-
-  )
+(def routes
+  ["/connect/jira/atlassian-connect.json"
+   {:get
+    {:handler (fn [_]
+                {:status 200
+                 :headers {"content-type" "application/json"}
+                 :body descriptor})}}])
