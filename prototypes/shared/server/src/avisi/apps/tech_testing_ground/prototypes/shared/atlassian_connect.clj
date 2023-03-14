@@ -33,9 +33,25 @@
         }]}}))
 
 (def routes
-  ["/connect/jira/atlassian-connect.json"
-   {:get
-    {:handler (fn [_]
-                {:status 200
-                 :headers {"content-type" "application/json"}
-                 :body descriptor})}}])
+  [["/atlassian/jira/atlassian-connect.json"
+    {:get
+     {:handler (fn [_]
+                 {:status 200
+                  :headers {"content-type" "application/json"}
+                  :body descriptor})}}]
+   ["/atlassian/lifecycle/:lifecycle"
+    {:post
+     {:parameters {:body map?}
+      :handler (fn [_] {:status 200
+                        :headers {"Content-Type" "text/plain"}
+                        :body "Temporary lifecycle dummy-response"})}}]
+   ["/jira-issue-panel"
+    {:get
+     {:handler (fn [_] {:status 200
+                        :headers {"Content-Type" "text/html"}
+                        :body "<!DOCTYPE html>\n<html>\n<body>\n\n<h1>My First Heading</h1>\n\n<p>My first paragraph.</p>\n\n</body><script src=\"https://connect-cdn.atl-paas.net/all.js\" async></script>\n</html>"})}}]
+   #_["/atlassian/jira/modules/issue-panel"
+      {:get
+       {:handler (fn [_] {:status 200
+                          :headers {"Content-Type" "text/plain"}
+                          :body "To be added once it's clear what it's used for..."})}}]])

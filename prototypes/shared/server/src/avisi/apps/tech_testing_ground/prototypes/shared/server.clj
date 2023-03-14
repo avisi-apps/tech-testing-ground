@@ -7,7 +7,8 @@
     [ring.middleware.resource :refer [wrap-resource]]
     [ring.middleware.content-type :refer [wrap-content-type]]
     [muuntaja.core :as muuntaja]
-    [muuntaja.middleware :as middleware]))
+    [muuntaja.middleware :as middleware]
+    [mount.core :as mount :refer [defstate]]))
 
 (def not-found-response
   {:status 404
@@ -27,14 +28,13 @@
       (ring/ring-handler
         (ring/router
           [routes
-           atlassian-connect/routes
            ["/ping"
             {:get
-               {:handler
-                  (fn [_]
-                    {:status 200
-                     :headers {"content-type" "text/plain"}
-                     :body "pong"})}}]])
+             {:handler
+              (fn [_]
+                {:status 200
+                 :headers {"content-type" "text/plain"}
+                 :body "pong"})}}]])
         (constantly not-found-response))
       (middleware/wrap-format content-negotiation)
       (catch-req-middleware)
@@ -45,9 +45,10 @@
 
 (def config
   {:ports
-     {:htmx 3001
-      :fulcro 3002
-      :electric 3003}})
+   {:central-server 3000
+    :htmx 3001
+    :fulcro 3002
+    :electric 3003}})
 (defn get-port [tech-name] (get-in config [:ports (keyword tech-name)]))
 
 (defn start-server
@@ -59,3 +60,10 @@
     {:port port
      ;; avoids blocking the main thread
      :join? false}))
+
+(def central-server-config
+  {:port 3000
+   :routes atlassian-connect/routes})
+
+(defstate central-server :start (start-server central-server-config) :stop (.stop central-server))
+(comment (mount/start) (mount/stop) (mount/running-states))
