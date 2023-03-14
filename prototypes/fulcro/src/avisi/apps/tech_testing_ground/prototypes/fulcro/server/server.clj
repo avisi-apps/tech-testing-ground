@@ -18,7 +18,7 @@
 (def routes [["/api" {:post {:handler pathom-query-handler}}]])
 
 (def server-config
-  {:port 3002
+  {:port (server/get-port "fulcro")
    :routes routes
    :custom-content-negotiation pathom-content-negotiation})
 

@@ -2,7 +2,8 @@
 ; https://github.com/hyperfiddle/electric-starter-app/blob/main/deps.edn
 {:paths ["src" "resources"]
  :deps {; internal deps
-        prototypes/shared-core {:local/root "../shared/core"}
+        shared/core {:local/root "../shared/core"}
+        shared/server {:local/root "../shared/server"}
         ; electric-start-app
         ch.qos.logback/logback-classic {:mvn/version "1.2.11"}
         ;; using the newer version of electric enables working builds, but breaks the dev setup

@@ -7,7 +7,7 @@
 (def routes (hello-world/routes))
 
 (def server-config
-  {:port 3001
+  {:port (server/get-port "htmx")
    :routes routes})
 
 (defn start-server [] (server/start-server server-config))

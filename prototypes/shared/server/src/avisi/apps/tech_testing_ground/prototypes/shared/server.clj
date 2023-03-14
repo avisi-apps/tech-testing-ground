@@ -28,11 +28,11 @@
           [routes
            ["/ping"
             {:get
-               {:handler
-                  (fn [_]
-                    {:status 200
-                     :headers {"Content-Type" "text/plain"}
-                     :body "pong"})}}]])
+             {:handler
+              (fn [_]
+                {:status 200
+                 :headers {"Content-Type" "text/plain"}
+                 :body "pong"})}}]])
         (constantly not-found-response))
       (middleware/wrap-format content-negotiation)
       (catch-req-middleware)
@@ -40,6 +40,13 @@
       (wrap-resource "public")
       (wrap-content-type)
       (wrap-index-as-root))))
+
+(def config
+  {:ports {:htmx 3001
+           :fulcro 3002
+           :electric 3003}})
+(defn get-port [tech-name]
+  (get-in config [:ports (keyword tech-name)]))
 
 (defn start-server
   [{:keys [port]
