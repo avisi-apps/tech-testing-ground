@@ -49,9 +49,9 @@
 (def config
   {:ports
    {:central-server 3000
-    :htmx 3001
-    :fulcro 3002
-    :electric 3003}})
+    :htmx 3000
+    :fulcro 3000
+    :electric 3000}})
 (defn get-port [tech-name] (get-in config [:ports (keyword tech-name)]))
 
 (defn start-server
