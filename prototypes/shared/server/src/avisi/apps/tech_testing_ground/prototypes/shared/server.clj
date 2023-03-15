@@ -64,9 +64,9 @@
      ;; avoids blocking the main thread
      :join? false}))
 
-(def central-server-config
+#_(def central-server-config
   {:port 3000
    :routes atlassian-connect/routes})
 
-(defstate central-server :start (start-server central-server-config) :stop (.stop central-server))
+#_(defstate central-server :start (start-server central-server-config) :stop (.stop central-server))
 (comment (mount/start) (mount/stop) (mount/running-states))
