@@ -6,8 +6,14 @@
                            :ignore-warnings true}           ; warnings don't prevent hot-reload
                 :output-dir "resources/public/js"
                 :asset-path "/js"
-                :modules {:main {:entries [user]
-                                 :init-fn user/start!}}
+                :modules {:shared {:entries []}
+                          :main {:entries [user]
+                                 :init-fn user/start!
+                                 :depends-on #{:shared}}
+                          #_:iframe #_{:entries [user]
+                                   :init-fn user/start!
+                                   :depends-on #{:shared}}
+                          }
                 :build-hooks [(shadow.cljs.build-report/hook {:output-to "target/build_report.html"})
                               (user/rcf-shadow-hook)]}
           :prod
