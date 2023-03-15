@@ -6,19 +6,10 @@
         shared/server {:local/root "../shared/server"}
         ; electric-start-app
         ch.qos.logback/logback-classic {:mvn/version "1.2.11"}
-        ;; using the newer version of electric enables working builds, but breaks the dev setup
-        ;; using the older version during development until there's a fix
-
-        ; use local electric-repo during dev, maybe maintain fork once things become more clear (see below)
-        local/electric {:local/root "../../../electric"}
-
-        ; dep to own remote fork of electric
-        ;yabmas/electric {:git/url "https://github.com/YabMas/electric"
-        ;                 :git/sha "ce7da1b0859da24758dbfb81cf0ae7a299cc7b2a"}
-
+        com.hyperfiddle/electric {:mvn/version "v2-alpha-167-gbd475584"}
         com.hyperfiddle/rcf {:mvn/version "20220926-202227"}
         info.sunng/ring-jetty9-adapter
-        {:mvn/version "0.14.3"                              ; (Jetty 9) is Java 8 compatible;
+        {:mvn/version "0.18.5"                              ; (Jetty 9) is Java 8 compatible;
          ;:mvn/version "0.17.7" ; (Jetty 10) is NOT Java 8 compatible
          :exclusions [org.slf4j/slf4j-api info.sunng/ring-jetty9-adapter-http3]} ; no need
         missionary/missionary {:mvn/version "b.27-SNAPSHOT"}

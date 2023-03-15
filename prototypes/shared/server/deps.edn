@@ -2,8 +2,10 @@
  :deps {; server
         ring/ring-core {:mvn/version "1.9.6"}
         ;ring/ring-jetty-adapter {:mvn/version "1.9.6"}
-        info.sunng/ring-jetty9-adapter {:mvn/version "0.18.5"}
+;hyperfiddle/electric
+        com.hyperfiddle/electric {:mvn/version "v2-alpha-167-gbd475584"}
+        info.sunng/ring-jetty9-adapter {:mvn/version "0.17.7"}
         metosin/reitit {:mvn/version "0.5.9"}
-        metosin/muuntaja {:mvn/version "0.6.7"}
+        metosin/muuntaja {:mvn/version "0.6.8"}
         ; dev-time state-mangement
-        mount/mount {:mvn/version "0.1.16"} }}
+        mount/mount {:mvn/version "0.1.16"}}}

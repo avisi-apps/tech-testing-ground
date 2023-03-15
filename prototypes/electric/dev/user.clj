@@ -1,6 +1,8 @@
 (ns user
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.server :as server])); Must be ".clj" file, Clojure doesn't auto-load user.cljc
+    [avisi.apps.tech-testing-ground.prototypes.shared.server :as server]
+    [avisi.apps.tech-testing-ground.prototypes.electric.server :as my-server]
+    )); Must be ".clj" file, Clojure doesn't auto-load user.cljc
 
 ; lazy load dev stuff - for faster REPL startup and cleaner dev classpath
 (def start-electric-server! (delay @(requiring-resolve 'hyperfiddle.electric-jetty-server/start-server!)))
@@ -16,7 +18,8 @@
   (println "Starting Electric compiler and server...")
   (@shadow-start!) ; serves index.html as well
   (@shadow-watch :dev) ; depends on shadow server
-  (def server (@start-electric-server! electric-server-config))
+  (def server (my-server/start-server))
+  #_(def server (@start-electric-server! electric-server-config))
   (comment (.stop server)))
 
 ; Userland Electric code is lazy loaded by the shadow build due to usage of
