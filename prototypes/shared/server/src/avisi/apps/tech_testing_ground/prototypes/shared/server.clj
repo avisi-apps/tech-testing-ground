@@ -2,7 +2,8 @@
   (:require
     [avisi.apps.tech-testing-ground.prototypes.shared.atlassian-connect :as atlassian-connect]
     [reitit.ring :as ring]
-    [ring.adapter.jetty :as jetty]
+    ;[ring.adapter.jetty :as jetty]
+    [ring.adapter.jetty9 :as jetty]
     [ring.middleware.params :refer [wrap-params]]
     [ring.middleware.resource :refer [wrap-resource]]
     [ring.middleware.content-type :refer [wrap-content-type]]
