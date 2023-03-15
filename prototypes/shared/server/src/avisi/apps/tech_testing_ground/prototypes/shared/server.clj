@@ -22,12 +22,15 @@
 (defn muuntaja-options [custom-content-negotiation]
   (reduce-kv (fn [m k v] (update-in m [:formats k] merge v)) muuntaja/default-options custom-content-negotiation))
 
-(defn app [{:keys [routes custom-content-negotiation]}]
+(defn app [{:keys [routes
+                   custom-content-negotiation
+                   jira-handlers]}]
   (let [content-negotiation (muuntaja-options custom-content-negotiation)]
     (->
       (ring/ring-handler
         (ring/router
           [routes
+           (atlassian-connect/routes jira-handlers)
            ["/ping"
             {:get
              {:handler

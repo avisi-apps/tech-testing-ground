@@ -32,7 +32,7 @@
          :url "/jira-issue-panel"}
         }]}}))
 
-(def routes
+(defn routes [{:keys [issue-panel-handler]}]
   [["/atlassian/jira/atlassian-connect.json"
     {:get
      {:handler (fn [_]
@@ -47,9 +47,7 @@
                         :body "Temporary lifecycle dummy-response"})}}]
    ["/jira-issue-panel"
     {:get
-     {:handler (fn [_] {:status 200
-                        :headers {"Content-Type" "text/html"}
-                        :body "<!DOCTYPE html>\n<html>\n<body>\n\n<h1>My First Heading</h1>\n\n<p>My first paragraph.</p>\n\n</body><script src=\"https://connect-cdn.atl-paas.net/all.js\" async></script>\n</html>"})}}]
+     {:handler issue-panel-handler}}]
    #_["/atlassian/jira/modules/issue-panel"
       {:get
        {:handler (fn [_] {:status 200

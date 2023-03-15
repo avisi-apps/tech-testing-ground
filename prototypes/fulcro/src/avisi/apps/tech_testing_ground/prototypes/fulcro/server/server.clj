@@ -3,6 +3,7 @@
     [avisi.apps.tech-testing-ground.prototypes.shared.server :as server]
     [avisi.apps.tech-testing-ground.prototypes.fulcro.server.parser :as parser]
     [com.wsscode.pathom3.connect.operation.transit :as pcot]
+    [ring.util.response :refer [redirect]]
     [mount.core :as mount :refer [defstate]]))
 
 (defn pathom-query-handler [{:keys [body-params]}]
@@ -10,17 +11,23 @@
    :accept "application/transit+json"
    :body (parser/api-parser body-params)})
 
+(defn dummy-handler [_] {:status 200
+                         :headers {"Content-Type" "text/html"}
+                         :body "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <link rel=\"icon\" type=\"image/x-icon\" href=\"favicon.ico\">\n    <title>fulcro-prototype</title>\n</head>\n<body>\n<div id=\"app\"></div>\n<noscript>You need to enable JavaScript to run this app.</noscript>\n<script src= \"https://connect-cdn.atl-paas.net/all.js\" async></script>\n<script type=\"text/javascript\" src=\"/js/main.js\"></script>\n</body>\n</html>"})
+
+
 (def pathom-content-negotiation
   {"application/transit+json"
-     {:decoder-opts {:handlers pcot/read-handlers}
-      :encoder-opts {:handlers pcot/write-handlers}}})
+   {:decoder-opts {:handlers pcot/read-handlers}
+    :encoder-opts {:handlers pcot/write-handlers}}})
 
 (def routes [["/api" {:post {:handler pathom-query-handler}}]])
 
 (def server-config
   {:port (server/get-port "fulcro")
    :routes routes
-   :custom-content-negotiation pathom-content-negotiation})
+   :custom-content-negotiation pathom-content-negotiation
+   :jira-handlers {:issue-panel-handler (constantly (redirect "issue-panel.html"))}})
 
 (defn start-server [] (server/start-server server-config))
 
