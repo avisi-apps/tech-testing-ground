@@ -1,11 +1,16 @@
 {:deps {:aliases [:dev]}
  :nrepl {:port 9001}
+ :dev-http {8000 {:root "resources/public"}}
+ :ssl {:keystore "../shared/server/ssl/keystore.jks"
+       :password "changeit"}
  :builds {:dev {:target :browser
                 :devtools {:watch-dir "resources/public"    ; live reload CSS
                            :hud #{:errors :progress}
+                           :devtools-url "https://localhost:9630"
                            :ignore-warnings true}           ; warnings don't prevent hot-reload
                 :output-dir "resources/public/js"
                 :asset-path "/js"
+                :dev {:asset-path "https://localhost:8000/js"}
                 :modules {:shared {:entries []}
                           :main {:entries [user]
                                  :init-fn user/start!
