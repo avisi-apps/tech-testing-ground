@@ -1,6 +1,7 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.server
   (:require
     [avisi.apps.tech-testing-ground.prototypes.shared.atlassian-connect :as atlassian-connect]
+    [avisi.apps.tech-testing-ground.prototypes.shared.monday :as monday]
     [reitit.ring :as ring]
     ;[ring.adapter.jetty :as jetty]
     [ring.adapter.jetty9 :as jetty]
@@ -39,14 +40,16 @@
 (defn app [{:keys [routes
                    custom-content-negotiation
                    ws-handler
-                   jira-handlers] :or {routes []}}]
+                   jira-handlers
+                   monday-handlers] :or {routes []}}]
   (let [content-negotiation (muuntaja-options custom-content-negotiation)]
     (->
       (ring/ring-handler
         (ring/router
           [routes
            ping-route
-           (atlassian-connect/routes jira-handlers)])
+           (atlassian-connect/routes jira-handlers)
+           (monday/routes monday-handlers)])
         (constantly not-found-response))
       (middleware/wrap-format content-negotiation)
       (catch-req-middleware)
