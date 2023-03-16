@@ -1,8 +1,13 @@
 {:deps {:aliases [:cljs :dev]}
- :dev-http {8000 "classpath:public"}
+ :http {:host "localhost"
+        :ssl-port 9630}
+ :dev-http {8000 {:root "resources/public"}}
+ :ssl {:keystore "ssl/keystore.jks"
+       :password "changeit"}
  :builds {:frontend {:target :browser
                      :output-dir "resources/public/js"
                      :asset-path "/js"
+                     :dev {:asset-path "https://localhost:8000/js"}
                      :modules {:shared {:entries []}
                                :main {:init-fn avisi.apps.tech-testing-ground.prototypes.fulcro.client.main-page/init
                                       :entries [avisi.apps.tech-testing-ground.prototypes.fulcro.client.main-page]
@@ -11,5 +16,6 @@
                                         :entries [avisi.apps.tech-testing-ground.prototypes.fulcro.client.issue-panel]
                                         :depends-on #{:shared}}}
                      :devtools {:after-load avisi.apps.tech-testing-ground.prototypes.fulcro.client.current-app/refresh
+                                :devtools-url "https://localhost:9630"
                                 :preloads [com.fulcrologic.fulcro.inspect.preload
                                            com.fulcrologic.fulcro.inspect.dom-picker-preload]}}}}
