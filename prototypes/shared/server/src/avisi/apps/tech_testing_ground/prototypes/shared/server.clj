@@ -7,7 +7,6 @@
     [ring.middleware.params :refer [wrap-params]]
     [ring.middleware.resource :refer [wrap-resource]]
     [ring.middleware.content-type :refer [wrap-content-type]]
-    [hyperfiddle.electric-jetty-adapter :as adapter]
     [muuntaja.core :as muuntaja]
     [muuntaja.middleware :as middleware]
     [mount.core :as mount :refer [defstate]]))
@@ -37,11 +36,6 @@
     (if (jetty/ws-upgrade-request? request)
       (jetty/ws-upgrade-response (ws-handler request))
       (next-handler request))))
-#_(defn wrap-websocket [next-handler]
-    (fn [request]
-      (if (jetty/ws-upgrade-request? request)
-        (jetty/ws-upgrade-response (adapter/electric-ws-adapter (partial adapter/electric-ws-message-handler request)))
-        (next-handler request))))
 (defn app [{:keys [routes
                    custom-content-negotiation
                    ws-handler
