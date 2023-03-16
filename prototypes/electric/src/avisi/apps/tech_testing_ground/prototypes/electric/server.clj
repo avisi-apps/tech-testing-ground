@@ -2,7 +2,9 @@
   (:require
     [avisi.apps.tech-testing-ground.prototypes.shared.server :as server]
     [ring.util.response :refer [redirect]]
-    [hyperfiddle.electric-jetty-adapter :as adapter]))
+    [hyperfiddle.electric-jetty-adapter :as adapter]
+    [mount.core :as mount :refer [defstate]]
+    ))
 
 (def server-config
   {:port (server/get-port "electric")
@@ -14,11 +16,6 @@
 
 (defn start-server [] (server/start-server server-config))
 
-(comment
+(defstate electric-server :start (start-server) :stop (.stop electric-server))
 
-  (start-server)
-
-  )
-;(defstate htmx-server :start (start-server) :stop (.stop htmx-server))
-;
-;(comment (mount/start) (mount/stop) (mount/running-states))
+(comment (mount/start) (mount/stop) (mount/running-states))

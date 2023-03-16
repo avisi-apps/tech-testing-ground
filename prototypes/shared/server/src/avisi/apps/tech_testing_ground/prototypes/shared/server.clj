@@ -39,7 +39,7 @@
 (defn app [{:keys [routes
                    custom-content-negotiation
                    ws-handler
-                   jira-handlers]}]
+                   jira-handlers] :or {routes []}}]
   (let [content-negotiation (muuntaja-options custom-content-negotiation)]
     (->
       (ring/ring-handler
@@ -56,11 +56,6 @@
       (wrap-index-as-root)
       (wrap-websocket ws-handler))))
 
-(comment
-
-  (ring/router [nil])
-
-  )
 (defn start-server
   [{:keys [host port resources-path]
     :or {port 3000 host "0.0.0.0" resources-path "public"}
