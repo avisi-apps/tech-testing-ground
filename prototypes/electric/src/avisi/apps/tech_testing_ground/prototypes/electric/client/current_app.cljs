@@ -18,5 +18,5 @@
   (mount-current-app))
 
 (defn ^:dev/before-load stop! []
-  (when reactor (reactor))                                  ; teardown
+  (when reactor (reactor))
   (set! reactor nil))
