@@ -2,7 +2,7 @@
  :http {:host "localhost"
         :ssl-port 9630}
  :dev-http {8000 {:root "resources/public"}}
- :ssl {:keystore "ssl/keystore.jks"
+ :ssl {:keystore "../shared/server/ssl/keystore.jks"
        :password "changeit"}
  :builds {:frontend {:target :browser
                      :output-dir "resources/public/js"
