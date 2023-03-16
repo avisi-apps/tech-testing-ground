@@ -1,4 +1,4 @@
-(ns avisi.apps.tech-testing-ground.prototypes.electric.client.current-app)
+(ns ^:dev/always avisi.apps.tech-testing-ground.prototypes.electric.client.current-app)
 
 (defonce ^:private reactor nil)
 

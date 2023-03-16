@@ -4,4 +4,4 @@
     [hyperfiddle.electric :as e]
     [hyperfiddle.electric-dom2 :as dom]))
 
-(e/defn HelloWorld [] (e/client (dom/text (e/server (shared-core/hello-from "electric")) #_"!!!")))
+(e/defn HelloWorld [] (e/client (dom/text (e/server (shared-core/hello-from "electric")) "!!!")))
