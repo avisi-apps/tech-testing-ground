@@ -12,11 +12,11 @@
                 :asset-path "/js"
                 :dev {:asset-path "https://localhost:8000/js"}
                 :modules {:shared {:entries []}
-                          :main {:entries [user]
-                                 :init-fn user/start!
+                          :main {:entries [avisi.apps.tech-testing-ground.prototypes.electric.client.main-page]
+                                 :init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.main-page/start!
                                  :depends-on #{:shared}}
-                          #_:iframe #_{:entries [user]
-                                   :init-fn user/start!
+                          :iframe {:entries [avisi.apps.tech-testing-ground.prototypes.electric.client.iframe]
+                                   :init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.iframe/start!
                                    :depends-on #{:shared}}
                           }
                 :build-hooks [(shadow.cljs.build-report/hook {:output-to "target/build_report.html"})

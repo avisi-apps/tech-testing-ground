@@ -1,9 +1,4 @@
-(ns user
-  (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.server :as server]
-    [avisi.apps.tech-testing-ground.prototypes.electric.server :as my-server]
-    ))                                                      ; Must be ".clj" file, Clojure doesn't auto-load user.cljc
-
+(ns user)
 ; lazy load dev stuff - for faster REPL startup and cleaner dev classpath
 (def shadow-start! (delay @(requiring-resolve 'shadow.cljs.devtools.server/start!)))
 (def shadow-watch (delay @(requiring-resolve 'shadow.cljs.devtools.api/watch)))
@@ -20,7 +15,6 @@
 
   (setup-shadow-cljs-watch)
 
-  (main)                                                    ; Electric Clojure(JVM) REPL entrypoint
   (hyperfiddle.rcf/enable!)                                 ; turn on RCF after all transitive deps have loaded
   (shadow.cljs.devtools.api/repl :dev)                      ; shadow server hosts the cljs repl
   ; connect a second REPL instance to it
