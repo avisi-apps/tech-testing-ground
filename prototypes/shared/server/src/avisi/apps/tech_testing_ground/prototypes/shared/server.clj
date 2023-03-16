@@ -45,6 +45,7 @@
       (ring/ring-handler
         (ring/router
           [routes
+           ping-route
            (atlassian-connect/routes jira-handlers)])
         (constantly not-found-response))
       (middleware/wrap-format content-negotiation)
@@ -54,13 +55,22 @@
       (wrap-content-type)
       (wrap-index-as-root)
       (wrap-websocket ws-handler))))
+
+(comment
+
+  (ring/router [nil])
+
+  )
 (defn start-server
-  [{:keys [port]
+  [{:keys [host port resources-path]
+    :or {port 3000 host "0.0.0.0" resources-path "public"}
     :as server-config}]
   (println (str "\nStarting server on port: " port "\n"))
   (jetty/run-jetty
     (app server-config)
-    {:port port
+    {:host host
+     :port port
+     :resources-path resources-path
      :join? false}))
 
 (def config

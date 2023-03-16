@@ -11,11 +11,6 @@
    :accept "application/transit+json"
    :body (parser/api-parser body-params)})
 
-(defn dummy-handler [_] {:status 200
-                         :headers {"Content-Type" "text/html"}
-                         :body "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <link rel=\"icon\" type=\"image/x-icon\" href=\"favicon.ico\">\n    <title>fulcro-prototype</title>\n</head>\n<body>\n<div id=\"app\"></div>\n<noscript>You need to enable JavaScript to run this app.</noscript>\n<script src= \"https://connect-cdn.atl-paas.net/all.js\" async></script>\n<script type=\"text/javascript\" src=\"/js/main.js\"></script>\n</body>\n</html>"})
-
-
 (def pathom-content-negotiation
   {"application/transit+json"
    {:decoder-opts {:handlers pcot/read-handlers}
