@@ -25,9 +25,11 @@
            {:status 200
             :headers {"content-type" "text/plain"}
             :body "pong"})}}])
+
 (defn- wrap-index-as-root
   [next-handler]
   (fn [request] (next-handler (if (= "/" (:uri request)) (assoc request :uri "/index.html") request))))
+
 (defn- catch-req-middleware [next-handler] (fn [request] (def _req request) (next-handler request)))
 
 (defn muuntaja-options [custom-content-negotiation]
@@ -36,6 +38,7 @@
 (defn wrap-websocket [next-handler ws-handler]
   (fn [request]
     (if (jetty/ws-upgrade-request? request) (jetty/ws-upgrade-response (ws-handler request)) (next-handler request))))
+
 (defn app
   [{:keys [routes custom-content-negotiation ws-handler jira-handlers monday-handlers]
     :or {routes []}}]

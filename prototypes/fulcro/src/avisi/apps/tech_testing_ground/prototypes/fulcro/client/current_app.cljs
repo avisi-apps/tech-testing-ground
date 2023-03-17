@@ -4,7 +4,9 @@
     [com.fulcrologic.fulcro.networking.http-remote :as http-remote]))
 
 (defonce ^:private current-app (atom nil))
+
 (defonce ^:private mount-element-id "app")
+
 (def ^:private remotes
   {:remote
      (http-remote/fulcro-http-remote
@@ -12,18 +14,22 @@
           (->
             (http-remote/wrap-fulcro-request
               (fn [req] (assoc-in req [:headers "Accept"] "application/transit+json"))))})})
+
 (defn ^:private reset-current-app [{:keys [client-did-mount]}]
   (reset!
     current-app
     (f-app/fulcro-app
       {:remotes remotes
        :client-did-mount client-did-mount})))
+
 (defn ^:private mount-current-app [root] (f-app/mount! @current-app root mount-element-id))
+
 (defn initialize-app
   [{:keys [root client-did-mount]
     :as app-config}]
   (reset-current-app app-config)
   (mount-current-app root))
+
 (defn ^:export refresh
   "During development, shadow-cljs will call this on every hot reload of source. See shadow-cljs.edn"
   []
