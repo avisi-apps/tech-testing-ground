@@ -11,3 +11,7 @@ target
 node_modules
 
 prototypes/*/resources/public/js
+.editorconfig
+.pnp.cjs
+.yarn
+ssl

@@ -1,4 +1,4 @@
-(ns avisi.apps.tech-testing-ground.prototypes.electric.hello-world
+(ns avisi.apps.tech-testing-ground.prototypes.electric.components.hello-world
   (:require
     #?(:clj [avisi.apps.tech-testing-ground.prototypes.shared.core :as shared-core])
     [hyperfiddle.electric :as e]

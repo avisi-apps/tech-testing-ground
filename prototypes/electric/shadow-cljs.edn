@@ -1,13 +1,24 @@
 {:deps {:aliases [:dev]}
  :nrepl {:port 9001}
+ :dev-http {8000 {:root "resources/public"}}
+ :ssl {:keystore "../shared/server/ssl/keystore.jks"
+       :password "changeit"}
  :builds {:dev {:target :browser
                 :devtools {:watch-dir "resources/public"    ; live reload CSS
                            :hud #{:errors :progress}
+                           :devtools-url "https://localhost:9630"
                            :ignore-warnings true}           ; warnings don't prevent hot-reload
                 :output-dir "resources/public/js"
                 :asset-path "/js"
-                :modules {:main {:entries [user]
-                                 :init-fn user/start!}}
+                :dev {:asset-path "https://localhost:8000/js"}
+                :modules {:shared {:entries []}
+                          :main {:entries [avisi.apps.tech-testing-ground.prototypes.electric.client.main-page]
+                                 :init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.main-page/init!
+                                 :depends-on #{:shared}}
+                          :iframe {:entries [avisi.apps.tech-testing-ground.prototypes.electric.client.item-view]
+                                   :init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.item-view/init!
+                                   :depends-on #{:shared}}
+                          }
                 :build-hooks [(shadow.cljs.build-report/hook {:output-to "target/build_report.html"})
                               (user/rcf-shadow-hook)]}
           :prod

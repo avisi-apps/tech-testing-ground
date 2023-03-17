@@ -3,6 +3,7 @@
     [avisi.apps.tech-testing-ground.prototypes.shared.server :as server]
     [avisi.apps.tech-testing-ground.prototypes.fulcro.server.parser :as parser]
     [com.wsscode.pathom3.connect.operation.transit :as pcot]
+    [ring.util.response :refer [redirect]]
     [mount.core :as mount :refer [defstate]]))
 
 (defn pathom-query-handler [{:keys [body-params]}]
@@ -20,7 +21,9 @@
 (def server-config
   {:port (server/get-port "fulcro")
    :routes routes
-   :custom-content-negotiation pathom-content-negotiation})
+   :custom-content-negotiation pathom-content-negotiation
+   :jira-handlers {:item-view-handler (constantly (redirect "jira-item-view.html"))}
+   :monday-handlers {:item-view-handler (constantly (redirect "monday-item-view.html"))}})
 
 (defn start-server [] (server/start-server server-config))
 
