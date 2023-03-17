@@ -1,4 +1,4 @@
-(ns avisi.apps.tech-testing-ground.prototypes.fulcro.client.issue-panel
+(ns avisi.apps.tech-testing-ground.prototypes.fulcro.client.item-view
   (:require
     [avisi.apps.tech-testing-ground.prototypes.fulcro.client.hello-world :as hello-world]
     [avisi.apps.tech-testing-ground.prototypes.fulcro.client.current-app :as current-app]
@@ -12,11 +12,8 @@
   {:query [{:hello-world (comp/get-query hello-world/HelloWorld)}]}
   (hello-world/ui-hello-world hello-world))
 
-(defn ^:export init
-  []
+(defn ^:export init []
   (current-app/initialize-app
     {:root Root
      :client-did-mount
-     (fn [app]
-       (df/load! app :hello-world hello-world/HelloWorld)
-       (js/console.log "Loaded issue-panel"))}))
+       (fn [app] (df/load! app :hello-world hello-world/HelloWorld) (js/console.log "Loaded issue-panel"))}))

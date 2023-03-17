@@ -12,8 +12,8 @@
                                :main {:init-fn avisi.apps.tech-testing-ground.prototypes.fulcro.client.main-page/init
                                       :entries [avisi.apps.tech-testing-ground.prototypes.fulcro.client.main-page]
                                       :depends-on #{:shared}}
-                               :iframe {:init-fn avisi.apps.tech-testing-ground.prototypes.fulcro.client.issue-panel/init
-                                        :entries [avisi.apps.tech-testing-ground.prototypes.fulcro.client.issue-panel]
+                               :iframe {:init-fn avisi.apps.tech-testing-ground.prototypes.fulcro.client.item-view/init
+                                        :entries [avisi.apps.tech-testing-ground.prototypes.fulcro.client.item-view]
                                         :depends-on #{:shared}}}
                      :devtools {:after-load avisi.apps.tech-testing-ground.prototypes.fulcro.client.current-app/refresh
                                 :devtools-url "https://localhost:9630"

@@ -5,9 +5,5 @@
     [hyperfiddle.electric :as e]
     [hyperfiddle.electric-dom2 :as dom]))
 
-(def root
-  (e/boot
-    (binding [dom/node js/document.body]
-      (hello-world/HelloWorld.))))
 (defn ^:export init! []
-  (current-app/initialize-app root))
+  (current-app/initialize-app (e/boot (binding [dom/node js/document.body] (hello-world/HelloWorld.)))))

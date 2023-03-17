@@ -17,13 +17,14 @@
    :headers {"Content-Type" "text/plain"}
    :body "Not Found"})
 
-(def ping-route ["/ping"
-                 {:get
-                  {:handler
-                   (fn [_]
-                     {:status 200
-                      :headers {"content-type" "text/plain"}
-                      :body "pong"})}}])
+(def ping-route
+  ["/ping"
+   {:get
+      {:handler
+         (fn [_]
+           {:status 200
+            :headers {"content-type" "text/plain"}
+            :body "pong"})}}])
 (defn- wrap-index-as-root
   [next-handler]
   (fn [request] (next-handler (if (= "/" (:uri request)) (assoc request :uri "/index.html") request))))
@@ -34,22 +35,14 @@
 
 (defn wrap-websocket [next-handler ws-handler]
   (fn [request]
-    (if (jetty/ws-upgrade-request? request)
-      (jetty/ws-upgrade-response (ws-handler request))
-      (next-handler request))))
-(defn app [{:keys [routes
-                   custom-content-negotiation
-                   ws-handler
-                   jira-handlers
-                   monday-handlers] :or {routes []}}]
+    (if (jetty/ws-upgrade-request? request) (jetty/ws-upgrade-response (ws-handler request)) (next-handler request))))
+(defn app
+  [{:keys [routes custom-content-negotiation ws-handler jira-handlers monday-handlers]
+    :or {routes []}}]
   (let [content-negotiation (muuntaja-options custom-content-negotiation)]
     (->
       (ring/ring-handler
-        (ring/router
-          [routes
-           ping-route
-           (atlassian-connect/routes jira-handlers)
-           (monday/routes monday-handlers)])
+        (ring/router [routes ping-route (atlassian-connect/routes jira-handlers) (monday/routes monday-handlers)])
         (constantly not-found-response))
       (middleware/wrap-format content-negotiation)
       (catch-req-middleware)
@@ -61,7 +54,10 @@
 
 (defn start-server
   [{:keys [host port resources-path]
-    :or {port 3000 host "0.0.0.0" resources-path "public"}
+    :or
+      {port 3000
+       host "0.0.0.0"
+       resources-path "public"}
     :as server-config}]
   (println (str "\nStarting server on port: " port "\n"))
   (jetty/run-jetty
@@ -71,13 +67,17 @@
      :resources-path resources-path
      :join? false}))
 
+; TODO: everything uses port 3000 till there's an implemented solution for integrating all prototypes with the same
+; plugin
 (def config
   {:ports
-   {:central-server 3000
-    :htmx 3000
-    :fulcro 3000
-    :electric 3000}})
+     {:central-server 3000
+      :htmx 3000
+      :fulcro 3000
+      :electric 3000}})
 (defn get-port [tech-name] (get-in config [:ports (keyword tech-name)]))
+
+; maybe a central proxy-server is the best solution, will work it out later
 #_(def central-server-config
     {:port 3000
      :routes atlassian-connect/routes})

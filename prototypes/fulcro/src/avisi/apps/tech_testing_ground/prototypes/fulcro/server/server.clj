@@ -13,8 +13,8 @@
 
 (def pathom-content-negotiation
   {"application/transit+json"
-   {:decoder-opts {:handlers pcot/read-handlers}
-    :encoder-opts {:handlers pcot/write-handlers}}})
+     {:decoder-opts {:handlers pcot/read-handlers}
+      :encoder-opts {:handlers pcot/write-handlers}}})
 
 (def routes [["/api" {:post {:handler pathom-query-handler}}]])
 
@@ -22,10 +22,8 @@
   {:port (server/get-port "fulcro")
    :routes routes
    :custom-content-negotiation pathom-content-negotiation
-   :jira-handlers {:issue-panel-handler (constantly (redirect "iframe-content.html"))}
-   :monday-handlers {:item-view-handler (constantly (redirect "monday-item-view.html"))}
-
-   })
+   :jira-handlers {:item-view-handler (constantly (redirect "jira-item-view.html"))}
+   :monday-handlers {:item-view-handler (constantly (redirect "monday-item-view.html"))}})
 
 (defn start-server [] (server/start-server server-config))
 

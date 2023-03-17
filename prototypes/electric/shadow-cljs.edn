@@ -15,8 +15,8 @@
                           :main {:entries [avisi.apps.tech-testing-ground.prototypes.electric.client.main-page]
                                  :init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.main-page/init!
                                  :depends-on #{:shared}}
-                          :iframe {:entries [avisi.apps.tech-testing-ground.prototypes.electric.client.iframe]
-                                   :init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.iframe/init!
+                          :iframe {:entries [avisi.apps.tech-testing-ground.prototypes.electric.client.item-view]
+                                   :init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.item-view/init!
                                    :depends-on #{:shared}}
                           }
                 :build-hooks [(shadow.cljs.build-report/hook {:output-to "target/build_report.html"})

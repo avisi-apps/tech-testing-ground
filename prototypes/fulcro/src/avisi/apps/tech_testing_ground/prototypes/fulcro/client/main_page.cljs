@@ -12,11 +12,8 @@
   {:query [{:hello-world (comp/get-query hello-world/HelloWorld)}]}
   (hello-world/ui-hello-world hello-world))
 
-(defn ^:export init
-  []
+(defn ^:export init []
   (current-app/initialize-app
     {:root Root
      :client-did-mount
-     (fn [app]
-       (df/load! app :hello-world hello-world/HelloWorld)
-       (js/console.log "Loaded main-page"))}))
+       (fn [app] (df/load! app :hello-world hello-world/HelloWorld) (js/console.log "Loaded main-page"))}))

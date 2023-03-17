@@ -10,7 +10,7 @@
 (def server-config
   {:port (server/get-port "htmx")
    :routes routes
-   :jira-handlers {:issue-panel-handler (constantly (redirect "iframe-content.html"))}
+   :jira-handlers {:item-view-handler (constantly (redirect "jira-item-view.html"))}
    :monday-handlers {:item-view-handler (constantly (redirect "monday-item-view.html"))}})
 
 (defn start-server [] (server/start-server server-config))
