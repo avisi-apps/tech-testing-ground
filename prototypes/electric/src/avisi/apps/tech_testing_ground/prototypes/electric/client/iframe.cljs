@@ -1,4 +1,3 @@
-; Electric currently needs to rebuild everything when any file changes.
 (ns ^:dev/always avisi.apps.tech-testing-ground.prototypes.electric.client.iframe
   (:require
     [avisi.apps.tech-testing-ground.prototypes.electric.components.hello-world :as hello-world]

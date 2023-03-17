@@ -22,7 +22,10 @@
   {:port (server/get-port "fulcro")
    :routes routes
    :custom-content-negotiation pathom-content-negotiation
-   :jira-handlers {:issue-panel-handler (constantly (redirect "iframe-content.html"))}})
+   :jira-handlers {:issue-panel-handler (constantly (redirect "iframe-content.html"))}
+   :monday-handlers {:item-view-handler (constantly (redirect "monday-item-view.html"))}
+
+   })
 
 (defn start-server [] (server/start-server server-config))
 

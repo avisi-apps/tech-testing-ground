@@ -3,7 +3,9 @@
     [avisi.apps.tech-testing-ground.prototypes.shared.server :as server]
     [ring.util.response :refer [redirect]]
     [hyperfiddle.electric-jetty-adapter :as adapter]
-    [mount.core :as mount :refer [defstate]]))
+    [mount.core :as mount :refer [defstate]]
+    [avisi.apps.tech-testing-ground.prototypes.electric.components.hello-world :as hello-world]
+    ))
 
 (def server-config
   {:port (server/get-port "electric")
@@ -11,7 +13,8 @@
    :routes []
    :resources-path "public"
    :ws-handler (fn [req] (adapter/electric-ws-adapter (partial adapter/electric-ws-message-handler req)))
-   :jira-handlers {:issue-panel-handler (constantly (redirect "iframe-content.html"))}})
+   :jira-handlers {:issue-panel-handler (constantly (redirect "iframe-content.html"))}
+   :monday-handlers {:item-view-handler (constantly (redirect "monday-item-view.html"))}})
 
 (defn start-server [] (server/start-server server-config))
 
