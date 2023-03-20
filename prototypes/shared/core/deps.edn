@@ -1,2 +1,2 @@
 {:paths ["src"]
- :deps {alekcz/fire {:mvn/version "0.5.0"}}}
+ :deps {lurodrigo/firestore-clj {:mvn/version "1.2.1"}}}
