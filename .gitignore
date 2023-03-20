@@ -18,3 +18,4 @@ ssl
 firestore-debug.log
 ui-debug.log
 .firebaserc
+app-credentials.json
