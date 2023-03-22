@@ -20,17 +20,18 @@
 (def ping-route
   ["/ping"
    {:get
-    {:handler
-     (fn [_]
-       {:status 200
-        :headers {"content-type" "text/plain"}
-        :body "pong"})}}])
+      {:handler
+         (fn [_]
+           {:status 200
+            :headers {"content-type" "text/plain"}
+            :body "pong"})}}])
 
 (defn- wrap-index-as-root
   [next-handler]
   (fn [request] (next-handler (if (= "/" (:uri request)) (assoc request :uri "/index.html") request))))
 
-(defn- catch-req-middleware [next-handler]
+(defn- catch-req-middleware
+  [next-handler]
   (fn [request]
     (def _req request)
     (when (= (:uri request) "/monday-item-view") (def _mreq request))
@@ -39,16 +40,12 @@
     (next-handler request)))
 
 (comment
-
   (->
     (:query-params _mreq)
     (get "sessionToken"))
-
   (->
     (:query-params _jreq)
-    (get "jwt"))
-
-  )
+    (get "jwt")))
 (defn muuntaja-options [custom-content-negotiation]
   (reduce-kv (fn [m k v] (update-in m [:formats k] merge v)) muuntaja/default-options custom-content-negotiation))
 
@@ -75,9 +72,9 @@
 (defn start-server
   [{:keys [host port resources-path]
     :or
-    {port 3000
-     host "0.0.0.0"
-     resources-path "public"}
+      {port 3000
+       host "0.0.0.0"
+       resources-path "public"}
     :as server-config}]
   (println (str "\nStarting server on port: " port "\n"))
   (jetty/run-jetty
@@ -91,10 +88,10 @@
 ; plugin
 (def config
   {:ports
-   {:central-server 3000
-    :htmx 3000
-    :fulcro 3000
-    :electric 3000}})
+     {:central-server 3000
+      :htmx 3000
+      :fulcro 3000
+      :electric 3000}})
 (defn get-port [tech-name] (get-in config [:ports (keyword tech-name)]))
 
 ; maybe a central proxy-server is the best solution, will work it out later
