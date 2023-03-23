@@ -46,13 +46,8 @@
           (reset! current-user)))
       (next-handler req))))
 
-(defn current-user->monday-user-id []
-  (get-in @current-user ["monday" "user-id"]))
-
 (comment
 
   @current-user
-
-  (current-user->monday-user-id)
 
   )
