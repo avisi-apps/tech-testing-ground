@@ -19,50 +19,40 @@
     (base64-decode)
     (json/read-str)))
 
-(defn monday-auth-middleware [next-handler]
-  (fn [req]
-    (->
-      (assoc-in req [:headers "Authorization"] (get-in @current-user ["monday" "api-token"]))
-      (next-handler))))
+(defmulti ^:private current-user->auth-header identity)
 
-(defn jira-auth-middleware [next-handler]
-  (fn [req]
-    (let [email (get-in @current-user ["jira" "email"])
-          api-token (get-in @current-user ["jira" "api-token"])
-          auth-token (->>
-                       (str email ":" api-token)
-                       (base64-encode))]
+(defmethod ^:private current-user->auth-header "jira" [_]
+  (let [email (get-in @current-user ["jira" "email"])
+        api-token (get-in @current-user ["jira" "api-token"])
+        auth-token (->>
+                     (str email ":" api-token)
+                     (base64-encode))]
+    (str "Basic " auth-token)))
+
+(defmethod ^:private current-user->auth-header "monday" [_]
+  (get-in @current-user ["monday" "api-token"]))
+
+(defn auth-middleware [platform]
+  (fn [next-handler]
+    (fn [req]
       (->
-        (assoc-in req [:headers "Authorization"] (str "Basic " auth-token))
+        (assoc-in req [:headers "Authorization"] (current-user->auth-header platform))
         (next-handler)))))
 
-(defn jira-user-middleware [next-handler]
-  (fn [req]
-    (let [user-id (->
-                    (:query-params req)
-                    (get "jwt")
-                    (get-jwt-payload)
-                    (get "sub"))]
-      (->>
-        (db/get-current-user
-          {:platform "jira"
-           :user-id user-id})
-        (reset! current-user)))
-    (next-handler req)))
-
-(defn monday-user-middleware [next-handler]
-  (fn [req]
-    (let [user-id (->
-                    (:query-params req)
-                    (get "sessionToken")
-                    (get-jwt-payload)
-                    (get-in ["dat" "user_id"]))]
-      (->>
-        (db/get-current-user
-          {:platform "monday"
-           :user-id user-id})
-        (reset! current-user)))
-    (next-handler req)))
+(defn identify-current-user-middleware [{:keys [platform path-to-jwt path-to-user-id]}]
+  (fn [next-handler]
+    (fn [req]
+      (let [user-id (->
+                      (:query-params req)
+                      (get-in path-to-jwt)
+                      (get-jwt-payload)
+                      (get-in path-to-user-id))]
+        (->>
+          (db/get-current-user
+            {:platform platform
+             :user-id user-id})
+          (reset! current-user)))
+      (next-handler req))))
 
 (defn current-user->monday-user-id []
   (get-in @current-user ["monday" "user-id"]))

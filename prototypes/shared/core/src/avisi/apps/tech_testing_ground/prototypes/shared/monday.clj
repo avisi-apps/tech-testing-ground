@@ -14,7 +14,7 @@
 
 (defn ^:private sent-query [query]
   (http/with-middleware
-    (conj clj-http.client/default-middleware current-user/monday-auth-middleware)
+    (conj clj-http.client/default-middleware (current-user/auth-middleware "monday"))
     (->
       (http/post
         api-url

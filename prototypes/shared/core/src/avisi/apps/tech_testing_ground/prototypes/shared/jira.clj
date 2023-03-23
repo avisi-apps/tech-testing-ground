@@ -2,11 +2,11 @@
   (:require
     [clj-http.client :as http]
     [clojure.data.json :as json]
-    [avisi.apps.tech-testing-ground.prototypes.shared.jwt :as jwt]))
+    [avisi.apps.tech-testing-ground.prototypes.shared.current-user :as current-user]))
 
 (def ^:private base-url "https://yabmas.atlassian.net")
 
-(def ^:private middleware (conj clj-http.client/default-middleware jwt/jira-auth-middleware))
+(def ^:private middleware (conj clj-http.client/default-middleware (current-user/auth-middleware "jira")))
 
 (def ^:private http-methods
   {:get http/get
