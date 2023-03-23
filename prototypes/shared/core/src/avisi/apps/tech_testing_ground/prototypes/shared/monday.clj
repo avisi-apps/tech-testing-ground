@@ -1,6 +1,7 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.monday
   (:require
     [avisi.apps.tech-testing-ground.prototypes.shared.current-user :as current-user]
+    [avisi.apps.tech-testing-ground.prototypes.shared.http-client :as http-client]
     [clojure.string :as str]
     [clj-http.client :as http]
     [clojure.data.json :as json]))
@@ -12,17 +13,15 @@
         date-obj (java.time.LocalDateTime/now)]
     {:date (.format formatter date-obj)}))
 
-(defn ^:private sent-query [query]
-  (http/with-middleware
-    (conj clj-http.client/default-middleware (current-user/auth-middleware "monday"))
-    (->
-      (http/post
-        api-url
-        {:headers {"Content-Type" "application/json"}
-         :body (json/write-str query)})
-      (:body)
-      (json/read-str :key-fn keyword)
-      (:data))))
+(def ^:private sent-query
+  (let [perform-request (http-client/perform-request-fn "monday")]
+    (fn [query]
+      (->
+        (perform-request
+          {:method :post
+           :url api-url
+           :body query})
+        (:data)))))
 
 (defn get-items-of-board [board-id]
   (->>

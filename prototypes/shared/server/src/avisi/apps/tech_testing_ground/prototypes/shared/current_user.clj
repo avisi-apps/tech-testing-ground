@@ -1,7 +1,8 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.current-user
   (:require
     [clojure.data.json :as json]
-    [avisi.apps.tech-testing-ground.prototypes.shared.database :as db])
+    [avisi.apps.tech-testing-ground.prototypes.shared.database :as db]
+    [avisi.apps.tech-testing-ground.prototypes.shared.http-client :as http-client])
   (:import
     java.util.Base64))
 
@@ -19,9 +20,7 @@
     (base64-decode)
     (json/read-str)))
 
-(defmulti ^:private current-user->auth-header identity)
-
-(defmethod ^:private current-user->auth-header "jira" [_]
+(defmethod ^:private http-client/auth-header "jira" [_]
   (let [email (get-in @current-user ["jira" "email"])
         api-token (get-in @current-user ["jira" "api-token"])
         auth-token (->>
@@ -29,15 +28,8 @@
                      (base64-encode))]
     (str "Basic " auth-token)))
 
-(defmethod ^:private current-user->auth-header "monday" [_]
+(defmethod ^:private http-client/auth-header "monday" [_]
   (get-in @current-user ["monday" "api-token"]))
-
-(defn auth-middleware [platform]
-  (fn [next-handler]
-    (fn [req]
-      (->
-        (assoc-in req [:headers "Authorization"] (current-user->auth-header platform))
-        (next-handler)))))
 
 (defn identify-current-user-middleware [{:keys [platform path-to-jwt path-to-user-id]}]
   (fn [next-handler]

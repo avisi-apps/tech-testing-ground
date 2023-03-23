@@ -1,29 +1,12 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.jira
   (:require
+    [avisi.apps.tech-testing-ground.prototypes.shared.http-client :as http-client]
     [clj-http.client :as http]
-    [clojure.data.json :as json]
-    [avisi.apps.tech-testing-ground.prototypes.shared.current-user :as current-user]))
+    [clojure.data.json :as json]))
 
 (def ^:private base-url "https://yabmas.atlassian.net")
 
-(def ^:private middleware (conj clj-http.client/default-middleware (current-user/auth-middleware "jira")))
-
-(def ^:private http-methods
-  {:get http/get
-   :post http/post
-   :put http/put
-   :delete http/delete})
-
-(defn ^:private perform-request [{:keys [method url body]}]
-  (let [request-fn (get http-methods method)
-        opts (cond-> {:headers {"Content-Type" "application/json"}} body (assoc :body (json/write-str body)))]
-    (http/with-middleware
-      middleware
-      (some->
-        (request-fn url opts)
-        (:body)
-        (json/read-str :key-fn keyword)))))
-
+(def ^:private perform-request (http-client/perform-request-fn "jira"))
 (defn get-items-of-board [board-id]
   ; The type of jira-project we're using always has a single board. Issues are found via the project-id instead of the
   ; id of the board they belong to. In our domain we work with the board-concept though and a project doesn't have any
@@ -68,6 +51,7 @@
       {:method :put
        :url (str base-url "/rest/api/2/issue/" key)
        :body body})))
+
 (defn update-item
   [{:item/keys [key summary description status]
     :as item}]
@@ -91,4 +75,4 @@
      :item/summary "New title"
      :item/description "My description"
      :item/status "Done"})
-  (delete-item {:item/key "EX-21"}))
+  (delete-item {:item/key "EX-14"}))
