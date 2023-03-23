@@ -1,4 +1,4 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.monday
+(ns avisi.apps.tech-testing-ground.prototypes.shared.monday-routes
   (:require
     [avisi.apps.tech-testing-ground.prototypes.shared.jwt :as jwt]
     [clj-http.client :as http]
@@ -8,5 +8,5 @@
 (defn routes [{:keys [item-view-handler]}]
   [["/monday-item-view"
     {:get
-     {:middleware [jwt/monday-user-middleware]
-      :handler item-view-handler}}]])
+       {:middleware [jwt/monday-user-middleware]
+        :handler item-view-handler}}]])

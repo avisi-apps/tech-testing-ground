@@ -1,7 +1,7 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.server
   (:require
     [avisi.apps.tech-testing-ground.prototypes.shared.atlassian-connect :as atlassian-connect]
-    [avisi.apps.tech-testing-ground.prototypes.shared.monday :as monday]
+    [avisi.apps.tech-testing-ground.prototypes.shared.monday-routes :as monday]
     [reitit.ring :as ring]
     ;[ring.adapter.jetty :as jetty]
     [ring.adapter.jetty9 :as jetty]
@@ -36,7 +36,6 @@
     (def _req request)
     (when (= (:uri request) "/monday-item-view") (def _mreq request))
     (when (= (:uri request) "/jira-item-view") (def _jreq request))
-
     (next-handler request)))
 
 (comment

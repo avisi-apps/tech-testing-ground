@@ -6,4 +6,5 @@
         com.hyperfiddle/rcf {:mvn/version "20220926-202227"}
         edn-query-language/eql-graphql {:mvn/version "2021.03.01"}
         edn-query-language/eql {:mvn/version "2021.02.28"}
+        buddy/buddy-core {:mvn/version "1.10.413"}
         }}
