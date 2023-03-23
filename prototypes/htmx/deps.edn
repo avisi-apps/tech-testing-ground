@@ -1,12 +1,11 @@
 {:paths ["src" "resources"]
  :deps {; internal deps
-        prototypes/shared-core {:local/root "../shared/core"}
-        prototypes/server {:local/root "../shared/server"}
+        prototypes/shared {:local/root "../shared"}
         ; html-templating
         hiccup/hiccup {:mvn/version "2.0.0-alpha2"}
         ; clojure-wrapper htmx
         ctmx/ctmx {:mvn/version "1.4.8"}
         ; dev-time state management
         mount/mount {:mvn/version "0.1.16"}}
- :aliases {:build {:deps {prototypes/build {:local/root "../shared/build"}}
+ :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.9.2" :git/sha "fe6b140"}}
                    :ns-default build}}}

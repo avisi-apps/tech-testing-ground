@@ -2,8 +2,7 @@
 ; https://github.com/hyperfiddle/electric-starter-app/blob/main/deps.edn
 {:paths ["src" "resources"]
  :deps {; internal deps
-        shared/core {:local/root "../shared/core"}
-        shared/server {:local/root "../shared/server"}
+        prototypes/shared {:local/root "../shared"}
         ; electric-start-app
         ch.qos.logback/logback-classic {:mvn/version "1.2.11"}
         com.hyperfiddle/electric {:mvn/version "v2-alpha-167-gbd475584"}
@@ -37,7 +36,7 @@
            {:extra-paths ["." "dev"]
             :ns-default build
             :extra-deps {thheller/shadow-cljs {:mvn/version "2.20.1"}
-                         prototypes/build {:local/root "../shared/build"}}
+                         io.github.clojure/tools.build {:git/tag "v0.9.2" :git/sha "fe6b140"}}
             :jvm-opts ["-Xss2m"
                        "-Dclojure.tools.logging.factory=clojure.tools.logging.impl/slf4j-factory"
                        "-Dlogback.configurationFile=src/logback.xml"]}}

@@ -1,7 +1,7 @@
 {:deps {:aliases [:dev]}
  :nrepl {:port 9001}
  :dev-http {8000 {:root "resources/public"}}
- :ssl {:keystore "../shared/server/ssl/keystore.jks"
+ :ssl {:keystore "../shared/ssl/keystore.jks"
        :password "changeit"}
  :builds {:dev {:target :browser
                 :devtools {:watch-dir "resources/public"    ; live reload CSS
