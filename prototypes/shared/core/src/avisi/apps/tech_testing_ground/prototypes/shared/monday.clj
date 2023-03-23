@@ -8,11 +8,6 @@
 
 (def ^:private api-url "https://api.monday.com/v2/")
 
-(defn ^:private current-date-monday-format []
-  (let [formatter (java.time.format.DateTimeFormatter/ofPattern "yyyy-MM-dd")
-        date-obj (java.time.LocalDateTime/now)]
-    {:date (.format formatter date-obj)}))
-
 (def ^:private sent-query
   (let [perform-request (http-client/perform-request-fn "monday")]
     (fn [query]
@@ -33,6 +28,11 @@
     (:items)))
 
 (def ^:private item-statuses ["Working on it" "Done" "Stuck"])
+
+(defn ^:private current-date-monday-format []
+  (let [formatter (java.time.format.DateTimeFormatter/ofPattern "yyyy-MM-dd")
+        date-obj (java.time.LocalDateTime/now)]
+    {:date (.format formatter date-obj)}))
 
 (defn add-item-to-board [board-id {:item/keys [name status]}]
   (let [column-values (json/write-str
@@ -58,10 +58,10 @@
         :item_id id
         :column_values column-values}})))
 
-(defn delete-item [item-id]
+(defn delete-item [{:item/keys [id]}]
   (sent-query
     {:query "mutation($item_id: Int) { delete_item(item_id: $item_id) { id }}"
-     :variables {:item_id item-id}}))
+     :variables {:item_id id}}))
 
 (comment
   (get-items-of-board 3990111892)
