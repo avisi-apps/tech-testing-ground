@@ -37,10 +37,6 @@
 (defn add-item-to-board [board-id {:item/keys [name status]}]
   (let [column-values (json/write-str
                         {:date4 (current-date-monday-format)
-                         :person
-                         {:personsAndTeams
-                          [{:id (current-user/current-user->monday-user-id)
-                            :kind "person"}]}
                          :status {:index (.indexOf item-statuses status)}})]
     (sent-query
       {:query
