@@ -1,28 +1,28 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.jwt
+(ns avisi.apps.tech-testing-ground.prototypes.shared.current-user
   (:require
     [clojure.data.json :as json]
     [avisi.apps.tech-testing-ground.prototypes.shared.database :as db])
   (:import
     java.util.Base64))
 
-(defonce current-user (atom nil))
+(defonce ^:private current-user (atom nil))
 
-(defn encode [to-encode] (.encodeToString (Base64/getEncoder) (.getBytes to-encode)))
+(defn ^:private base64-encode [to-encode] (.encodeToString (Base64/getEncoder) (.getBytes to-encode)))
 
-(defn decode [to-decode] (String. (.decode (Base64/getDecoder) to-decode)))
+(defn ^:private base64-decode [to-decode] (String. (.decode (Base64/getDecoder) to-decode)))
 
-(defn get-jwt-payload [jwt]
+(defn ^:private get-jwt-payload [jwt]
   (->
     jwt
     (clojure.string/split #"\.")
     (second)
-    (decode)
+    (base64-decode)
     (json/read-str)))
 
 (defn monday-auth-middleware [next-handler]
   (fn [req]
     (->
-      (assoc-in req [:headers "Authorization"] (get @current-user "monday-api-token"))
+      (assoc-in req [:headers "Authorization"] (get-in @current-user ["monday" "api-token"]))
       (next-handler))))
 
 (defn jira-auth-middleware [next-handler]
@@ -31,7 +31,7 @@
           api-token (get-in @current-user ["jira" "api-token"])
           auth-token (->>
                        (str email ":" api-token)
-                       (encode))]
+                       (base64-encode))]
       (->
         (assoc-in req [:headers "Authorization"] (str "Basic " auth-token))
         (next-handler)))))
@@ -64,4 +64,13 @@
         (reset! current-user)))
     (next-handler req)))
 
-(comment @current-user)
+(defn current-user->monday-user-id []
+  (get-in @current-user ["monday" "user-id"]))
+
+(comment
+
+  @current-user
+
+  (current-user->monday-user-id)
+
+  )

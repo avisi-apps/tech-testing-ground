@@ -24,38 +24,23 @@
         (:body)
         (json/read-str :key-fn keyword)))))
 
-(defn get-boards-of-user []
-  (->
-    (perform-request
-      {:method :get
-       :url (str base-url "/rest/agile/1.0/board")})
-    (:values)))
-
 (defn get-items-of-board [board-id]
+  ; The type of jira-project we're using always has a single board. Issues are found via the project-id instead of the
+  ; id of the board they belong to. In our domain we work with the board-concept though and a project doesn't have any
+  ; meaning, so we choose to expose the board-id in our function-signature. So the board-id in our application-domain
+  ; corresponds to the project-id in the jira-domain.
   (->
     (perform-request
       {:method :get
-       :url (str base-url "/rest/agile/1.0/board/" board-id "/issue")})
+       :url (str base-url "/rest/api/2/search?jql=project=" board-id)})
     (:issues)))
 
-(defn ^:private find-corresponding-project-id [board-id]
-  (->
-    (perform-request
-      {:method :get
-       :url (str base-url "/rest/agile/1.0/board/" board-id)})
-    (get-in [:location :projectId])))
-
 (defn add-item-to-board [board-id {:item/keys [summary description]}]
-  ; For the type of jira-project we're using an issue has to be added to a project which always has one board, so it's
-  ; automatically added to this board without further specifying it by id. In our domain
-  ; we work with the board-concept though and a project doesn't have any meaning, so we choose to expose the board-id in
-  ; our function-signature and have to translate it to a
-  ; project-id in the line below.
-  (let [project-id (find-corresponding-project-id board-id)
-        body {:fields
+  ; As with get-items the board-id in the function signature corresponds to the project-id in the jira-domain.
+  (let [body {:fields
               {:summary summary
                :description description
-               :project {:id project-id}
+               :project {:id board-id}
                :issuetype {:name "Task"}}
               :transition {:id "31"}}]
     (perform-request
@@ -95,10 +80,9 @@
      :url (str base-url "/rest/api/2/issue/" key)}))
 
 (comment
-  (get-boards-of-user)
-  (get-items-of-board 2)
+  (get-items-of-board 10001)
   (add-item-to-board
-    2
+    10001
     {:item/summary "An item"
      :item/description "Something that's already done"
      :item/status "Done"})

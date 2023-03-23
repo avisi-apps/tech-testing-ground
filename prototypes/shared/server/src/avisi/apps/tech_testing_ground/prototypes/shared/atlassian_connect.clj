@@ -1,6 +1,6 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.atlassian-connect
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.jwt :as jwt]))
+    [avisi.apps.tech-testing-ground.prototypes.shared.current-user :as current-user]))
 
 (def descriptor
   (let [base-url "https://jaamaask.eu.ngrok.io"]
@@ -52,7 +52,7 @@
              :body "Temporary lifecycle dummy-response"})}}]
    ["/jira-item-view"
     {:get
-       {:middleware [jwt/jira-user-middleware]
+       {:middleware [current-user/jira-user-middleware]
         :handler item-view-handler}}]
    #_["/atlassian/jira/modules/issue-panel"
       {:get
