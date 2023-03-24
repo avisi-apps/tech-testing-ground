@@ -1,6 +1,8 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.atlassian-connect
+(ns avisi.apps.tech-testing-ground.prototypes.shared.jira-routes
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.current-user :as current-user]))
+    [avisi.apps.tech-testing-ground.prototypes.shared.current-user :as current-user]
+    [avisi.apps.tech-testing-ground.prototypes.shared.jira-webhooks :as jira-webhooks]
+    ))
 
 (def descriptor
   (let [base-url "https://jaamaask.eu.ngrok.io"]
@@ -19,7 +21,14 @@
      :enableLicensing false
      :scopes ["read" "write" "delete" "act_as_user"]
      :modules
-     {:jiraIssueGlances
+     {:webhooks
+      [{:event "jira:issue_created"
+        :url "/atlassian/jira/webhooks/issue_created"}
+       {:event "jira:issue_updated"
+        :url "/atlassian/jira/webhooks/issue_updated"}
+       {:event "jira:issue_deleted"
+        :url "/atlassian/jira/webhooks/issue_deleted"}]
+      :jiraIssueGlances
       [{:name {:value "JiraMondaySync"}
         :icon
         {:width 24
@@ -34,14 +43,7 @@
          :url "/jira-item-view"}}]}}))
 
 (defn routes [{:keys [item-view-handler]}]
-  [["/atlassian/jira/atlassian-connect.json"
-    {:get
-     {:handler
-      (fn [_]
-        {:status 200
-         :headers {"content-type" "application/json"}
-         :body descriptor})}}]
-   ["/atlassian/lifecycle/:lifecycle"
+  [["/atlassian/lifecycle/:lifecycle"
     {:post
      {:parameters {:body map?}
       :handler
@@ -50,6 +52,25 @@
         {:status 200
          :headers {"Content-Type" "text/plain"}
          :body "Temporary lifecycle dummy-response"})}}]
+   ["/atlassian/jira"
+    [["/atlassian-connect.json"
+      {:get
+       {:handler
+        (fn [_]
+          {:status 200
+           :headers {"content-type" "application/json"}
+           :body descriptor})}}]
+     ["/webhooks"
+      ["/issue_created"
+       {:post
+        {:handler jira-webhooks/issue-created-handler}}]
+      ["/issue_updated"
+       {:post
+        {:handler jira-webhooks/issue-updated-handler}}]
+      ["/issue_deleted"
+       {:post
+        {:handler jira-webhooks/issue-deleted-handler}}]]]]
+
    ["/jira-item-view"
     {:get
      {:middleware [(current-user/identify-current-user-middleware {:platform "jira"

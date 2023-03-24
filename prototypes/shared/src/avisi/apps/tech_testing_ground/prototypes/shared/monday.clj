@@ -35,9 +35,10 @@
     {:date (.format formatter date-obj)}))
 
 (defn add-item-to-board [board-id {:item/keys [name status]}]
-  (let [column-values (json/write-str
-                        {:date4 (current-date-monday-format)
-                         :status {:index (.indexOf item-statuses status)}})]
+  (let [status-index (.indexOf item-statuses status)
+        column-values (json/write-str
+                        (cond-> {:date4 (current-date-monday-format)}
+                          (< -1 status-index) (assoc :status {:index status-index})))]
     (sent-query
       {:query
        "mutation ($board_id: Int!, $item_name: String, $column_values: JSON) { create_item(board_id: $board_id, item_name: $item_name, column_values: $column_values){ id }}"
@@ -46,7 +47,8 @@
         :item_name name
         :column_values column-values}})))
 
-(defn update-item [board-id {:item/keys [id name status]}]
+(defn update-item [board-id {:item/keys [id name status] :as item}]
+  (def _i item)
   (let [column-values (json/write-str
                         {:name name
                          :status {:label status}})]

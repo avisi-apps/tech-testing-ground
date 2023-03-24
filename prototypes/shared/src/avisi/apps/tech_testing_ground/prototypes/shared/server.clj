@@ -1,6 +1,6 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.server
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.atlassian-connect :as atlassian-connect]
+    [avisi.apps.tech-testing-ground.prototypes.shared.jira-routes :as atlassian-connect]
     [avisi.apps.tech-testing-ground.prototypes.shared.monday-routes :as monday]
     [reitit.ring :as ring]
     ;[ring.adapter.jetty :as jetty]
