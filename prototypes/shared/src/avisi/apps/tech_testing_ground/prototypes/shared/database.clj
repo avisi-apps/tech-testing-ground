@@ -16,47 +16,30 @@
     (vals)
     (first)))
 
-(def item-link-firestore-schema
-  [:map
-   ["jira-item-id" string?]
-   ["monday-item-id" int?]])
-(def firestore-board-link-schema
-  [:map
-   ["item-links"
-    [:vector {:decode/json (fn [v] (mapv #(into {} %) v))}
-     item-link-firestore-schema]]
-   ["jira"
-    [:map {:decode/json (fn [v] (into {} v))}
-     [:board-id int?]]]
-   ["monday"
-    [:map {:decode/json (fn [v] (into {} v))}
-     [:board-id int?]]]])
-
-(def item-link-schema
-  [:map
-   [:jira-item-id string?]
-   [:monday-item-id int?]])
-
 (def board-link-schema
   [:map
-   [:item-links
-    [:vector item-link-schema]]
+   [:id string?]
    [:jira
-    [:map
+    [:map {:decode/json (fn [v] (into {} v))}
      [:board-id int?]]]
    [:monday
-    [:map
+    [:map {:decode/json (fn [v] (into {} v))}
      [:board-id int?]]]])
+
 (defn get-board-link [{:keys [platform board-id]}]
   (as-> (->> (->
                (f/coll db "board-links")
-               (f/filter= (str "jira" ".board-id") 10001)
+               (f/filter= (str platform "-board-id") board-id)
                (f/pull))
           (map (fn [[k v]] (assoc v :id k)))
           (first)) board-link
-    ; map-values get returned as java-hashmaps, so they need to be converted to clj-maps. This is most likely a bug in the firestore-clj lib, will look into contributing a fix later but this will do for now.
-    (m/decode firestore-board-link-schema board-link mt/json-transformer)
     (m/decode board-link-schema board-link (mt/key-transformer {:decode keyword}))))
+
+(comment
+  (get-board-link
+    {:platform "jira"
+     :board-id 10001})
+  )
 
 (defn update-board-link [{:keys [id] :as board-link}]
   (let [board-link (m/encode board-link-schema board-link (mt/key-transformer {:encode name}))]
@@ -64,15 +47,60 @@
       (f/doc db (str "board-links/" id))
       (f/set! board-link))))
 
-(comment
+(def item-link-schema
+  [:map
+   [:board-link-id string?]
+   [:jira-item-id string?]
+   [:monday-item-id int?]])
 
-  (->
-    (m/encode board-link-schema _bl (mt/key-transformer {:encode name}))
-    ;(get "jira")
-    ;(class)
-    )
+(defn encode-item-link [item-link]
+  (m/encode item-link-schema item-link (mt/transformer
+                                         (mt/key-transformer {:encode name})
+                                         mt/string-transformer)))
+
+(comment
+  (encode-item-link {:board-link "123AB"
+                     :jira-item-id "456CD"
+                     :monday-item-id 123})
+
+  (decode-item-link {:board-link "123AB"
+                     :jira-item-id "456CD"
+                     :monday-item-id "123"})
 
   )
+
+(defn decode-item-link [item-link]
+  (m/decode item-link-schema item-link (mt/transformer
+                                         (mt/key-transformer {:decode keyword})
+                                         mt/string-transformer)))
+
+(defn create-item-link [{:keys [board-link-id
+                                jira-item-id
+                                monday-item-id]}]
+  (let [item-link (->> {:board-link-id board-link-id
+                        :jira-item-id jira-item-id
+                        :monday-item-id monday-item-id}
+                    (encode-item-link))]
+    (-> db
+      (f/coll "item-links")
+      (f/add! item-link))))
+
+(defn get-item-link [{:keys [board-link-id
+                             jira-item-id
+                             monday-item-id]}]
+  (let [filter (cond-> {"board-link-id" board-link-id}
+                 jira-item-id (assoc "jira-item-id" jira-item-id)
+                 monday-item-id (assoc "monday-item-id" monday-item-id))]
+    (let [[document-id item-link] (-> db
+                                    (f/coll "item-links")
+                                    (f/filter= filter)
+                                    (f/pull)
+                                    (first))]
+      (->
+        item-link
+        (assoc :id document-id)
+        (decode-item-link)))))
+
 
 (comment
   (get-current-user
@@ -80,10 +108,20 @@
      :user-id 36052059})
   (get-current-user
     {:platform "jira"
-     :user-id "630c7cca56010c40d4461641"})
+     :user-id "630c7cca56010c40d4461641"}))
+
+(comment
   (get-board-link
     {:platform "jira"
      :board-id 10001})
   (get-board-link
     {:platform "monday"
      :board-id 3990111892}))
+(comment
+  (create-item-link {:board-link-id 123
+                     :monday-item-id 456
+                     :jira-item-id 789})
+  (get-item-link {:board-link-id 123
+                  :monday-item-id 456})
+  (get-item-link {:board-link-id "hxet7w2KeklGVguP9R3q"
+                  :jira-item-id "EX-69"}))
