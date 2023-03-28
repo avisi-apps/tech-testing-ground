@@ -11,4 +11,7 @@
         ; state-mangement
         mount/mount {:mvn/version "0.1.17"}
         ;domain mapping
-        metosin/malli {:mvn/version "0.9.2"}}}
+        metosin/malli {:mvn/version "0.9.2"}
+        ; in-memory-db
+        datascript/datascript {:mvn/version "1.4.0"}
+        }}

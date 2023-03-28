@@ -33,6 +33,7 @@
   (let [{:keys [board-link-id]} (req->board-link req)
         {jira-item-id :item/id} (req->item req)]
     (db/get-item-link {:board-link-id board-link-id :jira-item-id jira-item-id})))
+
 (comment
 
   (req->item _ic-req)
