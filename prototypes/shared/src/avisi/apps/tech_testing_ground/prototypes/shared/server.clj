@@ -10,7 +10,7 @@
     [ring.middleware.content-type :refer [wrap-content-type]]
     [muuntaja.core :as muuntaja]
     [muuntaja.middleware :as middleware]
-    [mount.core :as mount :refer [defstate]]))
+    [mount.core :as mount :refer [defstate]] ))
 
 (def not-found-response
   {:status 404

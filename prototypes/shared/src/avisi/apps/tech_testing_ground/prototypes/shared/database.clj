@@ -31,7 +31,7 @@
                (f/coll db "board-links")
                (f/filter= (str platform "-board-id") board-id)
                (f/pull))
-          (map (fn [[k v]] (assoc v :id k)))
+          (map (fn [[k v]] (assoc v :board-link-id k)))
           (first)) board-link
     (m/decode board-link-schema board-link (mt/key-transformer {:decode keyword}))))
 
@@ -87,20 +87,26 @@
 
 (defn get-item-link [{:keys [board-link-id
                              jira-item-id
-                             monday-item-id]}]
+                             monday-item-id] :as item}]
+  (def _i item)
   (let [filter (cond-> {"board-link-id" board-link-id}
                  jira-item-id (assoc "jira-item-id" jira-item-id)
-                 monday-item-id (assoc "monday-item-id" monday-item-id))]
-    (let [[document-id item-link] (-> db
+                 ; TODO: fix id conversion with schema
+                 monday-item-id (assoc "monday-item-id" (str monday-item-id)))]
+    (when-let [[document-id item-link] (-> db
                                     (f/coll "item-links")
                                     (f/filter= filter)
                                     (f/pull)
                                     (first))]
       (->
         item-link
-        (assoc :id document-id)
+        (assoc :item-link-id document-id)
         (decode-item-link)))))
 
+(defn delete-item-link [{:keys [item-link-id]}]
+  (-> db
+    (f/doc (str "item-links/" item-link-id))
+    (f/delete!)))
 
 (comment
   (get-current-user
@@ -124,4 +130,5 @@
   (get-item-link {:board-link-id 123
                   :monday-item-id 456})
   (get-item-link {:board-link-id "hxet7w2KeklGVguP9R3q"
-                  :jira-item-id "EX-69"}))
+                  :jira-item-id "EX-69"})
+  (delete-item-link {:item-link-id "Zargf93gtvZUxrfWJ8iB"}))

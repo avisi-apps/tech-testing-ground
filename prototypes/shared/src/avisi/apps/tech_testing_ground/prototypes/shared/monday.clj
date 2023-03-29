@@ -1,10 +1,45 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.monday
   (:require
     [avisi.apps.tech-testing-ground.prototypes.shared.current-user :as current-user]
+    [avisi.apps.tech-testing-ground.prototypes.shared.domain :as domain]
     [avisi.apps.tech-testing-ground.prototypes.shared.http-client :as http-client]
     [clojure.string :as str]
     [clj-http.client :as http]
     [clojure.data.json :as json]))
+
+
+(defonce last-created (atom nil))
+(defonce last-updated (atom nil))
+(defonce last-deleted (atom nil))
+
+(defn set-last-created [item]
+  (reset! last-created item))
+
+(defn set-last-updated [item]
+  (reset! last-updated item))
+(defn set-last-deleted [item]
+  (reset! last-deleted item))
+(defn last-created? [board-id {:item/keys [title] :as item}]
+  (= (:item/title @last-created) title))
+
+(defn last-updated? [board-id {:item/keys [title status] :as item}]
+  (=
+    (and @last-updated
+      (select-keys @last-updated [:item/title :item/status])) (select-keys item [:item/title :item/status])))
+
+(defn last-deleted? [board-id {:item/keys [id] :as item}]
+  (= (select-keys @last-deleted [:item/id]) (select-keys item [:item/id])))
+
+(comment
+
+  (=
+    (and @last-updated
+      (select-keys @last-updated [:item/title :item/status])) (select-keys _i [:item/title :item/status]))
+
+  @last-created
+  @last-updated
+  @last-deleted
+  )
 
 (def ^:private api-url "https://api.monday.com/v2/")
 
@@ -27,6 +62,14 @@
     (first)
     (:items)))
 
+(defn get-items-by-filter [board-id {:item/keys [title]}]
+  (->>
+    (sent-query
+      {:query "query ($board_id: Int!, $item_name: String!) {items_by_column_values (board_id: $board_id, column_id: \"name\", column_value: $item_name) {id}}"
+       :variables {:board_id board-id
+                   :item_name title}})
+    (:items_by_column_values)))
+
 (def ^:private item-statuses ["Working on it" "Done" "Stuck"])
 
 (defn ^:private current-date-monday-format []
@@ -34,7 +77,7 @@
         date-obj (java.time.LocalDateTime/now)]
     {:date (.format formatter date-obj)}))
 
-(defn add-item-to-board [board-id {:item/keys [name status]}]
+(defn add-item-to-board [board-id {:item/keys [title status]}]
   (let [status-index (.indexOf item-statuses status)
         column-values (json/write-str
                         (cond-> {:date4 (current-date-monday-format)}
@@ -44,11 +87,12 @@
        "mutation ($board_id: Int!, $item_name: String, $column_values: JSON) { create_item(board_id: $board_id, item_name: $item_name, column_values: $column_values){ id }}"
        :variables
        {:board_id board-id
-        :item_name name
+        :item_name title
         :column_values column-values}})))
 
-(defn update-item [board-id {:item/keys [id name status] :as item}]
-  (let [column-values (json/write-str
+(defn update-item [board-id item]
+  (let [{:item/keys [id name status]} (domain/domain-item->monday-item item)
+        column-values (json/write-str
                         {:name name
                          :status {:label status}})]
     (sent-query
@@ -66,13 +110,14 @@
 
 (comment
   (get-items-of-board 3990111892)
-  (add-item-to-board 3990111892 {:item/name "from the repl"
+  (get-items-by-filter 3990111892 {:item/title "from monday"})
+  (add-item-to-board 3990111892 {:item/title "from the repl"
                                  :item/status "Stuck"})
   (delete-item 4180594831)
   (update-item
     3990111892
     {:item/id 4182971841
-     :item/name "New repl name!!"
+     :item/title "New repl name!!"
      :item/status "Stuck"}))
 
 (comment

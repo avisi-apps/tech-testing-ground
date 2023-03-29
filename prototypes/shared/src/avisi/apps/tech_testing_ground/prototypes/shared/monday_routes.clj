@@ -1,5 +1,6 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.monday-routes
   (:require
+    [avisi.apps.tech-testing-ground.prototypes.shared.monday-webhooks :as monday-webhooks]
     [avisi.apps.tech-testing-ground.prototypes.shared.current-user :as current-user]))
 
 (defn routes [{:keys [item-view-handler]}]
@@ -8,4 +9,8 @@
      {:middleware [(current-user/identify-current-user-middleware {:platform "monday"
                                                                    :path-to-jwt ["sessionToken"]
                                                                    :path-to-user-id ["dat" "user_id"]})]
-      :handler item-view-handler}}]])
+      :handler item-view-handler}}]
+   ["/monday"
+    ["/webhooks"
+     {:post
+      {:handler monday-webhooks/webhook-handler}}]]])
