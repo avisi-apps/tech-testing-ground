@@ -73,14 +73,13 @@
     (monday/set-last-created domain-item)
 
     (when-not (jira/last-created? jira-board-id domain-item)
-      (when-let [{jira-item-id :key} (jira/add-item-to-board jira-board-id domain-item)]
-        (when-not (db/get-item-link {:board-link-id board-link-id
-                                     :jira-item-id jira-item-id
-                                     :monday-item-id monday-item-id})
-          (db/create-item-link {:board-link-id board-link-id
-                                :jira-item-id jira-item-id
-                                :monday-item-id monday-item-id}))))
-    {:status 200}))
+      (when-let [{jira-item-id :item/id} (jira/add-item-to-board jira-board-id domain-item)]
+        (let [item-link {:board-link-id board-link-id
+                         :jira-item-id jira-item-id
+                         :monday-item-id monday-item-id}]
+          (when-not (db/get-item-link item-link)
+            (db/create-item-link item-link))))
+      {:status 200})))
 
 ; status updated
 (defmethod webhook-handler "update_column_value" [req]
@@ -118,8 +117,6 @@
 
     {:status 200}))
 
-
-
 ; item deleted
 (defmethod webhook-handler "delete_pulse" [req]
   (def _id-req req)
@@ -132,18 +129,3 @@
       (db/delete-item-link item-link))
 
     {:status 200}))
-
-(comment
-
-  (let [req _id-req]
-
-    (let [{:keys [jira-item-id] :as item-link} (webhook-req->item-link req)
-        domain-item {:item/id jira-item-id}]
-
-    (when jira-item-id
-      (jira/delete-item domain-item)
-      #_(db/delete-item-link item-link))
-
-    ))
-
-  )

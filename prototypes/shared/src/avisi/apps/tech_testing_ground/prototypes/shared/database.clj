@@ -88,7 +88,6 @@
 (defn get-item-link [{:keys [board-link-id
                              jira-item-id
                              monday-item-id] :as item}]
-  (def _i item)
   (let [filter (cond-> {"board-link-id" board-link-id}
                  jira-item-id (assoc "jira-item-id" jira-item-id)
                  ; TODO: fix id conversion with schema

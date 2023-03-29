@@ -51,13 +51,13 @@
     (jira/set-last-created domain-item)
 
     (when-not (monday/last-created? monday-board-id domain-item)
-      (when-let [{{monday-item-id :id} :create_item} (monday/add-item-to-board monday-board-id domain-item)]
-        (when-not (db/get-item-link {:board-link-id board-link-id
-                                     :jira-item-id jira-item-id
-                                     :monday-item-id monday-item-id})
-          (db/create-item-link {:board-link-id board-link-id
-                                :jira-item-id jira-item-id
-                                :monday-item-id monday-item-id}))))
+      (when-let [{monday-item-id :item/id} (monday/add-item-to-board monday-board-id domain-item)]
+        (let [item-link {:board-link-id board-link-id
+                         :jira-item-id jira-item-id
+                         :monday-item-id monday-item-id}]
+          (when-not (db/get-item-link item-link)
+            (db/create-item-link item-link)))))
+
     {:status 200}))
 
 (defn issue-updated-handler [req]
@@ -111,11 +111,10 @@
       #_(jira/set-last-deleted jira-issue)
 
       #_(when-not (monday/last-deleted? "onzin" monday-item)
-        (monday/delete-item monday-item))
+          (monday/delete-item monday-item))
 
       )
 
     )
-
 
   )

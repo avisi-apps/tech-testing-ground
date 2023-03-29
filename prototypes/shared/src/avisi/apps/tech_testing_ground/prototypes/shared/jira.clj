@@ -8,15 +8,13 @@
 
 (defonce last-created (atom nil))
 (defonce last-updated (atom nil))
-(defonce last-deleted (atom nil))
 
 (defn set-last-created [item]
   (reset! last-created item))
 
 (defn set-last-updated [item]
   (reset! last-updated item))
-(defn set-last-deleted [item]
-  (reset! last-deleted item))
+
 (defn last-created? [board-id {:item/keys [title] :as item}]
   (= (:item/title @last-created) title))
 
@@ -28,19 +26,7 @@
 
   @last-created
   @last-updated
-  @last-deleted
 
-  )
-(defn last-deleted? [board-id {:item/keys [id] :as item}]
-  (= (select-keys @last-deleted [:id]) (select-keys item [:id])))
-(comment
-
-  (last-created? 10001 {:item/title "another item"})
-
-  @last-created
-  @last-updated
-
-  (reset! last-created nil)
   )
 
 (def ^:private base-url "https://yabmas.atlassian.net")
@@ -80,17 +66,20 @@
 
 
 (defn add-item-to-board [board-id {:item/keys [title description] :as item}]
-  (reset! last-created {:item/title title})
   ; As with get-items the board-id in the function signature corresponds to the project-id in the jira-domain.
   (let [body {:fields
               {:summary title
                :description description
                :project {:id board-id}
                :issuetype {:name "Task"}}}]
-    (perform-request
-      {:method :post
-       :url (str base-url "/rest/api/2/issue")
-       :body body})))
+    (let [{:keys [key]}
+          (perform-request
+            {:method :post
+             :url (str base-url "/rest/api/2/issue")
+             :body body})]
+      (->
+        {:issue/key key :issue/summary title :issue/description description}
+        (domain/jira-issue->domain-item)))))
 
 (def ^:private transitions
   {"To Do" "11"
@@ -122,7 +111,6 @@
 
 (defn delete-item [{:item/keys [id] :as item}]
   (let [{:issue/keys [key]} (domain/domain-item->jira-issue item)]
-    (prn key)
     (perform-request
       {:method :delete
        :url (str base-url "/rest/api/2/issue/" key)})))

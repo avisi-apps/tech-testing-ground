@@ -121,12 +121,12 @@
   (mt/key-transformer
     {:encode (map-fn-passthrough domain-item-keys->jira-item-keys)
      :decode (map-fn-passthrough (set/map-invert domain-item-keys->jira-item-keys))}))
-(defn jira-issue->domain-item [jira-issue]
-  (as-> jira-issue item
-    (m/decode item-schema item (mt/transformer
-                                 jira-key-transformer
-                                 mt/strip-extra-keys-transformer))
-    (update item :item/status (map-fn (set/map-invert domain-item-status->jira-item-status)))))
+(defn jira-issue->domain-item [{:keys [status] :as jira-issue}]
+  (cond->
+    (m/decode item-schema jira-issue (mt/transformer
+                                       jira-key-transformer
+                                       mt/strip-extra-keys-transformer))
+    status (update :item/status (map-fn (set/map-invert domain-item-status->jira-item-status)))))
 
 (defn domain-item->jira-issue [domain-item]
   (as-> domain-item item

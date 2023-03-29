@@ -10,15 +10,13 @@
 
 (defonce last-created (atom nil))
 (defonce last-updated (atom nil))
-(defonce last-deleted (atom nil))
 
 (defn set-last-created [item]
   (reset! last-created item))
 
 (defn set-last-updated [item]
   (reset! last-updated item))
-(defn set-last-deleted [item]
-  (reset! last-deleted item))
+
 (defn last-created? [board-id {:item/keys [title] :as item}]
   (= (:item/title @last-created) title))
 
@@ -27,18 +25,11 @@
     (and @last-updated
       (select-keys @last-updated [:item/title :item/status])) (select-keys item [:item/title :item/status])))
 
-(defn last-deleted? [board-id {:item/keys [id] :as item}]
-  (= (select-keys @last-deleted [:item/id]) (select-keys item [:item/id])))
-
 (comment
-
-  (=
-    (and @last-updated
-      (select-keys @last-updated [:item/title :item/status])) (select-keys _i [:item/title :item/status]))
 
   @last-created
   @last-updated
-  @last-deleted
+
   )
 
 (def ^:private api-url "https://api.monday.com/v2/")
@@ -82,13 +73,17 @@
         column-values (json/write-str
                         (cond-> {:date4 (current-date-monday-format)}
                           (< -1 status-index) (assoc :status {:index status-index})))]
-    (sent-query
-      {:query
-       "mutation ($board_id: Int!, $item_name: String, $column_values: JSON) { create_item(board_id: $board_id, item_name: $item_name, column_values: $column_values){ id }}"
-       :variables
-       {:board_id board-id
-        :item_name title
-        :column_values column-values}})))
+    (let [{{:keys [id]} :create_item}
+          (sent-query
+            {:query
+             "mutation ($board_id: Int!, $item_name: String, $column_values: JSON) { create_item(board_id: $board_id, item_name: $item_name, column_values: $column_values){ id }}"
+             :variables
+             {:board_id board-id
+              :item_name title
+              :column_values column-values}})]
+      (->
+        {:item/id id :item/name title :item/status status}
+        (domain/monday-item->domain-item)))))
 
 (defn update-item [board-id item]
   (let [{:item/keys [id name status]} (domain/domain-item->monday-item item)
