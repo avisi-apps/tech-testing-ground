@@ -4,6 +4,7 @@
     [avisi.apps.tech-testing-ground.prototypes.shared.jira :as jira]
     [avisi.apps.tech-testing-ground.prototypes.shared.monday :as monday]
     [avisi.apps.tech-testing-ground.prototypes.shared.domain :as domain]
+    [avisi.apps.tech-testing-ground.prototypes.shared.boards :as boards]
     [clojure.edn :as edn]))
 
 (def path-to-project-id [:body-params :issue :fields :project :id])
@@ -51,7 +52,9 @@
     (jira/set-last-created domain-item)
 
     (when-not (monday/last-created? monday-board-id domain-item)
-      (when-let [{monday-item-id :item/id} (monday/add-item-to-board monday-board-id domain-item)]
+      (when-let [{monday-item-id :item/id} (-> monday-board-id
+                                             (boards/new-monday-board)
+                                             (boards/add-item domain-item))]
         (let [item-link {:board-link-id board-link-id
                          :jira-item-id jira-item-id
                          :monday-item-id monday-item-id}]
@@ -73,48 +76,23 @@
     (jira/set-last-updated domain-item)
 
     (when-not (monday/last-updated? monday-board-id domain-item)
-      (monday/update-item monday-board-id domain-item))
-    {:status 200}))
+      (-> monday-board-id
+        (boards/new-monday-board)
+        (boards/update-item domain-item))))
 
-(comment
-
-  (webhook-req->jira-issue _iu-req)
-
-  )
+  {:status 200})
 
 (defn issue-deleted-handler [req]
   (def _id-req req)
 
-  (let [{:keys [monday-item-id] :as item-link} (req->item-link req)
+  (let [{:keys [monday-board-id]} (req->board-link req)
+        {:keys [monday-item-id] :as item-link} (req->item-link req)
         domain-item {:item/id monday-item-id}]
 
     (when monday-item-id
-      (monday/delete-item domain-item)
+      (-> monday-board-id
+        (boards/new-monday-board)
+        (boards/delete-item domain-item))
       (db/delete-item-link item-link))
 
     {:status 200}))
-
-(comment
-
-  (req->item-link _id-req)
-
-  (webhook-req->jira-issue _id-req)
-
-  (let [req _id-req]
-
-    (let [{:keys [monday-item-id]} (req->item-link req)
-          jira-issue (webhook-req->jira-issue req)
-          monday-item {:item/id monday-item-id}]
-
-      monday-item
-      (req->item-link req)
-      #_(jira/set-last-deleted jira-issue)
-
-      #_(when-not (monday/last-deleted? "onzin" monday-item)
-          (monday/delete-item monday-item))
-
-      )
-
-    )
-
-  )

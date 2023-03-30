@@ -1,6 +1,5 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.jira
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.domain :as domain]
     [avisi.apps.tech-testing-ground.prototypes.shared.http-client :as http-client]
     [clj-http.client :as http]
     [clojure.data.json :as json]
@@ -40,92 +39,105 @@
      :item/description description
      :item/status name}))
 
-(defn get-items-of-board [board-id]
+
+(def path-to-issue-key [:key])
+(def path-to-summary [:fields :summary])
+(def path-to-status [:fields :status :name])
+(def path-to-description [:fields :description])
+
+(defn get-items [board-id]
   ; The type of jira-project we're using always has a single board. Issues are found via the project-id instead of the
   ; id of the board they belong to. In our domain we work with the board-concept though and a project doesn't have any
   ; meaning, so we choose to expose the board-id in our function-signature. So the board-id in our application-domain
   ; corresponds to the project-id in the jira-domain.
-  (->
+  (->>
     (perform-request
       {:method :get
        :url (str base-url "/rest/api/2/search?jql=project=" board-id)})
-    (:issues)))
+    (:issues)
+    (mapv (fn [res]
+            {:issue/key (get-in res path-to-issue-key)
+             :issue/summary (get-in res path-to-summary)
+             :issue/status (get-in res path-to-status)
+             :issue/description (get-in res path-to-description)}))))
 
-(defn ^:private get-item-by-id [{:item/keys [key]}]
+(defn ^:private get-item-by-id [{:issue/keys [key]}]
   (-> (perform-request
         {:method :get
          :url (str base-url "/rest/api/2/issue/" key)})
     (res->item)))
 
-(defn ^:private get-item-by-filters [board-id {:item/keys [title]}]
-  (let [jql-string (codec/url-encode (str "project = " board-id " AND summary ~ " (str "\"" title "" \")))]
+(defn ^:private get-item-by-filters [board-id {:issue/keys [summary]}]
+  (let [jql-string (codec/url-encode (str "project = " board-id " AND summary ~ " (str "\"" summary "" \")))]
     (-> (perform-request
           {:method :get
            :url (str base-url (str "/rest/api/2/search?jql=" jql-string))})
       #_(res->item))))
 
 
-(defn add-item-to-board [board-id {:item/keys [title description] :as item}]
+(defn add-item [board-id {:issue/keys [summary description]}]
   ; As with get-items the board-id in the function signature corresponds to the project-id in the jira-domain.
   (let [body {:fields
-              {:summary title
+              {:summary summary
                :description description
                :project {:id board-id}
-               :issuetype {:name "Task"}}}]
-    (let [{:keys [key]}
-          (perform-request
-            {:method :post
-             :url (str base-url "/rest/api/2/issue")
-             :body body})]
-      (->
-        {:issue/key key :issue/summary title :issue/description description}
-        (domain/jira-issue->domain-item)))))
+               :issuetype {:name "Task"}}}
+        {:keys [key]} (perform-request
+                        {:method :post
+                         :url (str base-url "/rest/api/2/issue")
+                         :body body})]
+    {:issue/key key :issue/summary summary :issue/description description}))
 
 (def ^:private transitions
   {"To Do" "11"
    "In Progress" "21"
    "Done" "31"})
 
-(defn ^:private transition-status-of-item [{:item/keys [id status]}]
+(defn ^:private transition-status-of-item [{:issue/keys [key status]}]
   (let [body {:transition {:id (get transitions status "11")}}]
     (perform-request
       {:method :post
-       :url (str base-url "/rest/api/2/issue/" id "/transitions")
+       :url (str base-url "/rest/api/2/issue/" key "/transitions")
        :body body})))
 
-(defn ^:private update-fields-of-item [{:item/keys [id title description]}]
-  (let [body {:fields {:summary title
+(defn ^:private update-fields-of-item [{:issue/keys [key summary description]}]
+  (let [body {:fields {:summary summary
                        :description description}}]
     (perform-request
       {:method :put
-       :url (str base-url "/rest/api/2/issue/" id)
+       :url (str base-url "/rest/api/2/issue/" key)
        :body body})))
 
 (defn update-item
-  [{:item/keys [id title description status]
-    :as item}]
-  (when title
-    (update-fields-of-item item))
+  [_ {:issue/keys [key summary description status]
+      :as issue}]
+  (when summary
+    (update-fields-of-item issue))
   (when status
-    (transition-status-of-item item)))
+    (transition-status-of-item issue))
+  {:issue/key key
+   :issue/summary summary
+   :issue/description description
+   :issue/status status})
 
-(defn delete-item [{:item/keys [id] :as item}]
-  (let [{:issue/keys [key]} (domain/domain-item->jira-issue item)]
-    (perform-request
-      {:method :delete
-       :url (str base-url "/rest/api/2/issue/" key)})))
+(defn delete-item [_ {:issue/keys [key]}]
+  (perform-request
+    {:method :delete
+     :url (str base-url "/rest/api/2/issue/" key)})
+  {:issue/key key})
 
 (comment
-  (get-items-of-board 10001)
+  (get-items 10001)
   (get-item-by-id {:item/key "EX-76"})
-  (add-item-to-board
+  (add-item
     10001
-    {:item/title "An item"
-     :item/description "Something that's already done"
-     :item/status "Done"})
+    {:issue/summary "An item"
+     :issue/description "Something that's already done"
+     :issue/status "Done"})
   (update-item
-    {:item/key "EX-76"
-     :item/summary "New title"
-     :item/description "My description"
-     :item/status "Done"})
-  (delete-item {:item/key "EX-14"}))
+    10001
+    {:issue/key "EX-237"
+     :issue/summary "New title"
+     :issue/description "My description"
+     :issue/status "Done"})
+  (delete-item 10001 {:issue/key "EX-235"}))

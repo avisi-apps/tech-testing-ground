@@ -44,14 +44,16 @@
            :body query})
         (:data)))))
 
-(defn get-items-of-board [board-id]
+(defn get-items [board-id]
   (->>
     (sent-query
-      {:query "query ($board_id: Int) {boards (ids: [$board_id]) {items {id name}}}"
+      {:query "query ($board_id: Int) {boards (ids: [$board_id]) {items {id name column_values(ids: \"status\") {text}}}}"
        :variables {:board_id board-id}})
     (:boards)
     (first)
-    (:items)))
+    (:items)
+    ; TODO with schema
+    (mapv (fn [{:keys [id name] [{status :text}] :column_values}] {:item/id id :item/name name :item/status status}))))
 
 (defn get-items-by-filter [board-id {:item/keys [title]}]
   (->>
@@ -68,7 +70,7 @@
         date-obj (java.time.LocalDateTime/now)]
     {:date (.format formatter date-obj)}))
 
-(defn add-item-to-board [board-id {:item/keys [title status]}]
+(defn add-item [board-id {:item/keys [name status]}]
   (let [status-index (.indexOf item-statuses status)
         column-values (json/write-str
                         (cond-> {:date4 (current-date-monday-format)}
@@ -79,41 +81,42 @@
              "mutation ($board_id: Int!, $item_name: String, $column_values: JSON) { create_item(board_id: $board_id, item_name: $item_name, column_values: $column_values){ id }}"
              :variables
              {:board_id board-id
-              :item_name title
+              :item_name name
               :column_values column-values}})]
-      (->
-        {:item/id id :item/name title :item/status status}
-        (domain/monday-item->domain-item)))))
+      {:item/id id :item/name name :item/status status})))
 
-(defn update-item [board-id item]
-  (let [{:item/keys [id name status]} (domain/domain-item->monday-item item)
-        column-values (json/write-str
+(defn update-item [board-id {:item/keys [id name status]}]
+  (let [column-values (json/write-str
                         {:name name
-                         :status {:label status}})]
-    (sent-query
-      {:query
-       "mutation ($item_id: Int $board_id: Int!, $column_values: JSON!) { change_multiple_column_values(item_id: $item_id, board_id: $board_id, column_values: $column_values ) { id }}"
-       :variables
-       {:board_id board-id
-        :item_id id
-        :column_values column-values}})))
+                         :status {:label status}})
+        {{:keys [id name] [{status :text}] :column_values} :delete_item}
+        (sent-query
+          {:query
+           "mutation ($item_id: Int $board_id: Int!, $column_values: JSON!) { change_multiple_column_values(item_id: $item_id, board_id: $board_id, column_values: $column_values ) {id name column_values(ids: \"status\") {text}}}"
+           :variables
+           {:board_id board-id
+            :item_id id
+            :column_values column-values}})]
+    {:item/id id :item/name name :item/status status}))
 
-(defn delete-item [{:item/keys [id]}]
-  (sent-query
-    {:query "mutation($item_id: Int) { delete_item(item_id: $item_id) { id }}"
-     :variables {:item_id id}}))
+(defn delete-item [_ {:item/keys [id]}]
+  (let [{{:keys [id name] [{status :text}] :column_values} :delete_item}
+        (sent-query
+          {:query "mutation($item_id: Int) { delete_item(item_id: $item_id) {id name column_values(ids: \"status\") {text}}}"
+           :variables {:item_id id}})]
+    {:item/id id :item/name name :item/status status}))
 
 (comment
-  (get-items-of-board 3990111892)
-  (get-items-by-filter 3990111892 {:item/title "from monday"})
-  (add-item-to-board 3990111892 {:item/title "from the repl"
-                                 :item/status "Stuck"})
-  (delete-item 4180594831)
+  (get-items 3990111892)
+  (get-items-by-filter 3990111892 {:item/name "from monday"})
+  (add-item 3990111892 {:item/name "from the repl"
+                        :item/status "Stuck"})
   (update-item
     3990111892
-    {:item/id 4182971841
-     :item/title "New repl name!!"
-     :item/status "Stuck"}))
+    {:item/id 4225744929
+     :item/name "New repl name!!"
+     :item/status "Stuck"})
+  (delete-item 3990111892 {:item/id 4228980758}))
 
 (comment
   ; queries for use with eql->gql lib, but no addded value was found in doing this so the decision has been made

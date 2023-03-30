@@ -1,5 +1,6 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.monday-webhooks
   (:require
+    [avisi.apps.tech-testing-ground.prototypes.shared.boards :as boards]
     [avisi.apps.tech-testing-ground.prototypes.shared.domain :as domain]
     [avisi.apps.tech-testing-ground.prototypes.shared.jira :as jira]
     [avisi.apps.tech-testing-ground.prototypes.shared.database :as db]
@@ -11,6 +12,7 @@
 
 (defmulti webhook-req->monday-item
   (fn [req] (get-in req [:body-params :event :type])))
+
 (defmethod webhook-req->monday-item "create_pulse" [req]
   (let [id (get-in req [:body-params :event :pulseId])
         name (get-in req [:body-params :event :pulseName])]
@@ -73,12 +75,15 @@
     (monday/set-last-created domain-item)
 
     (when-not (jira/last-created? jira-board-id domain-item)
-      (when-let [{jira-item-id :item/id} (jira/add-item-to-board jira-board-id domain-item)]
+      (when-let [{jira-item-id :item/id} (-> jira-board-id
+                                           (boards/new-jira-board)
+                                           (boards/add-item domain-item))]
         (let [item-link {:board-link-id board-link-id
                          :jira-item-id jira-item-id
                          :monday-item-id monday-item-id}]
           (when-not (db/get-item-link item-link)
             (db/create-item-link item-link))))
+
       {:status 200})))
 
 ; status updated
@@ -95,7 +100,9 @@
     (monday/set-last-updated domain-item)
 
     (when-not (jira/last-updated? "onzin" domain-item)
-      (jira/update-item domain-item))
+      (-> jira-board-id
+        (boards/new-jira-board)
+        (boards/update-item domain-item)))
 
     {:status 200}))
 
@@ -113,7 +120,9 @@
     (monday/set-last-updated domain-item)
 
     (when-not (jira/last-updated? "onzin" domain-item)
-      (jira/update-item domain-item))
+      (-> jira-board-id
+        (boards/new-jira-board)
+        (boards/update-item domain-item)))
 
     {:status 200}))
 
@@ -121,11 +130,14 @@
 (defmethod webhook-handler "delete_pulse" [req]
   (def _id-req req)
 
-  (let [{:keys [jira-item-id] :as item-link} (webhook-req->item-link req)
+  (let [{:keys [jira-board-id]} (webhook-req->board-link req)
+        {:keys [jira-item-id] :as item-link} (webhook-req->item-link req)
         domain-item {:item/id jira-item-id}]
 
     (when jira-item-id
-      (jira/delete-item domain-item)
+      (-> jira-board-id
+        (boards/new-jira-board)
+        (boards/delete-item domain-item))
       (db/delete-item-link item-link))
 
     {:status 200}))
