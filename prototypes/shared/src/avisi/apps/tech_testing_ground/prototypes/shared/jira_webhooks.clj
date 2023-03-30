@@ -5,6 +5,7 @@
     [avisi.apps.tech-testing-ground.prototypes.shared.monday :as monday]
     [avisi.apps.tech-testing-ground.prototypes.shared.domain :as domain]
     [avisi.apps.tech-testing-ground.prototypes.shared.boards :as boards]
+    [avisi.apps.tech-testing-ground.prototypes.shared.propagate-change :as propagate]
     [clojure.edn :as edn]))
 
 (def path-to-project-id [:body-params :issue :fields :project :id])
@@ -18,24 +19,16 @@
    :issue/summary (get-in req path-to-name)
    :issue/status (get-in req path-to-status)})
 
-(defn req->board [req]
+(defn webhook-req->jira-board [req]
   {:board/id (get-in req path-to-project-id)})
 
-(defn req->board-link [req]
-  (let [{:board/keys [id]} (req->board req)]
-    (db/get-board-link {:platform "jira"
-                        :board-id (edn/read-string id)})))
 
-(defn req->item-link [req]
-  (let [{:keys [board-link-id]} (req->board-link req)
-        {jira-item-id :issue/key} (webhook-req->jira-issue req)]
-    (db/get-item-link {:board-link-id board-link-id :jira-item-id jira-item-id})))
 
 (comment
 
   (webhook-req->jira-issue _ic-req)
   (req->board _ic-req)
-  (req->board-link _ic-req)
+  (webhook-req->jira-board _ic-req)
   (req->item-link _ic-req)
 
   )
@@ -43,56 +36,37 @@
 (defn issue-created-handler [req]
   (def _ic-req req)
 
-  (let [{jira-item-id :issue/key :as jira-issue} (webhook-req->jira-issue req)
-        domain-item (->
-                      (dissoc jira-issue :issue/key)
-                      (domain/jira-issue->domain-item))
-        {:keys [board-link-id monday-board-id]} (req->board-link req)]
+  (let [{board-id :board/id} (webhook-req->jira-board req)
+        domain-item (-> (webhook-req->jira-issue req)
+                      (domain/jira-issue->domain-item))]
 
-    (jira/set-last-created domain-item)
-
-    (when-not (monday/last-created? monday-board-id domain-item)
-      (when-let [{monday-item-id :item/id} (-> monday-board-id
-                                             (boards/new-monday-board)
-                                             (boards/add-item domain-item))]
-        (let [item-link {:board-link-id board-link-id
-                         :jira-item-id jira-item-id
-                         :monday-item-id monday-item-id}]
-          (when-not (db/get-item-link item-link)
-            (db/create-item-link item-link)))))
-
-    {:status 200}))
+    (propagate/propagate-add-item {:platform "jira"
+                                   :board-id board-id
+                                   :item domain-item}))
+  {:status 200})
 
 (defn issue-updated-handler [req]
   (def _iu-req req)
 
-  (let [{:keys [monday-board-id]} (req->board-link req)
-        {:keys [monday-item-id]} (req->item-link req)
-        jira-issue (webhook-req->jira-issue req)
-        domain-item (-> jira-issue
-                      (domain/jira-issue->domain-item)
-                      (assoc :item/id monday-item-id))]
+  (let [{board-id :board/id} (webhook-req->jira-board req)
+        domain-item (-> (webhook-req->jira-issue req)
+                      (domain/jira-issue->domain-item))]
 
-    (jira/set-last-updated domain-item)
-
-    (when-not (monday/last-updated? monday-board-id domain-item)
-      (-> monday-board-id
-        (boards/new-monday-board)
-        (boards/update-item domain-item))))
+    (propagate/propagate-update-item {:platform "jira"
+                                      :board-id board-id
+                                      :item domain-item}))
 
   {:status 200})
 
 (defn issue-deleted-handler [req]
   (def _id-req req)
 
-  (let [{:keys [monday-board-id]} (req->board-link req)
-        {:keys [monday-item-id] :as item-link} (req->item-link req)
-        domain-item {:item/id monday-item-id}]
+  (let [{board-id :board/id} (webhook-req->jira-board req)
+        domain-item (-> (webhook-req->jira-issue req)
+                      (domain/jira-issue->domain-item))]
 
-    (when monday-item-id
-      (-> monday-board-id
-        (boards/new-monday-board)
-        (boards/delete-item domain-item))
-      (db/delete-item-link item-link))
+    (propagate/propagate-delete-item {:platform "jira"
+                                      :board-id board-id
+                                      :item domain-item}))
 
-    {:status 200}))
+  {:status 200})

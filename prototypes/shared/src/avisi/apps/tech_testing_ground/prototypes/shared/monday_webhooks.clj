@@ -5,6 +5,7 @@
     [avisi.apps.tech-testing-ground.prototypes.shared.jira :as jira]
     [avisi.apps.tech-testing-ground.prototypes.shared.database :as db]
     [avisi.apps.tech-testing-ground.prototypes.shared.monday :as monday]
+    [avisi.apps.tech-testing-ground.prototypes.shared.propagate-change :as propagate]
     [malli.core :as m]
     [malli.transform :as mt]))
 
@@ -36,8 +37,8 @@
     {:item/id id}))
 
 (defn webhook-req->monday-board [req]
-  (let [name (get-in req [:body-params :event :boardId])]
-    {:board/id name}))
+  (let [id (get-in req [:body-params :event :boardId])]
+    {:board/id id}))
 
 (defn webhook-req->board-link [req]
   (let [{:board/keys [id]} (webhook-req->monday-board req)]
@@ -66,78 +67,54 @@
 (defmethod webhook-handler "create_pulse" [req]
   (def _ic-req req)
 
-  (let [{monday-item-id :item/id :as monday-item} (webhook-req->monday-item req)
-        domain-item (-> monday-item
-                      (dissoc :item/id)
-                      (domain/monday-item->domain-item))
-        {:keys [board-link-id jira-board-id]} (webhook-req->board-link req)]
+  (let [{board-id :board/id} (webhook-req->monday-board req)
+        domain-item (-> (webhook-req->monday-item req)
+                      (domain/monday-item->domain-item))]
 
-    (monday/set-last-created domain-item)
+    (propagate/propagate-add-item {:platform "monday"
+                                   :board-id board-id
+                                   :item domain-item}))
 
-    (when-not (jira/last-created? jira-board-id domain-item)
-      (when-let [{jira-item-id :item/id} (-> jira-board-id
-                                           (boards/new-jira-board)
-                                           (boards/add-item domain-item))]
-        (let [item-link {:board-link-id board-link-id
-                         :jira-item-id jira-item-id
-                         :monday-item-id monday-item-id}]
-          (when-not (db/get-item-link item-link)
-            (db/create-item-link item-link))))
-
-      {:status 200})))
+  {:status 200})
 
 ; status updated
 (defmethod webhook-handler "update_column_value" [req]
   (def _iu-req req)
 
-  (let [{:keys [jira-board-id]} (webhook-req->board-link req)
-        {:keys [jira-item-id]} (webhook-req->item-link req)
-        monday-item (webhook-req->monday-item req)
-        domain-item (-> monday-item
-                      (domain/monday-item->domain-item)
-                      (assoc :item/id jira-item-id))]
+  (let [{board-id :board/id} (webhook-req->monday-board req)
+        domain-item (-> (webhook-req->monday-item req)
+                      (domain/monday-item->domain-item))]
 
-    (monday/set-last-updated domain-item)
+    (prn domain-item)
 
-    (when-not (jira/last-updated? "onzin" domain-item)
-      (-> jira-board-id
-        (boards/new-jira-board)
-        (boards/update-item domain-item)))
-
-    {:status 200}))
+    (propagate/propagate-update-item {:platform "monday"
+                                      :board-id board-id
+                                      :item domain-item}))
+  {:status 200}
+  )
 
 ; name updated
 (defmethod webhook-handler "update_name" [req]
   (def _iu-req req)
 
-  (let [{:keys [jira-board-id]} (webhook-req->board-link req)
-        {:keys [jira-item-id]} (webhook-req->item-link req)
-        monday-item (webhook-req->monday-item req)
-        domain-item (-> monday-item
-                      (domain/monday-item->domain-item)
-                      (assoc :item/id jira-item-id))]
+  (let [{board-id :board/id} (webhook-req->monday-board req)
+        domain-item (-> (webhook-req->monday-item req)
+                      (domain/monday-item->domain-item))]
 
-    (monday/set-last-updated domain-item)
+    (propagate/propagate-update-item {:platform "monday"
+                                      :board-id board-id
+                                      :item domain-item}))
 
-    (when-not (jira/last-updated? "onzin" domain-item)
-      (-> jira-board-id
-        (boards/new-jira-board)
-        (boards/update-item domain-item)))
-
-    {:status 200}))
+  {:status 200})
 
 ; item deleted
 (defmethod webhook-handler "delete_pulse" [req]
   (def _id-req req)
 
-  (let [{:keys [jira-board-id]} (webhook-req->board-link req)
-        {:keys [jira-item-id] :as item-link} (webhook-req->item-link req)
-        domain-item {:item/id jira-item-id}]
+  (let [{board-id :board/id} (webhook-req->monday-board req)
+        domain-item (-> (webhook-req->monday-item req)
+                      (domain/monday-item->domain-item))]
 
-    (when jira-item-id
-      (-> jira-board-id
-        (boards/new-jira-board)
-        (boards/delete-item domain-item))
-      (db/delete-item-link item-link))
-
-    {:status 200}))
+    (propagate/propagate-delete-item {:platform "monday"
+                                      :board-id board-id
+                                      :item domain-item})))

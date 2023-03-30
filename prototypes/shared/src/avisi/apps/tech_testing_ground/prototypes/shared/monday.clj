@@ -85,7 +85,7 @@
               :column_values column-values}})]
       {:item/id id :item/name name :item/status status})))
 
-(defn update-item [board-id {:item/keys [id name status]}]
+(defn update-item [board-id {:item/keys [id name status] :as item}]
   (let [column-values (json/write-str
                         {:name name
                          :status {:label status}})
