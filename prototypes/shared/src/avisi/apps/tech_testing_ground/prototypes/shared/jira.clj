@@ -10,7 +10,11 @@
 (def ^:private perform-request (http-client/perform-request-fn "jira"))
 
 (defn res->item [res]
-  (let [{:keys [key] {:keys [summary description] {:keys [name]} :status} :fields} res]
+  (let [{:keys [key]
+         {:keys [summary description]
+          {:keys [name]} :status}
+           :fields}
+          res]
     {:item/key key
      :item/summary summary
      :item/description description
@@ -31,38 +35,43 @@
       {:method :get
        :url (str base-url "/rest/api/2/search?jql=project=" board-id)})
     (:issues)
-    (mapv (fn [res]
-            {:issue/key (get-in res path-to-issue-key)
-             :issue/summary (get-in res path-to-summary)
-             :issue/status (get-in res path-to-status)
-             :issue/description (get-in res path-to-description)}))))
+    (mapv
+      (fn [res]
+        {:issue/key (get-in res path-to-issue-key)
+         :issue/summary (get-in res path-to-summary)
+         :issue/status (get-in res path-to-status)
+         :issue/description (get-in res path-to-description)}))))
 
 (defn ^:private get-item-by-id [{:issue/keys [key]}]
-  (-> (perform-request
-        {:method :get
-         :url (str base-url "/rest/api/2/issue/" key)})
+  (->
+    (perform-request
+      {:method :get
+       :url (str base-url "/rest/api/2/issue/" key)})
     (res->item)))
 
 (defn ^:private get-item-by-filters [board-id {:issue/keys [summary]}]
   (let [jql-string (codec/url-encode (str "project = " board-id " AND summary ~ " (str "\"" summary "" \")))]
-    (-> (perform-request
-          {:method :get
-           :url (str base-url (str "/rest/api/2/search?jql=" jql-string))})
+    (->
+      (perform-request
+        {:method :get
+         :url (str base-url (str "/rest/api/2/search?jql=" jql-string))})
       #_(res->item))))
 
 
 (defn add-item [board-id {:issue/keys [summary description]}]
   ; As with get-items the board-id in the function signature corresponds to the project-id in the jira-domain.
   (let [body {:fields
-              {:summary summary
-               :description description
-               :project {:id board-id}
-               :issuetype {:name "Task"}}}
+                {:summary summary
+                 :description description
+                 :project {:id board-id}
+                 :issuetype {:name "Task"}}}
         {:keys [key]} (perform-request
                         {:method :post
                          :url (str base-url "/rest/api/2/issue")
                          :body body})]
-    {:issue/key key :issue/summary summary :issue/description description}))
+    {:issue/key key
+     :issue/summary summary
+     :issue/description description}))
 
 (def ^:private transitions
   {"To Do" "11"
@@ -77,20 +86,20 @@
        :body body})))
 
 (defn ^:private update-fields-of-item [{:issue/keys [key summary description]}]
-  (let [body {:fields {:summary summary
-                       :description description}}]
+  (let [body {:fields
+                {:summary summary
+                 :description description}}]
     (perform-request
       {:method :put
        :url (str base-url "/rest/api/2/issue/" key)
        :body body})))
 
 (defn update-item
-  [_ {:issue/keys [key summary description status]
-      :as issue}]
-  (when summary
-    (update-fields-of-item issue))
-  (when status
-    (transition-status-of-item issue))
+  [_
+   {:issue/keys [key summary description status]
+    :as issue}]
+  (when summary (update-fields-of-item issue))
+  (when status (transition-status-of-item issue))
   {:issue/key key
    :issue/summary summary
    :issue/description description

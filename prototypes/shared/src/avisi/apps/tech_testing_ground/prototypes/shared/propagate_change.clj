@@ -9,22 +9,29 @@
    "monday" "jira"})
 
 (def platforms
-  {"jira" {:board-identifier :jira-board-id
-           :item-identifier :jira-item-id
-           :instantiate-board boards/new-jira-board}
-   "monday" {:board-identifier :monday-board-id
-             :item-identifier :monday-item-id
-             :instantiate-board boards/new-monday-board}})
-(defn get-platform [platform-name]
-  (platforms platform-name))
+  {"jira"
+     {:board-identifier :jira-board-id
+      :item-identifier :jira-item-id
+      :instantiate-board boards/new-jira-board}
+   "monday"
+     {:board-identifier :monday-board-id
+      :item-identifier :monday-item-id
+      :instantiate-board boards/new-monday-board}})
+(defn get-platform [platform-name] (platforms platform-name))
 
 (defn get-target-board
   [{source-board-id :source/board-id
     source-platform :source/platform}]
   (let [{target-board-identifier :board-identifier
-         instantiate-target-board :instantiate-board} (-> source-platform (opposite-platform) (get-platform))]
+         instantiate-target-board :instantiate-board}
+          (->
+            source-platform
+            (opposite-platform)
+            (get-platform))]
     (->>
-      (db/get-board-link {:platform source-platform :board-id source-board-id})
+      (db/get-board-link
+        {:platform source-platform
+         :board-id source-board-id})
       (target-board-identifier)
       (instantiate-target-board))))
 
@@ -35,9 +42,12 @@
     {source-item-id :item/id} :source/item}]
   (let [{source-item-identifier :item-identifier} (get-platform source-platform)
         {target-item-identifier :item-identifier} (get-platform (opposite-platform source-platform))
-        {:keys [board-link-id]} (db/get-board-link {:platform source-platform :board-id source-board-id})]
+        {:keys [board-link-id]} (db/get-board-link
+                                  {:platform source-platform
+                                   :board-id source-board-id})]
     (some->>
-      {:board-link-id board-link-id source-item-identifier source-item-id}
+      {:board-link-id board-link-id
+       source-item-identifier source-item-id}
       (db/get-item-link)
       (target-item-identifier)
       (assoc item :item/id))))
@@ -47,20 +57,28 @@
     source-platform :source/platform
     {source-item-id :item/id} :source/item}]
   (let [{source-item-identifier :item-identifier} (get-platform source-platform)
-        {:keys [board-link-id]} (db/get-board-link {:platform source-platform :board-id source-board-id})]
+        {:keys [board-link-id]} (db/get-board-link
+                                  {:platform source-platform
+                                   :board-id source-board-id})]
     (some->>
-      {:board-link-id board-link-id source-item-identifier source-item-id}
+      {:board-link-id board-link-id
+       source-item-identifier source-item-id}
       (db/get-item-link)
       (:item-representation))))
 
 (defn update-item-representation
   [{source-board-id :source/board-id
     source-platform :source/platform
-    {source-item-id :item/id :as source-item} :source/item}]
+    {source-item-id :item/id
+     :as source-item}
+      :source/item}]
   (let [{source-item-identifier :item-identifier} (get-platform source-platform)
-        {:keys [board-link-id]} (db/get-board-link {:platform source-platform :board-id source-board-id})]
+        {:keys [board-link-id]} (db/get-board-link
+                                  {:platform source-platform
+                                   :board-id source-board-id})]
     (->
-      {:board-link-id board-link-id source-item-identifier source-item-id}
+      {:board-link-id board-link-id
+       source-item-identifier source-item-id}
       (db/get-item-link)
       (assoc :item-representation (select-keys source-item [:item/title :item/status]))
       (db/update-item-link))))
@@ -68,80 +86,67 @@
 (defn create-item-link
   [{source-board-id :source/board-id
     source-platform :source/platform
-    {source-item-id :item/id :as source-item} :source/item
+    {source-item-id :item/id
+     :as source-item}
+      :source/item
     {target-item-id :item/id} :target/item}]
-  (let [{:keys [board-link-id]} (db/get-board-link {:platform source-platform :board-id source-board-id})
+  (let [{:keys [board-link-id]} (db/get-board-link
+                                  {:platform source-platform
+                                   :board-id source-board-id})
         {source-item-identifier :item-identifier} (get-platform source-platform)
         {target-item-identifier :item-identifier} (get-platform (opposite-platform source-platform))]
-    (db/create-item-link {:board-link-id board-link-id
-                          source-item-identifier source-item-id
-                          target-item-identifier target-item-id
-                          :item-representation (select-keys source-item [:item/title :item/status])})))
+    (db/create-item-link
+      {:board-link-id board-link-id
+       source-item-identifier source-item-id
+       target-item-identifier target-item-id
+       :item-representation (select-keys source-item [:item/title :item/status])})))
 
 (defn delete-item-link
   [{source-board-id :source/board-id
     source-platform :source/platform
     {source-item-id :item/id} :source/item}]
-  (let [{:keys [board-link-id]} (db/get-board-link {:platform source-platform :board-id source-board-id})
+  (let [{:keys [board-link-id]} (db/get-board-link
+                                  {:platform source-platform
+                                   :board-id source-board-id})
         {source-item-identifier :item-identifier} (get-platform source-platform)]
     (some->>
-      (db/get-item-link {:board-link-id board-link-id
-                         source-item-identifier source-item-id})
+      (db/get-item-link
+        {:board-link-id board-link-id
+         source-item-identifier source-item-id})
       (db/delete-item-link))))
 
-(defonce last-created (atom nil))
-(defonce last-updated (atom nil))
+(defmulti propagate-action (fn [{:keys [action]}] action))
 
-(defn last-created? [{:item/keys [title] :as item}]
-  (= (:item/title @last-created) title))
-
-(defn last-updated? [{:item/keys [title status] :as item}]
-  (and @last-updated
-    (= (select-keys @last-updated [:item/title :item/status]) (select-keys item [:item/title :item/status]))))
-
-(comment
-
-  @last-created
-  @last-updated
-
-  )
-
-(defmulti propagate-action
-  (fn [{:keys [action]}] action))
-
-(defmethod propagate-action :create [{:source/keys [platform board-id item] :as source}]
+(defmethod propagate-action :create
+  [{:source/keys [platform board-id item]
+    :as source}]
   (when-not (get-item-representation source)
     (let [target-item (->
                         (get-target-board source)
                         (boards/add-item item))]
       (create-item-link (assoc source :target/item target-item)))))
 
-(defmethod propagate-action :update [{:source/keys [platform board-id item] :as source}]
-  (prn item)
-  (prn (get-item-representation source))
+(defmethod propagate-action :update
+  [{:source/keys [platform board-id item]
+    :as source}]
   (when-not (= item (get-item-representation source))
     (let [target-board (get-target-board source)
           target-item (get-target-item source)]
       (boards/update-item target-board target-item)
       (update-item-representation source))))
 
-(defmethod propagate-action :delete [{:source/keys [platform board-id item] :as source}]
+(defmethod propagate-action :delete
+  [{:source/keys [platform board-id item]
+    :as source}]
   (let [target-board (get-target-board source)
         target-item (get-target-item source)]
-    (when target-item
-      (boards/delete-item target-board target-item)
-      (delete-item-link source))))
+    (when target-item (boards/delete-item target-board target-item) (delete-item-link source))))
 
 (defn propagate-action-fn [webhook-req->propagation-args]
   (fn [req]
-    (try (->
-           req
-           (webhook-req->propagation-args)
-           (propagate-action))
-         {:status 200}
-         (catch Exception e
-           (prn "An error occured")
-           (println (ex-message e))
-           (println (ex-data e))
-           (println (ex-cause e))
-           {:status 500}))))
+    (try
+      (->
+        req
+        (webhook-req->propagation-args)
+        (propagate-action))
+      (catch Exception e (println "An error occured") (println (ex-message e))))))

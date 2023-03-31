@@ -8,44 +8,30 @@
     [avisi.apps.tech-testing-ground.prototypes.shared.propagate-change :as propagate]
     [clojure.edn :as edn]))
 
-(def path-to-project-id [:body-params :issue :fields :project :id])
-(def path-to-issue-key [:body-params :issue :key])
-(def path-to-account-id [:body-params :issue :creator :accountId])
-(def path-to-name [:body-params :issue :fields :summary])
-(def path-to-status [:body-params :issue :fields :status :name])
-(def path-to-action [:path-params :action])
+(def jira-action->domain-action
+  {"issue_created" :create
+   "issue_updated" :update
+   "issue_deleted" :delete})
 
-(defn webhook-req->jira-issue [req]
-  {:issue/key (get-in req path-to-issue-key)
-   :issue/summary (get-in req path-to-name)
-   :issue/status (get-in req path-to-status)})
-
-(defn webhook-req->board-id [req]
-  (->
-    (get-in req path-to-project-id)
-    (edn/read-string)))
-
-(defn webhook-req->action [req]
-  (case (get-in req path-to-action)
-    "issue_created" :create
-    "issue_updated" :update
-    "issue_deleted" :delete))
-
-(defn webhook-req->propagation-args [req]
+(defn webhook-req->propagation-args
+  [{{{{{project-id :id} :project
+       {status :name} :status
+       summary :summary}
+      :fields
+      key :key}
+     :issue}
+    :body-params
+    {:keys [action]} :path-params}]
   {:source/platform "jira"
-   :source/board-id (webhook-req->board-id req)
-   :source/item (-> (webhook-req->jira-issue req) (domain/jira-issue->domain-item))
-   :action (webhook-req->action req)})
+   :source/board-id (edn/read-string project-id)
+   :source/item
+   (->
+     {:issue/key key
+      :issue/summary summary
+      :issue/status status}
+     (domain/jira-issue->domain-item))
+   :action (jira-action->domain-action action)})
 
-(def propagate-action
-  (propagate/propagate-action-fn webhook-req->propagation-args))
+(def propagate-action (propagate/propagate-action-fn webhook-req->propagation-args))
 
-(defn webhook-handler [req]
-  (def _jwh-req req)
-  (propagate-action req))
-
-(comment
-
-  (webhook-req->propagation-args _jwh-req)
-
-  )
+(defn webhook-handler [req] (propagate-action req))

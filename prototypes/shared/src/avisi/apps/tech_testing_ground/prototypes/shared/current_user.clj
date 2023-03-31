@@ -20,7 +20,8 @@
     (base64-decode)
     (json/read-str)))
 
-(defmethod ^:private http-client/auth-header "jira" [_]
+(defmethod ^:private http-client/auth-header "jira"
+  [_]
   (let [email (get-in @current-user ["jira" "email"])
         api-token (get-in @current-user ["jira" "api-token"])
         auth-token (->>
@@ -28,8 +29,7 @@
                      (base64-encode))]
     (str "Basic " auth-token)))
 
-(defmethod ^:private http-client/auth-header "monday" [_]
-  (get-in @current-user ["monday" "api-token"]))
+(defmethod ^:private http-client/auth-header "monday" [_] (get-in @current-user ["monday" "api-token"]))
 
 (defn identify-current-user-middleware [{:keys [platform path-to-jwt path-to-user-id]}]
   (fn [next-handler]
@@ -46,8 +46,4 @@
           (reset! current-user)))
       (next-handler req))))
 
-(comment
-
-  @current-user
-
-  )
+(comment @current-user)

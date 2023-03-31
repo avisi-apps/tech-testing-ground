@@ -3,12 +3,9 @@
     [malli.core :as m]
     [malli.transform :as mt]
     [clojure.set :as set]
-    [hyperfiddle.rcf :refer [tests]]
-    ))
+    [hyperfiddle.rcf :refer [tests]]))
 
-(def board-schema
-  [:map
-   [:id string?]])
+(def board-schema [:map [:id string?]])
 (def item-schema
   [:map
    [:item/id string?]
@@ -18,34 +15,19 @@
 
 
 
-(def board-link-schema
-  [:map
-   [:board-link-id string?]
-   [:jira-board-id string?]
-   [:monday-board-id string?]])
+(def board-link-schema [:map [:board-link-id string?] [:jira-board-id string?] [:monday-board-id string?]])
 
-(def item-link-schema
-  [:map
-   [:item-link-id string?]
-   [:jira-item-id string?]
-   [:monday-item-id string?]])
+(def item-link-schema [:map [:item-link-id string?] [:jira-item-id string?] [:monday-item-id string?]])
 
-(defn map-fn-passthrough [m]
-  (fn [k] (get m k k)))
+(defn map-fn-passthrough [m] (fn [k] (get m k k)))
 
-(defn map-fn
-  ([m] (fn [k] (get m k)))
-  ([m default] (fn [k] (get m k default))))
+(defn map-fn ([m] (fn [k] (get m k))) ([m default] (fn [k] (get m k default))))
 
 ; monday transformations
 (def monday-item-schema
-  [:map
-   [:item/id string?]
-   [:item/name string?]
-   [:item/status [:enum "Working on it" "Done" "Stuck"]]])
+  [:map [:item/id string?] [:item/name string?] [:item/status [:enum "Working on it" "Done" "Stuck"]]])
 
-(def domain-item-keys->monday-item-keys
-  {:item/title :item/name})
+(def domain-item-keys->monday-item-keys {:item/title :item/name})
 
 (def domain-item-status->monday-item-status
   {"In Progress" "Working on it"
@@ -58,9 +40,7 @@
      :decode (map-fn-passthrough (set/map-invert domain-item-keys->monday-item-keys))}))
 (defn monday-item->domain-item [monday-item]
   (as-> monday-item item
-    (m/decode item-schema item (mt/transformer
-                                 monday-key-transformer
-                                 mt/strip-extra-keys-transformer))
+    (m/decode item-schema item (mt/transformer monday-key-transformer mt/strip-extra-keys-transformer))
     (update item :item/status (set/map-invert domain-item-status->monday-item-status))))
 
 (defn domain-item->monday-item [domain-item]
@@ -70,7 +50,6 @@
     (update item :item/status (map-fn domain-item-status->monday-item-status))))
 
 (tests
-
   "domain -> monday"
   (->
     {:item/title "Something todo"
@@ -81,23 +60,20 @@
   :=
   {:item/name "Something todo"
    :item/status "Stuck"}
-
   ; Unknown status should default to nil
   (->
     {:item/status "To Do"}
     (domain-item->monday-item))
-  :=
-  {:item/status nil}
-
+  := {:item/status nil}
   "monday -> domain"
-  (->
-    {:item/name "Something todo"
-     :item/status "Stuck"
-     :item/monday-specific "Shouldn't leave monday-ns"}
-    (monday-item->domain-item))
+    (->
+      {:item/name "Something todo"
+       :item/status "Stuck"
+       :item/monday-specific "Shouldn't leave monday-ns"}
+      (monday-item->domain-item))
   :=
-  {:item/title "Something todo"
-   :item/status "Blocked"})
+    {:item/title "Something todo"
+     :item/status "Blocked"})
 
 (def jira-item-schema
   [:map
@@ -121,11 +97,10 @@
   (mt/key-transformer
     {:encode (map-fn-passthrough domain-item-keys->jira-item-keys)
      :decode (map-fn-passthrough (set/map-invert domain-item-keys->jira-item-keys))}))
-(defn jira-issue->domain-item [{:keys [status] :as jira-issue}]
-  (cond->
-    (m/decode item-schema jira-issue (mt/transformer
-                                       jira-key-transformer
-                                       mt/strip-extra-keys-transformer))
+(defn jira-issue->domain-item
+  [{:keys [status]
+    :as jira-issue}]
+  (cond-> (m/decode item-schema jira-issue (mt/transformer jira-key-transformer mt/strip-extra-keys-transformer))
     status (update :item/status (map-fn (set/map-invert domain-item-status->jira-item-status)))))
 
 (defn domain-item->jira-issue [domain-item]
@@ -135,7 +110,6 @@
     (update item :issue/status (map-fn domain-item-status->jira-item-status "To Do"))))
 
 (tests
-
   "domain -> jira"
   (->
     {:item/title "Something todo"
@@ -147,23 +121,18 @@
   {:issue/summary "Something todo"
    :issue/description "A description"
    :issue/status "In Progress"}
-
   ; unknown status defaults to "To Do"
   (->
     {:item/status "Blocked"}
     (domain-item->jira-issue))
-  :=
-  {:issue/status "To Do"}
-
+  := {:issue/status "To Do"}
   "jira -> domain"
-  (->
-    {:issue/summary "Something todo"
-     :issue/description "A description"
-     :issue/status "In Progress"}
-    (jira-issue->domain-item))
+    (->
+      {:issue/summary "Something todo"
+       :issue/description "A description"
+       :issue/status "In Progress"}
+      (jira-issue->domain-item))
   :=
-  {:item/title "Something todo"
-   :item/description "A description"
-   :item/status "In Progress"}
-
-  )
+    {:item/title "Something todo"
+     :item/description "A description"
+     :item/status "In Progress"})
