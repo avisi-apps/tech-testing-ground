@@ -10,13 +10,13 @@
 
 (def platforms
   {"jira"
-     {:board-identifier :jira-board-id
-      :item-identifier :jira-item-id
-      :instantiate-board boards/new-jira-board}
+   {:board-identifier :jira-board-id
+    :item-identifier :jira-item-id
+    :instantiate-board boards/new-jira-board}
    "monday"
-     {:board-identifier :monday-board-id
-      :item-identifier :monday-item-id
-      :instantiate-board boards/new-monday-board}})
+   {:board-identifier :monday-board-id
+    :item-identifier :monday-item-id
+    :instantiate-board boards/new-monday-board}})
 (defn get-platform [platform-name] (platforms platform-name))
 
 (defn get-target-board
@@ -24,10 +24,10 @@
     source-platform :source/platform}]
   (let [{target-board-identifier :board-identifier
          instantiate-target-board :instantiate-board}
-          (->
-            source-platform
-            (opposite-platform)
-            (get-platform))]
+        (->
+          source-platform
+          (opposite-platform)
+          (get-platform))]
     (->>
       (db/get-board-link
         {:platform source-platform
@@ -71,7 +71,7 @@
     source-platform :source/platform
     {source-item-id :item/id
      :as source-item}
-      :source/item}]
+    :source/item}]
   (let [{source-item-identifier :item-identifier} (get-platform source-platform)
         {:keys [board-link-id]} (db/get-board-link
                                   {:platform source-platform
@@ -88,7 +88,7 @@
     source-platform :source/platform
     {source-item-id :item/id
      :as source-item}
-      :source/item
+    :source/item
     {target-item-id :item/id} :target/item}]
   (let [{:keys [board-link-id]} (db/get-board-link
                                   {:platform source-platform
@@ -115,12 +115,22 @@
          source-item-identifier source-item-id})
       (db/delete-item-link))))
 
+(defn sync-by-default?
+  [{source-board-id :source/board-id
+    source-platform :source/platform
+    {source-item-id :item/id} :source/item}]
+  (-> (db/get-board-link
+        {:platform source-platform
+         :board-id source-board-id})
+    (:sync-by-default)))
+
 (defmulti propagate-action (fn [{:keys [action]}] action))
 
 (defmethod propagate-action :create
   [{:source/keys [platform board-id item]
     :as source}]
-  (when-not (get-item-representation source)
+  (prn (sync-by-default? source))
+  (when (and (sync-by-default? source) (not (get-item-representation source)))
     (let [target-item (->
                         (get-target-board source)
                         (boards/add-item item))]

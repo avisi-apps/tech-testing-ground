@@ -21,7 +21,8 @@
   [:map
    [:id string?]
    [:jira-board-id int?]
-   [:monday-board-id int?]])
+   [:monday-board-id int?]
+   [:sync-by-default boolean?]])
 
 (defn get-board-link [{:keys [platform board-id]}]
   (as->
