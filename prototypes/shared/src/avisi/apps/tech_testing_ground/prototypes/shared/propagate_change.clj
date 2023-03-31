@@ -141,27 +141,15 @@
 
   (reset! last-updated item))
 
-(defn propagate-delete-item [{:keys [platform board-id item] :as source}]
+(defn propagate-delete-item [{:keys [platform board-id item]}]
   (let [target-board (get-target-board {:source/platform platform
                                         :source/board-id board-id})
         target-item (get-target-item {:source/platform platform
                                       :source/board-id board-id
                                       :source/item item})]
-    (def _ti target-item)
-    (def _tb target-board)
-    (def _s source)
 
     (when target-item
       (boards/delete-item target-board target-item)
       (delete-item-link {:source/platform platform
                          :source/board-id board-id
                          :source/item item}))))
-
-(comment
-
-  (let [{:keys [platform board-id item]} _s]
-    (delete-item-link {:source/platform platform
-                       :source/board-id board-id
-                       :source/item item}))
-
-  )

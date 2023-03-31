@@ -72,11 +72,10 @@
         {:handler jira-webhooks/issue-deleted-handler}}]]]]
 
    ["/jira-item-view"
-    {:get
-     {:middleware [(current-user/identify-current-user-middleware {:platform "jira"
-                                                                   :path-to-jwt ["jwt"]
-                                                                   :path-to-user-id ["sub"]})]
-      :handler item-view-handler}}]
+    {:middleware [(current-user/identify-current-user-middleware {:platform "jira"
+                                                                  :path-to-jwt ["jwt"]
+                                                                  :path-to-user-id ["sub"]})]
+     :get {:handler item-view-handler}}]
    #_["/atlassian/jira/modules/issue-panel"
       {:get
        {:handler

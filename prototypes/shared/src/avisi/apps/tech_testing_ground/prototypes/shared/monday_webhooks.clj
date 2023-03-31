@@ -9,8 +9,6 @@
     [malli.core :as m]
     [malli.transform :as mt]))
 
-; req info extraction
-
 (defmulti webhook-req->monday-item
   (fn [req] (get-in req [:body-params :event :type])))
 
@@ -40,81 +38,44 @@
   (let [id (get-in req [:body-params :event :boardId])]
     {:board/id id}))
 
-(defn webhook-req->board-link [req]
-  (let [{:board/keys [id]} (webhook-req->monday-board req)]
-    (db/get-board-link {:platform "monday"
-                        :board-id id})))
+(defn webhook-req->propagation-args [req]
+  (let [{board-id :board/id} (webhook-req->monday-board req)
+        domain-item (-> (webhook-req->monday-item req)
+                      (domain/monday-item->domain-item))]
 
-(defn webhook-req->item-link [req]
-  (let [{:keys [board-link-id]} (webhook-req->board-link req)
-        {monday-item-id :item/id} (webhook-req->monday-item req)]
-    (db/get-item-link {:board-link-id board-link-id :monday-item-id monday-item-id})))
+    {:platform "monday"
+     :board-id board-id
+     :item domain-item}))
 
 (comment
   (webhook-req->monday-item _iu-req)
   (webhook-req->monday-board _iu-req)
-  (webhook-req->board-link _iu-req)
-  (webhook-req->item-link _iu-req)
   )
 
-; webhooks handlers
 (defmulti webhook-handler
   (fn [req]
     (def _req req)
     (get-in req [:body-params :event :type])))
 
-; item created
 (defmethod webhook-handler "create_pulse" [req]
-  (def _ic-req req)
-
-  (let [{board-id :board/id} (webhook-req->monday-board req)
-        domain-item (-> (webhook-req->monday-item req)
-                      (domain/monday-item->domain-item))]
-
-    (propagate/propagate-add-item {:platform "monday"
-                                   :board-id board-id
-                                   :item domain-item}))
-
+  (->>
+    (webhook-req->propagation-args req)
+    (propagate/propagate-add-item))
   {:status 200})
 
-; status updated
 (defmethod webhook-handler "update_column_value" [req]
-  (def _iu-req req)
-
-  (let [{board-id :board/id} (webhook-req->monday-board req)
-        domain-item (-> (webhook-req->monday-item req)
-                      (domain/monday-item->domain-item))]
-
-    (prn domain-item)
-
-    (propagate/propagate-update-item {:platform "monday"
-                                      :board-id board-id
-                                      :item domain-item}))
-  {:status 200}
-  )
-
-; name updated
-(defmethod webhook-handler "update_name" [req]
-  (def _iu-req req)
-
-  (let [{board-id :board/id} (webhook-req->monday-board req)
-        domain-item (-> (webhook-req->monday-item req)
-                      (domain/monday-item->domain-item))]
-
-    (propagate/propagate-update-item {:platform "monday"
-                                      :board-id board-id
-                                      :item domain-item}))
-
+  (->>
+    (webhook-req->propagation-args req)
+    (propagate/propagate-update-item))
   {:status 200})
 
-; item deleted
+(defmethod webhook-handler "update_name" [req]
+  (->>
+    (webhook-req->propagation-args req)
+    (propagate/propagate-update-item))
+  {:status 200})
+
 (defmethod webhook-handler "delete_pulse" [req]
-  (def _id-req req)
-
-  (let [{board-id :board/id} (webhook-req->monday-board req)
-        domain-item (-> (webhook-req->monday-item req)
-                      (domain/monday-item->domain-item))]
-
-    (propagate/propagate-delete-item {:platform "monday"
-                                      :board-id board-id
-                                      :item domain-item})))
+ (->>
+    (webhook-req->propagation-args req)
+    (propagate/propagate-delete-item)))

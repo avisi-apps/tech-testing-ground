@@ -60,8 +60,8 @@
       (ring/ring-handler
         (ring/router [routes ping-route (atlassian-connect/routes jira-handlers) (monday/routes monday-handlers)])
         (constantly not-found-response))
-      (middleware/wrap-format content-negotiation)
       (catch-req-middleware)
+      (middleware/wrap-format content-negotiation)
       (wrap-params)
       (wrap-resource "public")
       (wrap-content-type)

@@ -22,51 +22,33 @@
 (defn webhook-req->jira-board [req]
   {:board/id (get-in req path-to-project-id)})
 
-
-
 (comment
-
   (webhook-req->jira-issue _ic-req)
-  (req->board _ic-req)
   (webhook-req->jira-board _ic-req)
-  (req->item-link _ic-req)
-
   )
 
-(defn issue-created-handler [req]
-  (def _ic-req req)
-
+(defn webhook-req->propagation-args [req]
   (let [{board-id :board/id} (webhook-req->jira-board req)
         domain-item (-> (webhook-req->jira-issue req)
                       (domain/jira-issue->domain-item))]
+    {:platform "jira"
+     :board-id board-id
+     :item domain-item}))
 
-    (propagate/propagate-add-item {:platform "jira"
-                                   :board-id board-id
-                                   :item domain-item}))
+(defn issue-created-handler [req]
+  (->>
+    (webhook-req->propagation-args req)
+    (propagate/propagate-add-item))
   {:status 200})
 
 (defn issue-updated-handler [req]
-  (def _iu-req req)
-
-  (let [{board-id :board/id} (webhook-req->jira-board req)
-        domain-item (-> (webhook-req->jira-issue req)
-                      (domain/jira-issue->domain-item))]
-
-    (propagate/propagate-update-item {:platform "jira"
-                                      :board-id board-id
-                                      :item domain-item}))
-
+  (->>
+    (webhook-req->propagation-args req)
+    (propagate/propagate-update-item))
   {:status 200})
 
 (defn issue-deleted-handler [req]
-  (def _id-req req)
-
-  (let [{board-id :board/id} (webhook-req->jira-board req)
-        domain-item (-> (webhook-req->jira-issue req)
-                      (domain/jira-issue->domain-item))]
-
-    (propagate/propagate-delete-item {:platform "jira"
-                                      :board-id board-id
-                                      :item domain-item}))
-
+  (->>
+    (webhook-req->propagation-args req)
+    (propagate/propagate-delete-item))
   {:status 200})
