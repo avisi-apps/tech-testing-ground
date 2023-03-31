@@ -42,17 +42,41 @@
       (target-item-identifier)
       (assoc item :item/id))))
 
+(defn get-item-representation
+  [{source-board-id :source/board-id
+    source-platform :source/platform
+    {source-item-id :item/id} :source/item}]
+  (let [{source-item-identifier :item-identifier} (get-platform source-platform)
+        {:keys [board-link-id]} (db/get-board-link {:platform source-platform :board-id source-board-id})]
+    (some->>
+      {:board-link-id board-link-id source-item-identifier source-item-id}
+      (db/get-item-link)
+      (:item-representation))))
+
+(defn update-item-representation
+  [{source-board-id :source/board-id
+    source-platform :source/platform
+    {source-item-id :item/id :as source-item} :source/item}]
+  (let [{source-item-identifier :item-identifier} (get-platform source-platform)
+        {:keys [board-link-id]} (db/get-board-link {:platform source-platform :board-id source-board-id})]
+    (->
+      {:board-link-id board-link-id source-item-identifier source-item-id}
+      (db/get-item-link)
+      (assoc :item-representation (select-keys source-item [:item/title :item/status]))
+      (db/update-item-link))))
+
 (defn create-item-link
   [{source-board-id :source/board-id
     source-platform :source/platform
-    {source-item-id :item/id} :source/item
+    {source-item-id :item/id :as source-item} :source/item
     {target-item-id :item/id} :target/item}]
   (let [{:keys [board-link-id]} (db/get-board-link {:platform source-platform :board-id source-board-id})
         {source-item-identifier :item-identifier} (get-platform source-platform)
         {target-item-identifier :item-identifier} (get-platform (opposite-platform source-platform))]
     (db/create-item-link {:board-link-id board-link-id
                           source-item-identifier source-item-id
-                          target-item-identifier target-item-id})))
+                          target-item-identifier target-item-id
+                          :item-representation (select-keys source-item [:item/title :item/status])})))
 
 (defn delete-item-link
   [{source-board-id :source/board-id
@@ -60,7 +84,7 @@
     {source-item-id :item/id} :source/item}]
   (let [{:keys [board-link-id]} (db/get-board-link {:platform source-platform :board-id source-board-id})
         {source-item-identifier :item-identifier} (get-platform source-platform)]
-    (->>
+    (some->>
       (db/get-item-link {:board-link-id board-link-id
                          source-item-identifier source-item-id})
       (db/delete-item-link))))
@@ -86,25 +110,20 @@
   (fn [{:keys [action]}] action))
 
 (defmethod propagate-action :create [{:source/keys [platform board-id item] :as source}]
-
-  (when-not (last-created? item)
-
+  (when-not (get-item-representation source)
     (let [target-item (->
                         (get-target-board source)
                         (boards/add-item item))]
-      (create-item-link (assoc source :target/item target-item))
-
-      (reset! last-created item))))
+      (create-item-link (assoc source :target/item target-item)))))
 
 (defmethod propagate-action :update [{:source/keys [platform board-id item] :as source}]
-
-  (when-not (last-updated? item)
-
+  (prn item)
+  (prn (get-item-representation source))
+  (when-not (= item (get-item-representation source))
     (let [target-board (get-target-board source)
           target-item (get-target-item source)]
-      (boards/update-item target-board target-item)))
-
-  (reset! last-updated item))
+      (boards/update-item target-board target-item)
+      (update-item-representation source))))
 
 (defmethod propagate-action :delete [{:source/keys [platform board-id item] :as source}]
   (let [target-board (get-target-board source)
@@ -119,4 +138,10 @@
            req
            (webhook-req->propagation-args)
            (propagate-action))
-         (catch Exception e (prn (.getMessage e))))))
+         {:status 200}
+         (catch Exception e
+           (prn "An error occured")
+           (println (ex-message e))
+           (println (ex-data e))
+           (println (ex-cause e))
+           {:status 500}))))

@@ -1,5 +1,6 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.database
   (:require
+    [avisi.apps.tech-testing-ground.prototypes.shared.domain :as domain]
     [firestore-clj.core :as f]
     [malli.core :as m]
     [malli.transform :as mt]
@@ -51,7 +52,8 @@
   [:map
    [:board-link-id string?]
    [:jira-item-id string?]
-   [:monday-item-id int?]])
+   [:monday-item-id int?]
+   [:item-representation domain/item-schema]])
 
 (defn encode-item-link [item-link]
   (m/encode item-link-schema item-link (mt/transformer
@@ -59,11 +61,14 @@
                                          mt/string-transformer)))
 
 (comment
-  (encode-item-link {:board-link "123AB"
-                     :jira-item-id "456CD"
-                     :monday-item-id 123})
 
-  (decode-item-link {:board-link "123AB"
+  (encode-item-link {:board-link-id "123AB"
+                     :jira-item-id "456CD"
+                     :monday-item-id 123
+                     :item-representation {:item/title "Example item"
+                                           :item/status "To Do"}})
+
+  (decode-item-link {:board-link-id "123AB"
                      :jira-item-id "456CD"
                      :monday-item-id "123"})
 
@@ -76,14 +81,20 @@
 
 (defn create-item-link [{:keys [board-link-id
                                 jira-item-id
-                                monday-item-id]}]
-  (let [item-link (->> {:board-link-id board-link-id
-                        :jira-item-id jira-item-id
-                        :monday-item-id monday-item-id}
-                    (encode-item-link))]
-    (-> db
-      (f/coll "item-links")
-      (f/add! item-link))))
+                                monday-item-id
+                                item-representation] :as item-link}]
+  (-> db
+    (f/coll "item-links")
+    (f/add! (encode-item-link item-link))))
+
+(defn update-item-link [{:keys [board-link-id
+                                jira-item-id
+                                monday-item-id
+                                item-link-id
+                                item-representation] :as item-link}]
+  (-> db
+    (f/doc (str "item-links/" item-link-id))
+    (f/set! (encode-item-link item-link))))
 
 (defn get-item-link [{:keys [board-link-id
                              jira-item-id
@@ -93,11 +104,11 @@
                  ; TODO: fix id conversion with schema
                  monday-item-id (assoc "monday-item-id" (str monday-item-id)))]
     (when-let [[document-id item-link] (-> db
-                                    (f/coll "item-links")
-                                    (f/filter= filter)
-                                    (f/pull)
-                                    (first))]
-      (->
+                                         (f/coll "item-links")
+                                         (f/filter= filter)
+                                         (f/pull)
+                                         (first))]
+      (some->
         item-link
         (assoc :item-link-id document-id)
         (decode-item-link)))))
