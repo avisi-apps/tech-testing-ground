@@ -20,8 +20,8 @@
 (def board-link-schema
   [:map
    [:id string?]
-   [:jira [:map {:decode/json (fn [v] (into {} v))} [:board-id int?]]]
-   [:monday [:map {:decode/json (fn [v] (into {} v))} [:board-id int?]]]])
+   [:jira-board-id int?]
+   [:monday-board-id int?]])
 
 (defn get-board-link [{:keys [platform board-id]}]
   (as->
@@ -35,19 +35,6 @@
     board-link
     (m/decode board-link-schema board-link (mt/key-transformer {:decode keyword}))))
 
-(comment
-  (get-board-link
-    {:platform "jira"
-     :board-id 10001}))
-
-(defn update-board-link
-  [{:keys [id]
-    :as board-link}]
-  (let [board-link (m/encode board-link-schema board-link (mt/key-transformer {:encode name}))]
-    (->
-      (f/doc db (str "board-links/" id))
-      (f/set! board-link))))
-
 (def item-link-schema
   [:map
    [:board-link-id string?]
@@ -55,8 +42,14 @@
    [:monday-item-id int?]
    [:item-representation domain/item-schema]])
 
+(def item-link-transformer
+  (mt/transformer (mt/key-transformer {:encode name
+                                       :decode keyword}) mt/string-transformer))
 (defn encode-item-link [item-link]
-  (m/encode item-link-schema item-link (mt/transformer (mt/key-transformer {:encode name}) mt/string-transformer)))
+  (m/encode item-link-schema item-link item-link-transformer))
+
+(defn decode-item-link [item-link]
+  (m/decode item-link-schema item-link item-link-transformer))
 
 (comment
   (encode-item-link
@@ -64,15 +57,8 @@
      :jira-item-id "456CD"
      :monday-item-id 123
      :item-representation
-       {:item/title "Example item"
-        :item/status "To Do"}})
-  (decode-item-link
-    {:board-link-id "123AB"
-     :jira-item-id "456CD"
-     :monday-item-id "123"}))
-
-(defn decode-item-link [item-link]
-  (m/decode item-link-schema item-link (mt/transformer (mt/key-transformer {:decode keyword}) mt/string-transformer)))
+     {:item/title "Example item"
+      :item/status "To Do"}}))
 
 (defn create-item-link
   [{:keys [board-link-id jira-item-id monday-item-id item-representation]
@@ -81,14 +67,6 @@
     db
     (f/coll "item-links")
     (f/add! (encode-item-link item-link))))
-
-(defn update-item-link
-  [{:keys [board-link-id jira-item-id monday-item-id item-link-id item-representation]
-    :as item-link}]
-  (->
-    db
-    (f/doc (str "item-links/" item-link-id))
-    (f/set! (encode-item-link item-link))))
 
 (defn get-item-link
   [{:keys [board-link-id jira-item-id monday-item-id]
@@ -107,6 +85,14 @@
         item-link
         (assoc :item-link-id document-id)
         (decode-item-link)))))
+
+(defn update-item-link
+  [{:keys [board-link-id jira-item-id monday-item-id item-link-id item-representation]
+    :as item-link}]
+  (->
+    db
+    (f/doc (str "item-links/" item-link-id))
+    (f/set! (encode-item-link item-link))))
 
 (defn delete-item-link [{:keys [item-link-id]}]
   (->

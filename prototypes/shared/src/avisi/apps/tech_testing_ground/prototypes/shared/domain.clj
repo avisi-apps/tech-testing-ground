@@ -13,8 +13,6 @@
    [:item/description string?]
    [:item/status [:enum "To Do" "In Progres" "Done" "Blocked"]]])
 
-
-
 (def board-link-schema [:map [:board-link-id string?] [:jira-board-id string?] [:monday-board-id string?]])
 
 (def item-link-schema [:map [:item-link-id string?] [:jira-item-id string?] [:monday-item-id string?]])

@@ -1,13 +1,7 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.monday-webhooks
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.boards :as boards]
     [avisi.apps.tech-testing-ground.prototypes.shared.domain :as domain]
-    [avisi.apps.tech-testing-ground.prototypes.shared.jira :as jira]
-    [avisi.apps.tech-testing-ground.prototypes.shared.database :as db]
-    [avisi.apps.tech-testing-ground.prototypes.shared.monday :as monday]
-    [avisi.apps.tech-testing-ground.prototypes.shared.propagate-change :as propagate]
-    [malli.core :as m]
-    [malli.transform :as mt]))
+    [avisi.apps.tech-testing-ground.prototypes.shared.propagate-change :as propagate]))
 
 (defmulti webhook-event->monday-item (fn [{:keys [type]}] type))
 
@@ -36,8 +30,7 @@
    "update_name" :update
    "delete_pulse" :delete})
 
-(defn webhook-req->propagation-args [{{{event-type :type board-id :boardId :as event} :event} :body-params :as req}]
-  (def _r req)
+(defn webhook-req->propagation-args [{{{event-type :type board-id :boardId :as event} :event} :body-params}]
   {:source/platform "monday"
    :source/board-id board-id
    :source/item
@@ -48,13 +41,8 @@
 
 (def propagate-action (propagate/propagate-action-fn webhook-req->propagation-args))
 
-(defn webhook-handler [req] (propagate-action req))
-
-(comment
-
-  (let [{{{event-type :type board-id :boardId} :event :as event} :body-params :as req} _r]
-
-    (webhook-event->monday-item event)
-    )
-
-  )
+(defn webhook-handler [req]
+  (try
+    (propagate-action req)
+    {:status 200}
+    (catch Exception _ {:status 500})))

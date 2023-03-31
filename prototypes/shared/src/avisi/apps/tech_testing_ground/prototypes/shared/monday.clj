@@ -1,6 +1,6 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.monday
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.current-user :as current-user]
+    [avisi.apps.tech-testing-ground.prototypes.shared.authantication :as current-user]
     [avisi.apps.tech-testing-ground.prototypes.shared.domain :as domain]
     [avisi.apps.tech-testing-ground.prototypes.shared.http-client :as http-client]
     [clojure.string :as str]
