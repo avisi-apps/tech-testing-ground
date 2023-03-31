@@ -34,48 +34,31 @@
   (let [id (get-in req [:body-params :event :itemId])]
     {:item/id id}))
 
-(defn webhook-req->monday-board [req]
-  (let [id (get-in req [:body-params :event :boardId])]
-    {:board/id id}))
+(defn webhook-req->board-id [req]
+  (get-in req [:body-params :event :boardId]))
+
+(defn webhook-req->action [req]
+  (case (get-in req [:body-params :event :type])
+    "create_pulse" :create
+    "update_column_value" :update
+    "update_name" :update
+    "delete_pulse" :delete))
 
 (defn webhook-req->propagation-args [req]
-  (let [{board-id :board/id} (webhook-req->monday-board req)
-        domain-item (-> (webhook-req->monday-item req)
-                      (domain/monday-item->domain-item))]
+  {:source/platform "monday"
+   :source/board-id (webhook-req->board-id req)
+   :source/item (-> (webhook-req->monday-item req) (domain/monday-item->domain-item))
+   :action (webhook-req->action req)})
 
-    {:platform "monday"
-     :board-id board-id
-     :item domain-item}))
+(def propagate-action
+  (propagate/propagate-action-fn webhook-req->propagation-args))
+
+(defn webhook-handler [req]
+  (def _mwh-req req)
+  (propagate-action req))
 
 (comment
-  (webhook-req->monday-item _iu-req)
-  (webhook-req->monday-board _iu-req)
+
+  (webhook-req->propagation-args _mwh-req)
+
   )
-
-(defmulti webhook-handler
-  (fn [req]
-    (def _req req)
-    (get-in req [:body-params :event :type])))
-
-(defmethod webhook-handler "create_pulse" [req]
-  (->>
-    (webhook-req->propagation-args req)
-    (propagate/propagate-add-item))
-  {:status 200})
-
-(defmethod webhook-handler "update_column_value" [req]
-  (->>
-    (webhook-req->propagation-args req)
-    (propagate/propagate-update-item))
-  {:status 200})
-
-(defmethod webhook-handler "update_name" [req]
-  (->>
-    (webhook-req->propagation-args req)
-    (propagate/propagate-update-item))
-  {:status 200})
-
-(defmethod webhook-handler "delete_pulse" [req]
- (->>
-    (webhook-req->propagation-args req)
-    (propagate/propagate-delete-item)))

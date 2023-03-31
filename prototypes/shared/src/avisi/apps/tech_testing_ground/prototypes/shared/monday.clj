@@ -7,31 +7,6 @@
     [clj-http.client :as http]
     [clojure.data.json :as json]))
 
-
-(defonce last-created (atom nil))
-(defonce last-updated (atom nil))
-
-(defn set-last-created [item]
-  (reset! last-created item))
-
-(defn set-last-updated [item]
-  (reset! last-updated item))
-
-(defn last-created? [board-id {:item/keys [title] :as item}]
-  (= (:item/title @last-created) title))
-
-(defn last-updated? [board-id {:item/keys [title status] :as item}]
-  (=
-    (and @last-updated
-      (select-keys @last-updated [:item/title :item/status])) (select-keys item [:item/title :item/status])))
-
-(comment
-
-  @last-created
-  @last-updated
-
-  )
-
 (def ^:private api-url "https://api.monday.com/v2/")
 
 (def ^:private sent-query

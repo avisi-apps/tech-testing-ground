@@ -13,42 +13,39 @@
 (def path-to-account-id [:body-params :issue :creator :accountId])
 (def path-to-name [:body-params :issue :fields :summary])
 (def path-to-status [:body-params :issue :fields :status :name])
+(def path-to-action [:path-params :action])
 
 (defn webhook-req->jira-issue [req]
   {:issue/key (get-in req path-to-issue-key)
    :issue/summary (get-in req path-to-name)
    :issue/status (get-in req path-to-status)})
 
-(defn webhook-req->jira-board [req]
-  {:board/id (get-in req path-to-project-id)})
+(defn webhook-req->board-id [req]
+  (->
+    (get-in req path-to-project-id)
+    (edn/read-string)))
 
-(comment
-  (webhook-req->jira-issue _ic-req)
-  (webhook-req->jira-board _ic-req)
-  )
+(defn webhook-req->action [req]
+  (case (get-in req path-to-action)
+    "issue_created" :create
+    "issue_updated" :update
+    "issue_deleted" :delete))
 
 (defn webhook-req->propagation-args [req]
-  (let [{board-id :board/id} (webhook-req->jira-board req)
-        domain-item (-> (webhook-req->jira-issue req)
-                      (domain/jira-issue->domain-item))]
-    {:platform "jira"
-     :board-id board-id
-     :item domain-item}))
+  {:source/platform "jira"
+   :source/board-id (webhook-req->board-id req)
+   :source/item (-> (webhook-req->jira-issue req) (domain/jira-issue->domain-item))
+   :action (webhook-req->action req)})
 
-(defn issue-created-handler [req]
-  (->>
-    (webhook-req->propagation-args req)
-    (propagate/propagate-add-item))
-  {:status 200})
+(def propagate-action
+  (propagate/propagate-action-fn webhook-req->propagation-args))
 
-(defn issue-updated-handler [req]
-  (->>
-    (webhook-req->propagation-args req)
-    (propagate/propagate-update-item))
-  {:status 200})
+(defn webhook-handler [req]
+  (def _jwh-req req)
+  (propagate-action req))
 
-(defn issue-deleted-handler [req]
-  (->>
-    (webhook-req->propagation-args req)
-    (propagate/propagate-delete-item))
-  {:status 200})
+(comment
+
+  (webhook-req->propagation-args _jwh-req)
+
+  )

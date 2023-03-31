@@ -5,29 +5,6 @@
     [clojure.data.json :as json]
     [ring.util.codec :as codec]))
 
-(defonce last-created (atom nil))
-(defonce last-updated (atom nil))
-
-(defn set-last-created [item]
-  (reset! last-created item))
-
-(defn set-last-updated [item]
-  (reset! last-updated item))
-
-(defn last-created? [board-id {:item/keys [title] :as item}]
-  (= (:item/title @last-created) title))
-
-(defn last-updated? [board-id {:item/keys [title status] :as item}]
-  (and @last-updated
-    (= (select-keys @last-updated [:item/title :item/status]) (select-keys item [:item/title :item/status]))))
-
-(comment
-
-  @last-created
-  @last-updated
-
-  )
-
 (def ^:private base-url "https://yabmas.atlassian.net")
 
 (def ^:private perform-request (http-client/perform-request-fn "jira"))
@@ -38,7 +15,6 @@
      :item/summary summary
      :item/description description
      :item/status name}))
-
 
 (def path-to-issue-key [:key])
 (def path-to-summary [:fields :summary])
@@ -127,17 +103,17 @@
   {:issue/key key})
 
 (comment
-  (get-items 10001)
+  (get-items 10002)
   (get-item-by-id {:item/key "EX-76"})
   (add-item
-    10001
+    10002
     {:issue/summary "An item"
      :issue/description "Something that's already done"
      :issue/status "Done"})
   (update-item
-    10001
+    10002
     {:issue/key "EX-237"
      :issue/summary "New title"
      :issue/description "My description"
      :issue/status "Done"})
-  (delete-item 10001 {:issue/key "EX-235"}))
+  (delete-item 10002 {:issue/key "EX-235"}))

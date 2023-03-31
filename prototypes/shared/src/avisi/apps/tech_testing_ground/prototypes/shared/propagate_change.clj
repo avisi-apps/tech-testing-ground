@@ -2,98 +2,67 @@
   (:require
     [avisi.apps.tech-testing-ground.prototypes.shared.database :as db]
     [avisi.apps.tech-testing-ground.prototypes.shared.boards :as boards]
-    [clojure.string :as str]
-    [clojure.edn :as edn]
-    ))
+    [clojure.string :as str]))
 
-(defn board-key->platform [board-key]
-  (->>
-    board-key
-    (name)
-    (re-find #"^[^-]*")))
+(def opposite-platform
+  {"jira" "monday"
+   "monday" "jira"})
 
-(defn platform->item-key [platform]
-  (keyword (str platform "-item-id")))
+(def platforms
+  {"jira" {:board-identifier :jira-board-id
+           :item-identifier :jira-item-id
+           :instantiate-board boards/new-jira-board}
+   "monday" {:board-identifier :monday-board-id
+             :item-identifier :monday-item-id
+             :instantiate-board boards/new-monday-board}})
+(defn get-platform [platform-name]
+  (platforms platform-name))
 
-(defn platform->board-key [platform]
-  (keyword (str platform "-board-id")))
+(defn get-target-board
+  [{source-board-id :source/board-id
+    source-platform :source/platform}]
+  (let [{target-board-identifier :board-identifier
+         instantiate-target-board :instantiate-board} (-> source-platform (opposite-platform) (get-platform))]
+    (->>
+      (db/get-board-link {:platform source-platform :board-id source-board-id})
+      (target-board-identifier)
+      (instantiate-target-board))))
 
-(defn instantiate-board [platform board-id]
-  (case platform
-    "monday" (boards/new-monday-board board-id)
-    "jira" (boards/new-jira-board board-id)))
-
-(defmulti get-target-board
-  (fn [{:source/keys [platform]}] platform))
-
-(defmethod get-target-board "jira"
-  [{:source/keys [board-id]}]
-  (->
-    (db/get-board-link {:platform "jira" :board-id (edn/read-string board-id)})
-    (:monday-board-id)
-    (boards/new-monday-board)))
-(defmethod get-target-board "monday"
-  [{:source/keys [board-id]}]
-  (->
-    (db/get-board-link {:platform "monday" :board-id board-id})
-    (:jira-board-id)
-    (boards/new-jira-board)))
-
-(defmulti get-target-item
-  (fn [{:source/keys [platform]}] platform))
-
-(defmethod get-target-item "jira"
-  [{:source/keys [platform board-id item]
+(defn get-target-item
+  [{:source/keys [item]
+    source-board-id :source/board-id
+    source-platform :source/platform
     {source-item-id :item/id} :source/item}]
-  (let [{:keys [board-link-id]} (db/get-board-link {:platform platform :board-id (edn/read-string board-id)})]
+  (let [{source-item-identifier :item-identifier} (get-platform source-platform)
+        {target-item-identifier :item-identifier} (get-platform (opposite-platform source-platform))
+        {:keys [board-link-id]} (db/get-board-link {:platform source-platform :board-id source-board-id})]
     (some->>
-      (db/get-item-link {:board-link-id board-link-id :jira-item-id source-item-id})
-      (:monday-item-id)
+      {:board-link-id board-link-id source-item-identifier source-item-id}
+      (db/get-item-link)
+      (target-item-identifier)
       (assoc item :item/id))))
 
-(defmethod get-target-item "monday"
-  [{:source/keys [platform board-id item]
+(defn create-item-link
+  [{source-board-id :source/board-id
+    source-platform :source/platform
+    {source-item-id :item/id} :source/item
+    {target-item-id :item/id} :target/item}]
+  (let [{:keys [board-link-id]} (db/get-board-link {:platform source-platform :board-id source-board-id})
+        {source-item-identifier :item-identifier} (get-platform source-platform)
+        {target-item-identifier :item-identifier} (get-platform (opposite-platform source-platform))]
+    (db/create-item-link {:board-link-id board-link-id
+                          source-item-identifier source-item-id
+                          target-item-identifier target-item-id})))
+
+(defn delete-item-link
+  [{source-board-id :source/board-id
+    source-platform :source/platform
     {source-item-id :item/id} :source/item}]
-  (let [{:keys [board-link-id]} (db/get-board-link {:platform platform :board-id board-id})]
-    (some->>
-      (db/get-item-link {:board-link-id board-link-id :monday-item-id source-item-id})
-      (:jira-item-id)
-      (assoc item :item/id))))
-
-(defmulti create-item-link
-  (fn [{:source/keys [platform]}] platform))
-
-(defmethod create-item-link "jira"
-  [{:source/keys [platform board-id]
-    {target-item-id :item/id} :target/item
-    {source-item-id :item/id} :source/item}]
-  (let [{:keys [board-link-id]} (db/get-board-link {:platform platform :board-id (edn/read-string board-id)})]
-    (db/create-item-link {:board-link-id board-link-id :jira-item-id source-item-id :monday-item-id target-item-id})))
-
-(defmethod create-item-link "monday"
-  [{:source/keys [platform board-id]
-    {target-item-id :item/id} :target/item
-    {source-item-id :item/id} :source/item}]
-  (let [{:keys [board-link-id]} (db/get-board-link {:platform platform :board-id board-id})]
-    (db/create-item-link {:board-link-id board-link-id :jira-item-id target-item-id :monday-item-id source-item-id})))
-
-(defmulti delete-item-link
-  (fn [{:source/keys [platform]}] platform))
-
-(defmethod delete-item-link "jira"
-  [{:source/keys [platform board-id]
-    {source-item-id :item/id} :source/item}]
-  (let [{:keys [board-link-id]} (db/get-board-link {:platform platform :board-id (edn/read-string board-id)})]
+  (let [{:keys [board-link-id]} (db/get-board-link {:platform source-platform :board-id source-board-id})
+        {source-item-identifier :item-identifier} (get-platform source-platform)]
     (->>
-      (db/get-item-link {:board-link-id board-link-id :jira-item-id source-item-id})
-      (db/delete-item-link))))
-
-(defmethod delete-item-link "monday"
-  [{:source/keys [platform board-id]
-    {source-item-id :item/id} :source/item}]
-  (let [{:keys [board-link-id]} (db/get-board-link {:platform platform :board-id board-id})]
-    (->>
-      (db/get-item-link {:board-link-id board-link-id :monday-item-id source-item-id})
+      (db/get-item-link {:board-link-id board-link-id
+                         source-item-identifier source-item-id})
       (db/delete-item-link))))
 
 (defonce last-created (atom nil))
@@ -113,43 +82,41 @@
 
   )
 
-(defn propagate-add-item [{:keys [platform board-id item]}]
+(defmulti propagate-action
+  (fn [{:keys [action]}] action))
+
+(defmethod propagate-action :create [{:source/keys [platform board-id item] :as source}]
 
   (when-not (last-created? item)
 
     (let [target-item (->
-                        (get-target-board {:source/platform platform :source/board-id board-id})
+                        (get-target-board source)
                         (boards/add-item item))]
-
-      (create-item-link {:source/platform platform
-                         :source/board-id board-id
-                         :source/item item
-                         :target/item target-item})
+      (create-item-link (assoc source :target/item target-item))
 
       (reset! last-created item))))
 
-(defn propagate-update-item [{:keys [platform board-id item]}]
+(defmethod propagate-action :update [{:source/keys [platform board-id item] :as source}]
 
   (when-not (last-updated? item)
 
-    (let [target-board (get-target-board {:source/platform platform
-                                          :source/board-id board-id})
-          target-item (get-target-item {:source/platform platform
-                                        :source/board-id board-id
-                                        :source/item item})]
+    (let [target-board (get-target-board source)
+          target-item (get-target-item source)]
       (boards/update-item target-board target-item)))
 
   (reset! last-updated item))
 
-(defn propagate-delete-item [{:keys [platform board-id item]}]
-  (let [target-board (get-target-board {:source/platform platform
-                                        :source/board-id board-id})
-        target-item (get-target-item {:source/platform platform
-                                      :source/board-id board-id
-                                      :source/item item})]
-
+(defmethod propagate-action :delete [{:source/keys [platform board-id item] :as source}]
+  (let [target-board (get-target-board source)
+        target-item (get-target-item source)]
     (when target-item
       (boards/delete-item target-board target-item)
-      (delete-item-link {:source/platform platform
-                         :source/board-id board-id
-                         :source/item item}))))
+      (delete-item-link source))))
+
+(defn propagate-action-fn [webhook-req->propagation-args]
+  (fn [req]
+    (try (->
+           req
+           (webhook-req->propagation-args)
+           (propagate-action))
+         (catch Exception e (prn (.getMessage e))))))

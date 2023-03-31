@@ -60,16 +60,9 @@
           {:status 200
            :headers {"content-type" "application/json"}
            :body descriptor})}}]
-     ["/webhooks"
-      ["/issue_created"
-       {:post
-        {:handler jira-webhooks/issue-created-handler}}]
-      ["/issue_updated"
-       {:post
-        {:handler jira-webhooks/issue-updated-handler}}]
-      ["/issue_deleted"
-       {:post
-        {:handler jira-webhooks/issue-deleted-handler}}]]]]
+     ["/webhooks/:action"
+      {:post
+       {:handler jira-webhooks/webhook-handler}}]]]
 
    ["/jira-item-view"
     {:middleware [(current-user/identify-current-user-middleware {:platform "jira"
