@@ -98,8 +98,10 @@
   [_
    {:issue/keys [key summary description status]
     :as issue}]
-  (when summary (update-fields-of-item issue))
-  (when status (transition-status-of-item issue))
+  (when summary
+    (update-fields-of-item issue))
+  (when status
+    (transition-status-of-item issue))
   {:issue/key key
    :issue/summary summary
    :issue/description description

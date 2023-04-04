@@ -1,4 +1,4 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.authantication
+(ns avisi.apps.tech-testing-ground.prototypes.shared.authentication
   (:require
     [avisi.apps.tech-testing-ground.prototypes.shared.database :as db]
     [clojure.data.json :as json])
@@ -35,7 +35,6 @@
 (defn identify-current-user-middleware [{:keys [platform path-to-jwt path-to-user-id]}]
   (fn [next-handler]
     (fn [req]
-      (def _re req)
       (let [user-id (cond-> req
                       path-to-jwt (-> (get-in path-to-jwt) (get-jwt-payload))
                       :always (get-in path-to-user-id))]

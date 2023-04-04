@@ -2,7 +2,7 @@
   (:require
     [clj-http.client :as http]
     [clojure.data.json :as json]
-    [avisi.apps.tech-testing-ground.prototypes.shared.authantication :as auth]))
+    [avisi.apps.tech-testing-ground.prototypes.shared.authentication :as auth]))
 
 (defn ^:private custom-middleware [platform] (conj clj-http.client/default-middleware (auth/add-auth-header-middleware platform)))
 

@@ -7,8 +7,8 @@
 
 (def board-schema [:map [:id string?]])
 (def item-schema
-  [:map
-   [:item/id string?]
+  [:map {:decode/json #(into {} %)}
+   [:item/id [string? {:encode/string str}]]
    [:item/title string?]
    [:item/description string?]
    [:item/status [:enum "To Do" "In Progres" "Done" "Blocked"]]])
@@ -23,40 +23,46 @@
 
 ; monday transformations
 (def monday-item-schema
-  [:map [:item/id string?] [:item/name string?] [:item/status [:enum "Working on it" "Done" "Stuck"]]])
+  [:map
+   [:item/id int?]
+   [:item/name string?]
+   [:item/status [:enum "Working on it" "Done" "Stuck"]]])
 
 (def domain-item-keys->monday-item-keys {:item/title :item/name})
 
 (def domain-item-status->monday-item-status
   {"In Progress" "Working on it"
-   "Done" "Done"
-   "Blocked" "Stuck"})
+   "Done"        "Done"
+   "Blocked"     "Stuck"})
 
 (def monday-key-transformer
   (mt/key-transformer
-    {:encode (map-fn-passthrough domain-item-keys->monday-item-keys)
-     :decode (map-fn-passthrough (set/map-invert domain-item-keys->monday-item-keys))}))
-(defn monday-item->domain-item [monday-item]
-  (as-> monday-item item
-    (m/decode item-schema item (mt/transformer monday-key-transformer mt/strip-extra-keys-transformer))
-    (update item :item/status (set/map-invert domain-item-status->monday-item-status))))
+    {:encode (map-fn-passthrough (set/map-invert domain-item-keys->monday-item-keys))
+     :decode (map-fn-passthrough domain-item-keys->monday-item-keys)}))
 
 (defn domain-item->monday-item [domain-item]
   (as-> domain-item item
-    (m/encode item-schema item monday-key-transformer)
-    (m/encode monday-item-schema item mt/strip-extra-keys-transformer)
-    (update item :item/status (map-fn domain-item-status->monday-item-status))))
+        (m/decode monday-item-schema item (mt/transformer monday-key-transformer mt/string-transformer mt/strip-extra-keys-transformer))
+        (update item :item/status (map-fn domain-item-status->monday-item-status))))
+
+(defn monday-item->domain-item [monday-item]
+  (as-> monday-item item
+        (m/encode item-schema item (mt/transformer monday-key-transformer mt/string-transformer))
+        (m/encode item-schema item mt/strip-extra-keys-transformer)
+        (update item :item/status (set/map-invert domain-item-status->monday-item-status))))
 
 (tests
   "domain -> monday"
   (->
-    {:item/title "Something todo"
-     :item/description "A description"
-     :item/status "Blocked"
+    {:item/id                     "82352345"
+     :item/title                  "Something todo"
+     :item/description            "A description"
+     :item/status                 "Blocked"
      :item/not-existent-in-monday "shouldn't enter monday-ns"}
     (domain-item->monday-item))
   :=
-  {:item/name "Something todo"
+  {:item/id     82352345
+   :item/name   "Something todo"
    :item/status "Stuck"}
   ; Unknown status should default to nil
   (->
@@ -64,14 +70,16 @@
     (domain-item->monday-item))
   := {:item/status nil}
   "monday -> domain"
-    (->
-      {:item/name "Something todo"
-       :item/status "Stuck"
-       :item/monday-specific "Shouldn't leave monday-ns"}
-      (monday-item->domain-item))
+  (->
+    {:item/id              523154123
+     :item/name            "Something todo"
+     :item/status          "Stuck"
+     :item/monday-specific "Shouldn't leave monday-ns"}
+    (monday-item->domain-item))
   :=
-    {:item/title "Something todo"
-     :item/status "Blocked"})
+  {:item/id     "523154123"
+   :item/title  "Something todo"
+   :item/status "Blocked"})
 
 (def jira-item-schema
   [:map
@@ -81,15 +89,15 @@
    [:issue/status [:enum "To Do" "In Progres" "Done"]]])
 
 (def domain-item-keys->jira-item-keys
-  {:item/id :issue/key
-   :item/title :issue/summary
+  {:item/id          :issue/key
+   :item/title       :issue/summary
    :item/description :issue/description
-   :item/status :issue/status})
+   :item/status      :issue/status})
 
 (def domain-item-status->jira-item-status
-  {"To Do" "To Do"
+  {"To Do"       "To Do"
    "In Progress" "In Progress"
-   "Done" "Done"})
+   "Done"        "Done"})
 
 (def jira-key-transformer
   (mt/key-transformer
@@ -97,40 +105,40 @@
      :decode (map-fn-passthrough (set/map-invert domain-item-keys->jira-item-keys))}))
 (defn jira-issue->domain-item
   [{:keys [status]
-    :as jira-issue}]
+    :as   jira-issue}]
   (cond-> (m/decode item-schema jira-issue (mt/transformer jira-key-transformer mt/strip-extra-keys-transformer))
-    status (update :item/status (map-fn (set/map-invert domain-item-status->jira-item-status)))))
+          status (update :item/status (map-fn (set/map-invert domain-item-status->jira-item-status)))))
 
 (defn domain-item->jira-issue [domain-item]
   (as-> domain-item item
-    (m/encode item-schema item jira-key-transformer)
-    (m/encode jira-item-schema item mt/strip-extra-keys-transformer)
-    (update item :issue/status (map-fn domain-item-status->jira-item-status "To Do"))))
+        (m/encode item-schema item jira-key-transformer)
+        (m/encode jira-item-schema item mt/strip-extra-keys-transformer)
+        (update item :issue/status (map-fn domain-item-status->jira-item-status "To Do"))))
 
 (tests
   "domain -> jira"
   (->
-    {:item/title "Something todo"
-     :item/description "A description"
-     :item/status "In Progress"
+    {:item/title                "Something todo"
+     :item/description          "A description"
+     :item/status               "In Progress"
      :item/not-existent-in-jira "shouldn't enter jira-ns"}
     (domain-item->jira-issue))
   :=
-  {:issue/summary "Something todo"
+  {:issue/summary     "Something todo"
    :issue/description "A description"
-   :issue/status "In Progress"}
+   :issue/status      "In Progress"}
   ; unknown status defaults to "To Do"
   (->
     {:item/status "Blocked"}
     (domain-item->jira-issue))
   := {:issue/status "To Do"}
   "jira -> domain"
-    (->
-      {:issue/summary "Something todo"
-       :issue/description "A description"
-       :issue/status "In Progress"}
-      (jira-issue->domain-item))
+  (->
+    {:issue/summary     "Something todo"
+     :issue/description "A description"
+     :issue/status      "In Progress"}
+    (jira-issue->domain-item))
   :=
-    {:item/title "Something todo"
-     :item/description "A description"
-     :item/status "In Progress"})
+  {:item/title       "Something todo"
+   :item/description "A description"
+   :item/status      "In Progress"})

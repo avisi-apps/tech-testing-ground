@@ -1,7 +1,7 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.monday-routes
   (:require
     [avisi.apps.tech-testing-ground.prototypes.shared.monday-webhooks :as monday-webhooks]
-    [avisi.apps.tech-testing-ground.prototypes.shared.authantication :as current-user]))
+    [avisi.apps.tech-testing-ground.prototypes.shared.authentication :as current-user]))
 
 (defn routes [{:keys [item-view-handler]}]
   [["/monday-item-view"

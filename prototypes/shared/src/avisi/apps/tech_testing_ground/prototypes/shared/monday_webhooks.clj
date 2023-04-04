@@ -11,12 +11,12 @@
    :item/name name})
 
 (defmethod webhook-event->monday-item "update_name"
-  [{id :pulseId {name :name} :value}]
+  [{id :pulseId {name :name} :value :as req}]
   {:item/id id
    :item/name name})
 
 (defmethod webhook-event->monday-item "update_column_value"
-  [{id :pulseId {{status :text} :label} :value}]
+  [{id :pulseId {{status :text} :label} :value :as req}]
   {:item/id id
    :item/status status})
 
@@ -31,9 +31,9 @@
    "delete_pulse" :delete})
 
 (defn webhook-req->propagation-args [{{{event-type :type board-id :boardId :as event} :event} :body-params}]
-  {:source/platform "monday"
-   :source/board-id board-id
-   :source/item
+  {:platform "monday"
+   :board-id board-id
+   :item
    (->
      (webhook-event->monday-item event)
      (domain/monday-item->domain-item))

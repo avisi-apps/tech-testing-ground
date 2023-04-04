@@ -18,9 +18,9 @@
      :issue}
     :body-params
     {:keys [action]} :path-params}]
-  {:source/platform "jira"
-   :source/board-id (edn/read-string project-id)
-   :source/item
+  {:platform "jira"
+   :board-id (edn/read-string project-id)
+   :item
    (->
      {:issue/key key
       :issue/summary summary

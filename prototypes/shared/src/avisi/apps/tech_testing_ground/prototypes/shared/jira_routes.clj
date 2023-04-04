@@ -1,6 +1,6 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.jira-routes
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.authantication :as current-user]
+    [avisi.apps.tech-testing-ground.prototypes.shared.authentication :as current-user]
     [avisi.apps.tech-testing-ground.prototypes.shared.jira-webhooks :as jira-webhooks]))
 
 (def descriptor

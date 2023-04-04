@@ -4,85 +4,103 @@
     [avisi.apps.tech-testing-ground.prototypes.shared.monday :as monday]
     [avisi.apps.tech-testing-ground.prototypes.shared.jira :as jira]))
 
-(defprotocol Board
-  (get-items [_])
-  (update-item [_ item])
-  (add-item [_ item])
-  (delete-item [_ item]))
+(defmulti get-platform-props name)
 
-(defrecord MondayBoard [board-id]
-  Board
-    (get-items [_]
-      (->>
-        (monday/get-items board-id)
-        (mapv domain/monday-item->domain-item)))
-    (add-item [_ item]
-      (->>
-        item
-        (domain/domain-item->monday-item)
-        (monday/add-item board-id)
-        (domain/monday-item->domain-item)))
-    (update-item [_ item]
-      (->>
-        item
-        (domain/domain-item->monday-item)
-        (monday/update-item board-id)
-        (domain/monday-item->domain-item)))
-    (delete-item [_ item]
-      (->>
-        item
-        (domain/domain-item->monday-item)
-        (monday/delete-item board-id)
-        (domain/monday-item->domain-item))))
+(defmethod get-platform-props "jira" [_]
+  {:identifiers
+   {:board-identifier :jira-board-id
+    :item-identifier  :jira-item-id}
+   :domain-mappings
+   {:encode domain/jira-issue->domain-item
+    :decode domain/domain-item->jira-issue}
+   :item-handling-functions
+   {:get-items   jira/get-items
+    :create-item jira/add-item
+    :update-item jira/update-item
+    :delete-item jira/delete-item}})
 
-(defn new-monday-board [board-id] (->MondayBoard board-id))
+(defmethod get-platform-props "monday" [_]
+  {:identifiers
+   {:board-identifier :monday-board-id
+    :item-identifier  :monday-item-id}
+   :domain-mappings
+   {:encode domain/monday-item->domain-item
+    :decode domain/domain-item->monday-item}
+   :item-handling-functions
+   {:get-items   monday/get-items
+    :create-item monday/add-item
+    :update-item monday/update-item
+    :delete-item monday/delete-item}})
 
-(defrecord JiraBoard [board-id]
-  Board
-    (get-items [_]
-      (->>
-        (jira/get-items board-id)
-        (mapv domain/jira-issue->domain-item)))
-    (add-item [_ item]
-      (->>
-        item
-        (domain/domain-item->jira-issue)
-        (jira/add-item board-id)
-        (domain/jira-issue->domain-item)))
-    (update-item [_ item]
-      (->>
-        item
-        (domain/domain-item->jira-issue)
-        (jira/update-item board-id)
-        (domain/jira-issue->domain-item)))
-    (delete-item [_ item]
-      (->>
-        item
-        (domain/domain-item->jira-issue)
-        (jira/delete-item board-id)
-        (domain/jira-issue->domain-item))))
+(def opposite-platform
+  {"jira"   "monday"
+   "monday" "jira"})
 
-(defn new-jira-board [board-id] (->JiraBoard board-id))
+(defn get-board-identifier [platform]
+  (-> platform
+      (get-platform-props)
+      (get-in [:identifiers :board-identifier])))
+
+(defn get-item-identifier [platform]
+  (-> platform
+      (get-platform-props)
+      (get-in [:identifiers :item-identifier])))
+
+(defn get-items [{:keys [platform board-id]}]
+  (let [{{:keys [get-items]} :item-handling-functions
+         {:keys [encode]}    :domain-mappings} (get-platform-props platform)]
+    (->>
+      (get-items board-id)
+      (mapv encode))))
+
+(defn add-item [{:keys [platform board-id]} item]
+  (let [{{:keys [create-item]}   :item-handling-functions
+         {:keys [encode decode]} :domain-mappings} (get-platform-props platform)]
+    (->>
+      item
+      (decode)
+      (create-item board-id)
+      (encode))))
+(defn update-item [{:keys [platform board-id]} item]
+  (let [{{:keys [update-item]}   :item-handling-functions
+         {:keys [encode decode]} :domain-mappings} (get-platform-props platform)]
+    (->>
+      item
+      (decode)
+      (update-item board-id)
+      (encode))))
+(defn delete-item [{:keys [platform board-id]} item]
+  (let [{{:keys [delete-item]}   :item-handling-functions
+         {:keys [encode decode]} :domain-mappings} (get-platform-props platform)]
+    (->>
+      item
+      (decode)
+      (delete-item board-id)
+      (encode))))
+
 (comment
-  (def monday-board (->MondayBoard 3990111892))
-  (get-items monday-board)
-  (add-item monday-board {:item/title "via record"})
-  (update-item
-    monday-board
-    {:item/id 4228890295
-     :item/title "updated via record"
-     :item/status "In Progress"})
-  (delete-item monday-board {:item/id 4229005186})
-  (def jira-board (->JiraBoard 10001))
-  (get-items jira-board)
+  (get-items
+    {:platform "monday" :board-id 3990111892})
   (add-item
-    jira-board
-    {:item/title "via record"
+    {:platform "monday" :board-id 3990111892}
+    {:item/title "via record"})
+  (update-item
+    {:platform "monday" :board-id 3990111892}
+    {:item/id     "4255726976"
+     :item/title  "updated via record"
+     :item/status "In Progress"})
+  (delete-item
+    {:platform "monday" :board-id 3990111892}
+    {:item/id "4255726976"})
+  (get-items {:platform "jira" :board-id 10002})
+  (add-item
+    {:platform "jira" :board-id 10002}
+    {:item/title       "via record"
      :item/description "a description"})
   (update-item
-    jira-board
-    {:item/id "EX-238"
-     :item/title "updated via record"
+    {:platform "jira" :board-id 10002}
+    {:item/id          "ME-114"
+     :item/title       "updated via record"
      :item/description "changed description"
-     :item/status "In Progress"})
-  (delete-item jira-board {:item/id "EX-238"}))
+     :item/status      "In Progress"})
+  (delete-item {:platform "jira" :board-id 10002} {:item/id "ME-114"}))
