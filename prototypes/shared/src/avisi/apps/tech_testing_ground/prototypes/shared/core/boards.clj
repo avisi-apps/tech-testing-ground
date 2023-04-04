@@ -1,8 +1,9 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.boards
+(ns avisi.apps.tech-testing-ground.prototypes.shared.core.boards
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.domain :as domain]
-    [avisi.apps.tech-testing-ground.prototypes.shared.monday :as monday]
-    [avisi.apps.tech-testing-ground.prototypes.shared.jira :as jira]))
+    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.jira.api-wrapper :as jira]
+    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.jira.domain-mapping :as jira-domain-mapping]
+    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.monday.api-wrapper :as monday]
+    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.monday.domain-mapping :as monday-domain-mapping]))
 
 (defmulti get-platform-props name)
 
@@ -11,8 +12,8 @@
    {:board-identifier :jira-board-id
     :item-identifier  :jira-item-id}
    :domain-mappings
-   {:encode domain/jira-issue->domain-item
-    :decode domain/domain-item->jira-issue}
+   {:encode jira-domain-mapping/jira-issue->domain-item
+    :decode jira-domain-mapping/domain-item->jira-issue}
    :item-handling-functions
    {:get-items   jira/get-items
     :create-item jira/add-item
@@ -24,8 +25,8 @@
    {:board-identifier :monday-board-id
     :item-identifier  :monday-item-id}
    :domain-mappings
-   {:encode domain/monday-item->domain-item
-    :decode domain/domain-item->monday-item}
+   {:encode monday-domain-mapping/monday-item->domain-item
+    :decode monday-domain-mapping/domain-item->monday-item}
    :item-handling-functions
    {:get-items   monday/get-items
     :create-item monday/add-item
@@ -61,6 +62,7 @@
       (decode)
       (create-item board-id)
       (encode))))
+
 (defn update-item [{:keys [platform board-id]} item]
   (let [{{:keys [update-item]}   :item-handling-functions
          {:keys [encode decode]} :domain-mappings} (get-platform-props platform)]
@@ -69,6 +71,7 @@
       (decode)
       (update-item board-id)
       (encode))))
+
 (defn delete-item [{:keys [platform board-id]} item]
   (let [{{:keys [delete-item]}   :item-handling-functions
          {:keys [encode decode]} :domain-mappings} (get-platform-props platform)]

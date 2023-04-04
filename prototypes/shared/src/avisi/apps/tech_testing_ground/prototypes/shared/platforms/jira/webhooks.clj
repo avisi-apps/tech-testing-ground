@@ -1,7 +1,7 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.jira-webhooks
+(ns avisi.apps.tech-testing-ground.prototypes.shared.platforms.jira.webhooks
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.domain :as domain]
-    [avisi.apps.tech-testing-ground.prototypes.shared.propagate-change :as propagate]
+    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.jira.domain-mapping :as domain]
+    [avisi.apps.tech-testing-ground.prototypes.shared.core.propagate-change :as propagate]
     [clojure.edn :as edn]))
 
 (def jira-action->domain-action

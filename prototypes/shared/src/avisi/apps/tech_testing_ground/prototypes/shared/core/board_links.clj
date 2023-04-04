@@ -1,7 +1,7 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.board-links
+(ns avisi.apps.tech-testing-ground.prototypes.shared.core.board-links
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.boards :as boards]
-    [avisi.apps.tech-testing-ground.prototypes.shared.database :as db]))
+    [avisi.apps.tech-testing-ground.prototypes.shared.core.boards :as boards]
+    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.board-links :as db]))
 
 (defn get-connected-board
   [{source-platform :platform

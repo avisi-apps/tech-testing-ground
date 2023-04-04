@@ -17,6 +17,4 @@
         datascript/datascript {:mvn/version "1.4.0"}
         ; testing
         com.hyperfiddle/rcf {:mvn/version "20220926-202227"}
-        ; tracing
-        jpmonettas/flow-storm-debugger {:mvn/version "RELEASE"}
         }}

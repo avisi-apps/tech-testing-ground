@@ -1,6 +1,6 @@
 (ns avisi.apps.tech-testing-ground.prototypes.fulcro.server.server
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.server :as server]
+    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.server :as server]
     [avisi.apps.tech-testing-ground.prototypes.fulcro.server.parser :as parser]
     [com.wsscode.pathom3.connect.operation.transit :as pcot]
     [ring.util.response :refer [redirect]]

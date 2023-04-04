@@ -1,10 +1,6 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.monday
+(ns avisi.apps.tech-testing-ground.prototypes.shared.platforms.monday.api-wrapper
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.authentication :as current-user]
-    [avisi.apps.tech-testing-ground.prototypes.shared.domain :as domain]
-    [avisi.apps.tech-testing-ground.prototypes.shared.http-client :as http-client]
-    [clojure.string :as str]
-    [clj-http.client :as http]
+    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.http-client :as http-client]
     [clojure.data.json :as json]))
 
 (def ^:private api-url "https://api.monday.com/v2/")

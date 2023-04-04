@@ -1,30 +1,29 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.server
+(ns avisi.apps.tech-testing-ground.prototypes.shared.peripherals.server
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.jira-routes :as atlassian-connect]
-    [avisi.apps.tech-testing-ground.prototypes.shared.monday-routes :as monday]
-    [reitit.ring :as ring]
-    ;[ring.adapter.jetty :as jetty]
-    [ring.adapter.jetty9 :as jetty]
-    [ring.middleware.params :refer [wrap-params]]
-    [ring.middleware.resource :refer [wrap-resource]]
-    [ring.middleware.content-type :refer [wrap-content-type]]
+    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.jira.routes :as jira]
+    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.monday.routes :as monday]
+    [mount.core :as mount :refer [defstate]]
     [muuntaja.core :as muuntaja]
     [muuntaja.middleware :as middleware]
-    [mount.core :as mount :refer [defstate]]))
+    [reitit.ring :as ring]
+    [ring.adapter.jetty9 :as jetty]
+    [ring.middleware.content-type :refer [wrap-content-type]]
+    [ring.middleware.params :refer [wrap-params]]
+    [ring.middleware.resource :refer [wrap-resource]]))
 
 (def not-found-response
-  {:status 404
+  {:status  404
    :headers {"Content-Type" "text/plain"}
-   :body "Not Found"})
+   :body    "Not Found"})
 
 (def ping-route
   ["/ping"
    {:get
-      {:handler
-         (fn [_]
-           {:status 200
-            :headers {"content-type" "text/plain"}
-            :body "pong"})}}])
+    {:handler
+     (fn [_]
+       {:status  200
+        :headers {"content-type" "text/plain"}
+        :body    "pong"})}}])
 
 (defn- wrap-index-as-root
   [next-handler]
@@ -54,11 +53,11 @@
 
 (defn app
   [{:keys [routes custom-content-negotiation ws-handler jira-handlers monday-handlers]
-    :or {routes []}}]
+    :or   {routes []}}]
   (let [content-negotiation (muuntaja-options custom-content-negotiation)]
     (->
       (ring/ring-handler
-        (ring/router [routes ping-route (atlassian-connect/routes jira-handlers) (monday/routes monday-handlers)])
+        (ring/router [routes ping-route (jira/routes jira-handlers) (monday/routes monday-handlers)])
         (constantly not-found-response))
       (catch-req-middleware)
       (middleware/wrap-format content-negotiation)
@@ -71,31 +70,31 @@
 (defn start-server
   [{:keys [host port resources-path]
     :or
-      {port 3000
-       host "0.0.0.0"
-       resources-path "public"}
-    :as server-config}]
+    {port           3000
+     host           "0.0.0.0"
+     resources-path "public"}
+    :as   server-config}]
   (println (str "\nStarting server on port: " port "\n"))
   (jetty/run-jetty
     (app server-config)
-    {:host host
-     :port port
+    {:host           host
+     :port           port
      :resources-path resources-path
-     :join? false}))
+     :join?          false}))
 
 ; TODO: everything uses port 3000 till there's an implemented solution for integrating all prototypes with the same
 ; plugin
 (def config
   {:ports
-     {:central-server 3000
-      :htmx 3000
-      :fulcro 3000
-      :electric 3000}})
+   {:central-server 3000
+    :htmx           3000
+    :fulcro         3000
+    :electric       3000}})
 (defn get-port [tech-name] (get-in config [:ports (keyword tech-name)]))
 
 ; maybe a central proxy-server is the best solution, will work it out later
 #_(def central-server-config
-    {:port 3000
+    {:port   3000
      :routes atlassian-connect/routes})
 
 #_(defstate central-server :start (start-server central-server-config) :stop (.stop central-server))

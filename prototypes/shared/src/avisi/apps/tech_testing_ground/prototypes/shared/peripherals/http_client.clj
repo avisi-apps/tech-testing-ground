@@ -1,15 +1,15 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.http-client
+(ns avisi.apps.tech-testing-ground.prototypes.shared.peripherals.http-client
   (:require
+    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.authentication :as auth]
     [clj-http.client :as http]
-    [clojure.data.json :as json]
-    [avisi.apps.tech-testing-ground.prototypes.shared.authentication :as auth]))
+    [clojure.data.json :as json]))
 
 (defn ^:private custom-middleware [platform] (conj clj-http.client/default-middleware (auth/add-auth-header-middleware platform)))
 
 (def ^:private http-methods
-  {:get http/get
-   :post http/post
-   :put http/put
+  {:get    http/get
+   :post   http/post
+   :put    http/put
    :delete http/delete})
 
 (defn perform-request-fn [platform]

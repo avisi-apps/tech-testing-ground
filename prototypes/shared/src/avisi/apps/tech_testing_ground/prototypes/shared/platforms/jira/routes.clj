@@ -1,7 +1,7 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.jira-routes
+(ns avisi.apps.tech-testing-ground.prototypes.shared.platforms.jira.routes
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.authentication :as current-user]
-    [avisi.apps.tech-testing-ground.prototypes.shared.jira-webhooks :as jira-webhooks]))
+    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.authentication :as authentication]
+    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.jira.webhooks :as webhooks]))
 
 (def descriptor
   (let [base-url "https://jaamaask.eu.ngrok.io"]
@@ -60,13 +60,13 @@
            :headers {"content-type" "application/json"}
            :body descriptor})}}]
      ["/webhooks/:action" {:middleware
-                           [(current-user/identify-current-user-middleware
+                           [(authentication/identify-current-user-middleware
                               {:platform "jira"
                                :path-to-user-id [:body-params :issue :fields :creator :accountId]})]
-                           :post {:handler jira-webhooks/webhook-handler}}]]]
+                           :post {:handler webhooks/webhook-handler}}]]]
    ["/jira-item-view"
     {:middleware
-     [(current-user/identify-current-user-middleware
+     [(authentication/identify-current-user-middleware
         {:platform "jira"
          :path-to-jwt [:query-params "jwt"]
          :path-to-user-id ["sub"]})]

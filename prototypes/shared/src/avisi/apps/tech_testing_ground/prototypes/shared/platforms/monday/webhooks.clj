@@ -1,7 +1,7 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.monday-webhooks
+(ns avisi.apps.tech-testing-ground.prototypes.shared.platforms.monday.webhooks
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.domain :as domain]
-    [avisi.apps.tech-testing-ground.prototypes.shared.propagate-change :as propagate]))
+    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.monday.domain-mapping :as domain]
+    [avisi.apps.tech-testing-ground.prototypes.shared.core.propagate-change :as propagate]))
 
 (defmulti webhook-event->monday-item (fn [{:keys [type]}] type))
 

@@ -1,6 +1,6 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.authentication
+(ns avisi.apps.tech-testing-ground.prototypes.shared.peripherals.authentication
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.database :as db]
+    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.current-user :as db]
     [clojure.data.json :as json])
   (:import
     java.util.Base64))
@@ -36,12 +36,12 @@
   (fn [next-handler]
     (fn [req]
       (let [user-id (cond-> req
-                      path-to-jwt (-> (get-in path-to-jwt) (get-jwt-payload))
-                      :always (get-in path-to-user-id))]
+                            path-to-jwt (-> (get-in path-to-jwt) (get-jwt-payload))
+                            :always (get-in path-to-user-id))]
         (->>
           (db/get-current-user
             {:platform platform
-             :user-id user-id})
+             :user-id  user-id})
           (reset! current-user)))
       (next-handler req))))
 

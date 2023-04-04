@@ -1,8 +1,9 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.item-links
+(ns avisi.apps.tech-testing-ground.prototypes.shared.core.item-links
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.board-links :as board-links]
-    [avisi.apps.tech-testing-ground.prototypes.shared.boards :as boards]
-    [avisi.apps.tech-testing-ground.prototypes.shared.database :as db]
+    [avisi.apps.tech-testing-ground.prototypes.shared.core.board-links :as board-links]
+    [avisi.apps.tech-testing-ground.prototypes.shared.core.boards :as boards]
+    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.board-links :as board-link-db]
+    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.item-links :as item-link-db]
     [clojure.set :as set]))
 
 (defn create-item-link
@@ -12,12 +13,12 @@
      :as            source-item}
     :item}
    {target-item-id :item/id}]
-  (let [{:keys [board-link-id]} (db/get-board-link
+  (let [{:keys [board-link-id]} (board-link-db/get-board-link
                                   {:platform source-platform
                                    :board-id source-board-id})
         source-item-identifier (boards/get-item-identifier source-platform)
         target-item-identifier (boards/get-item-identifier (boards/opposite-platform source-platform))]
-    (db/create-item-link
+    (item-link-db/create-item-link
       {:board-link-id         board-link-id
        source-item-identifier source-item-id
        target-item-identifier target-item-id
@@ -30,34 +31,34 @@
      :as            source-item}
     :item}]
   (let [source-item-identifier (boards/get-item-identifier source-platform)
-        {:keys [board-link-id]} (db/get-board-link
+        {:keys [board-link-id]} (board-link-db/get-board-link
                                   {:platform source-platform
                                    :board-id source-board-id})]
     (->
       {:board-link-id         board-link-id
        source-item-identifier source-item-id}
-      (db/get-item-link)
+      (item-link-db/get-item-link)
       (assoc :item-representation (select-keys source-item [:item/title :item/status]))
-      (db/update-item-link))))
+      (item-link-db/update-item-link))))
 
 (defn delete-item-link
   [{source-board-id      :board-id
     source-platform      :platform
     {source-item-id :id} :item}]
-  (let [{:keys [board-link-id]} (db/get-board-link
+  (let [{:keys [board-link-id]} (board-link-db/get-board-link
                                   {:platform source-platform
                                    :board-id source-board-id})
         source-item-identifier (boards/get-item-identifier source-platform)]
     (some->>
-      (db/get-item-link
+      (item-link-db/get-item-link
         {:board-link-id         board-link-id
          source-item-identifier source-item-id})
-      (db/delete-item-link))))
+      (item-link-db/delete-item-link))))
 
 (defn get-item-links [{:keys [platform board-id] :as board}]
   (-> board
-      (db/get-board-link)
-      (db/get-item-links)))
+      (board-link-db/get-board-link)
+      (item-link-db/get-item-links)))
 
 (defn get-unlinked-items [{:keys [platform board-id] :as board}]
   (let [item-identifier (boards/get-item-identifier platform)
@@ -72,13 +73,13 @@
     source-platform           :platform
     {source-item-id :item/id} :item}]
   (let [source-item-identifier (boards/get-item-identifier source-platform)
-        {:keys [board-link-id]} (db/get-board-link
+        {:keys [board-link-id]} (board-link-db/get-board-link
                                   {:platform source-platform
                                    :board-id source-board-id})]
     (some->>
       {:board-link-id         board-link-id
        source-item-identifier source-item-id}
-      (db/get-item-link)
+      (item-link-db/get-item-link)
       (:item-representation))))
 
 (defn get-connected-item
@@ -88,13 +89,13 @@
     {source-item-id :item/id} :item}]
   (let [source-item-identifier (boards/get-item-identifier source-platform)
         target-item-identifier (boards/get-item-identifier (boards/opposite-platform source-platform))
-        {:keys [board-link-id]} (db/get-board-link
+        {:keys [board-link-id]} (board-link-db/get-board-link
                                   {:platform source-platform
                                    :board-id source-board-id})]
     (some->>
       {:board-link-id         board-link-id
        source-item-identifier source-item-id}
-      (db/get-item-link)
+      (item-link-db/get-item-link)
       (target-item-identifier)
       (assoc item :item/id))))
 

@@ -1,6 +1,6 @@
 (ns avisi.apps.tech-testing-ground.prototypes.electric.server.server
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.server :as server]
+    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.server :as server]
     [ring.util.response :refer [redirect]]
     [hyperfiddle.electric-jetty-adapter :as adapter]
     [mount.core :as mount :refer [defstate]]))
