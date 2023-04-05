@@ -15,7 +15,7 @@
 (comment
   (get-current-user
     {:platform "monday"
-     :user-id  36052059})
+     :user-id 36052059})
   (get-current-user
     {:platform "jira"
-     :user-id  "630c7cca56010c40d4461641"}))
+     :user-id "630c7cca56010c40d4461641"}))

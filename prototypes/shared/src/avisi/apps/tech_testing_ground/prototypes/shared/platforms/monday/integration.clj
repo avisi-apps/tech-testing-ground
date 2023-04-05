@@ -5,13 +5,13 @@
 
 (def integration-props
   {:identifiers
-   {:board-identifier :monday-board-id
-    :item-identifier  :monday-item-id}
+     {:board-identifier :monday-board-id
+      :item-identifier :monday-item-id}
    :domain-mappings
-   {:encode domain/monday-item->domain-item
-    :decode domain/domain-item->monday-item}
+     {:encode domain/monday-item->domain-item
+      :decode domain/domain-item->monday-item}
    :item-handling-functions
-   {:get-items   monday/get-items
-    :create-item monday/add-item
-    :update-item monday/update-item
-    :delete-item monday/delete-item}})
+     {:get-items monday/get-items
+      :create-item monday/add-item
+      :update-item monday/update-item
+      :delete-item monday/delete-item}})

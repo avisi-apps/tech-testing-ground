@@ -14,15 +14,15 @@
    [:issue/status [:enum "To Do" "In Progres" "Done"]]])
 
 (def domain-item-keys->jira-item-keys
-  {:item/id          :issue/key
-   :item/title       :issue/summary
+  {:item/id :issue/key
+   :item/title :issue/summary
    :item/description :issue/description
-   :item/status      :issue/status})
+   :item/status :issue/status})
 
 (def domain-item-status->jira-item-status
-  {"To Do"       "To Do"
+  {"To Do" "To Do"
    "In Progress" "In Progress"
-   "Done"        "Done"})
+   "Done" "Done"})
 
 (def jira-key-transformer
   (mt/key-transformer
@@ -31,40 +31,40 @@
 
 (defn jira-issue->domain-item
   [{:keys [status]
-    :as   jira-issue}]
+    :as jira-issue}]
   (cond-> (m/decode item/item-schema jira-issue (mt/transformer jira-key-transformer mt/strip-extra-keys-transformer))
-          status (update :item/status (set/map-invert domain-item-status->jira-item-status))))
+    status (update :item/status (set/map-invert domain-item-status->jira-item-status))))
 
 (defn domain-item->jira-issue [domain-item]
   (as-> domain-item item
-        (m/encode item/item-schema item jira-key-transformer)
-        (m/encode jira-item-schema item mt/strip-extra-keys-transformer)
-        (update item :issue/status #(domain-item-status->jira-item-status % "To Do"))))
+    (m/encode item/item-schema item jira-key-transformer)
+    (m/encode jira-item-schema item mt/strip-extra-keys-transformer)
+    (update item :issue/status #(domain-item-status->jira-item-status % "To Do"))))
 
 (tests
   "domain -> jira"
   (->
-    {:item/title                "Something todo"
-     :item/description          "A description"
-     :item/status               "In Progress"
+    {:item/title "Something todo"
+     :item/description "A description"
+     :item/status "In Progress"
      :item/not-existent-in-jira "shouldn't enter jira-ns"}
     (domain-item->jira-issue))
   :=
-  {:issue/summary     "Something todo"
+  {:issue/summary "Something todo"
    :issue/description "A description"
-   :issue/status      "In Progress"}
+   :issue/status "In Progress"}
   ; unknown status defaults to "To Do"
   (->
     {:item/status "Blocked"}
     (domain-item->jira-issue))
   := {:issue/status "To Do"}
   "jira -> domain"
-  (->
-    {:issue/summary     "Something todo"
-     :issue/description "A description"
-     :issue/status      "In Progress"}
-    (jira-issue->domain-item))
+    (->
+      {:issue/summary "Something todo"
+       :issue/description "A description"
+       :issue/status "In Progress"}
+      (jira-issue->domain-item))
   :=
-  {:item/title       "Something todo"
-   :item/description "A description"
-   :item/status      "In Progress"})
+    {:item/title "Something todo"
+     :item/description "A description"
+     :item/status "In Progress"})

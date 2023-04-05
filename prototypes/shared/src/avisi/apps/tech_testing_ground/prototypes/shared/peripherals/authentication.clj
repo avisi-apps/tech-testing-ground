@@ -36,12 +36,15 @@
   (fn [next-handler]
     (fn [req]
       (let [user-id (cond-> req
-                            path-to-jwt (-> (get-in path-to-jwt) (get-jwt-payload))
-                            :always (get-in path-to-user-id))]
+                      path-to-jwt
+                        (->
+                          (get-in path-to-jwt)
+                          (get-jwt-payload))
+                      :always (get-in path-to-user-id))]
         (->>
           (db/get-current-user
             {:platform platform
-             :user-id  user-id})
+             :user-id user-id})
           (reset! current-user)))
       (next-handler req))))
 
@@ -52,9 +55,4 @@
         (assoc-in req [:headers "Authorization"] (auth-header platform))
         (next-handler)))))
 
-(comment
-
-  @current-user
-
-  (reset! current-user nil)
-  )
+(comment @current-user (reset! current-user nil))

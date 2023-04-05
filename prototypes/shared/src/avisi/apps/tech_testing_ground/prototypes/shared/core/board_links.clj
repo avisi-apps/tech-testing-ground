@@ -14,26 +14,42 @@
                             {:platform source-platform
                              :board-id source-board-id})
                           (target-board-identifier))]
-    {:platform target-platform :board-id target-board-id}))
+    {:platform target-platform
+     :board-id target-board-id}))
 
-(defn sync-by-default?
-  [{:keys [board-id platform]}]
-  (-> (db/get-board-link
-        {:platform platform
-         :board-id board-id})
-      (:sync-by-default)))
+(defn sync-by-default? [{:keys [board-id platform]}]
+  (->
+    (db/get-board-link
+      {:platform platform
+       :board-id board-id})
+    (:sync-by-default)))
 
 (defn set-sync-by-default [{:keys [board-id platform]} sync-by-default]
-  (-> (db/get-board-link
-        {:platform platform
-         :board-id board-id})
-      (assoc :sync-by-default sync-by-default)
-      (db/update-board-link)))
+  (->
+    (db/get-board-link
+      {:platform platform
+       :board-id board-id})
+    (assoc :sync-by-default sync-by-default)
+    (db/update-board-link)))
 
 (comment
-  (get-connected-board {:platform "jira" :board-id 10002})
-  (get-connected-board {:platform "monday" :board-id 3990111892})
-  (sync-by-default? {:platform "jira" :board-id 10002})
-  (sync-by-default? {:platform "monday" :board-id 3990111892})
-  (set-sync-by-default {:platform "monday" :board-id 3990111892} true)
-  (set-sync-by-default {:platform "monday" :board-id 3990111892} false))
+  (get-connected-board
+    {:platform "jira"
+     :board-id 10002})
+  (get-connected-board
+    {:platform "monday"
+     :board-id 3990111892})
+  (sync-by-default?
+    {:platform "jira"
+     :board-id 10002})
+  (sync-by-default?
+    {:platform "monday"
+     :board-id 3990111892})
+  (set-sync-by-default
+    {:platform "monday"
+     :board-id 3990111892}
+    true)
+  (set-sync-by-default
+    {:platform "monday"
+     :board-id 3990111892}
+    false))

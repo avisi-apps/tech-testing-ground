@@ -5,18 +5,11 @@
     [malli.core :as m]
     [malli.transform :as mt]))
 
-(def board-link-schema
-  [:map
-   [:id string?]
-   [:jira-board-id int?]
-   [:monday-board-id int?]
-   [:sync-by-default boolean?]])
+(def board-link-schema [:map [:id string?] [:jira-board-id int?] [:monday-board-id int?] [:sync-by-default boolean?]])
 
-(defn decode-board-link [board-link]
-  (m/decode board-link-schema board-link (mt/key-transformer {:decode keyword})))
+(defn decode-board-link [board-link] (m/decode board-link-schema board-link (mt/key-transformer {:decode keyword})))
 
-(defn encode-board-link [board-link]
-  (m/encode board-link-schema board-link (mt/key-transformer {:encode name})))
+(defn encode-board-link [board-link] (m/encode board-link-schema board-link (mt/key-transformer {:encode name})))
 
 (defn get-board-link [{:keys [platform board-id]}]
   (when-let [[document-id board-link] (->
@@ -29,10 +22,13 @@
       (assoc :board-link-id document-id)
       (decode-board-link))))
 
-(defn update-board-link [{:keys [board-link-id] :as board-link}]
-  (-> db
-      (f/doc (str "board-links/" board-link-id))
-      (f/set! (encode-board-link board-link))))
+(defn update-board-link
+  [{:keys [board-link-id]
+    :as board-link}]
+  (->
+    db
+    (f/doc (str "board-links/" board-link-id))
+    (f/set! (encode-board-link board-link))))
 
 
 (comment
@@ -47,5 +43,4 @@
       {:platform "monday"
        :board-id 3990111892})
     (assoc :sync-by-default false)
-    (update-board-link))
-  )
+    (update-board-link)))

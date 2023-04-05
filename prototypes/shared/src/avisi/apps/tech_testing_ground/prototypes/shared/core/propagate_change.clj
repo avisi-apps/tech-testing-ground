@@ -8,7 +8,7 @@
 
 (defmethod propagate-action :create
   [{:keys [platform board-id item]
-    :as   source}]
+    :as source}]
   (when (and (board-links/sync-by-default? source) (not (item-links/get-item-representation source)))
     (let [to-be-connected (->
                             (board-links/get-connected-board source)
@@ -17,7 +17,7 @@
 
 (defmethod propagate-action :update
   [{:keys [platform board-id item]
-    :as   source}]
+    :as source}]
   (when-not (= item (item-links/get-item-representation source))
     (let [target-board (board-links/get-connected-board source)
           target-item (item-links/get-connected-item source)]
@@ -26,7 +26,7 @@
 
 (defmethod propagate-action :delete
   [{:keys [platform board-id item]
-    :as   source}]
+    :as source}]
   (let [target-board (board-links/get-connected-board source)
         target-item (item-links/get-connected-item source)]
     (when target-item (boards/delete-item target-board target-item) (item-links/delete-item-link source))))
