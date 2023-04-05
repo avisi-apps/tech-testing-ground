@@ -1,15 +1,12 @@
 (ns avisi.apps.tech-testing-ground.prototypes.electric.server.server
   (:require
     [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.server :as server]
-    [ring.util.response :refer [redirect]]
     [hyperfiddle.electric-jetty-adapter :as adapter]
-    [mount.core :as mount :refer [defstate]]))
+    [mount.core :as mount :refer [defstate]]
+    [ring.util.response :refer [redirect]]))
 
 (def server-config
-  {:port (server/get-port "electric")
-   :host "0.0.0.0"
-   :routes []
-   :resources-path "public"
+  {:routes []
    :ws-handler (fn [req] (adapter/electric-ws-adapter (partial adapter/electric-ws-message-handler req)))
    :jira-handlers {:item-view-handler (constantly (redirect "jira-item-view.html"))}
    :monday-handlers {:item-view-handler (constantly (redirect "monday-item-view.html"))}})

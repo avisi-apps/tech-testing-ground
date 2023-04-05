@@ -2,7 +2,6 @@
   (:require
     [avisi.apps.tech-testing-ground.prototypes.shared.platforms.jira.routes :as jira]
     [avisi.apps.tech-testing-ground.prototypes.shared.platforms.monday.routes :as monday]
-    [mount.core :as mount :refer [defstate]]
     [muuntaja.core :as muuntaja]
     [muuntaja.middleware :as middleware]
     [reitit.ring :as ring]
@@ -29,13 +28,7 @@
   [next-handler]
   (fn [request] (next-handler (if (= "/" (:uri request)) (assoc request :uri "/index.html") request))))
 
-(defn- catch-req-middleware
-  [next-handler]
-  (fn [request]
-    (def _req request)
-    (when (= (:uri request) "/monday-item-view") (def _mreq request))
-    (when (= (:uri request) "/jira-item-view") (def _jreq request))
-    (next-handler request)))
+(defn- catch-req-middleware [next-handler] (fn [request] (def _req request) (next-handler request)))
 
 (comment
   (->
@@ -67,6 +60,7 @@
       (wrap-index-as-root)
       (wrap-websocket ws-handler))))
 
+; TODO: everything uses port 3000 till there's an implemented solution for integrating all prototypes with the same
 (defn start-server
   [{:keys [host port resources-path]
     :or
@@ -81,21 +75,3 @@
      :port port
      :resources-path resources-path
      :join? false}))
-
-; TODO: everything uses port 3000 till there's an implemented solution for integrating all prototypes with the same
-; plugin
-(def config
-  {:ports
-     {:central-server 3000
-      :htmx 3000
-      :fulcro 3000
-      :electric 3000}})
-(defn get-port [tech-name] (get-in config [:ports (keyword tech-name)]))
-
-; maybe a central proxy-server is the best solution, will work it out later
-#_(def central-server-config
-    {:port 3000
-     :routes atlassian-connect/routes})
-
-#_(defstate central-server :start (start-server central-server-config) :stop (.stop central-server))
-(comment (mount/start) (mount/stop) (mount/running-states))

@@ -8,8 +8,7 @@
 (def routes (hello-world/routes))
 
 (def server-config
-  {:port (server/get-port "htmx")
-   :routes routes
+  {:routes routes
    :jira-handlers {:item-view-handler (constantly (redirect "jira-item-view.html"))}
    :monday-handlers {:item-view-handler (constantly (redirect "monday-item-view.html"))}})
 
