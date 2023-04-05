@@ -1,4 +1,4 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.main
+(ns avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.config
   (:require
     [firestore-clj.core :as f]))
 

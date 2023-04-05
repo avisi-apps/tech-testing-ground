@@ -1,10 +1,10 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.platforms.jira.domain-mapping
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.core.domain :as domain]
-    [malli.core :as m]
-    [malli.transform :as mt]
+    [avisi.apps.tech-testing-ground.prototypes.shared.core.items :as item]
     [clojure.set :as set]
-    [hyperfiddle.rcf :refer [tests]]))
+    [hyperfiddle.rcf :refer [tests]]
+    [malli.core :as m]
+    [malli.transform :as mt]))
 
 (def jira-item-schema
   [:map
@@ -26,19 +26,20 @@
 
 (def jira-key-transformer
   (mt/key-transformer
-    {:encode (domain/map-fn-passthrough domain-item-keys->jira-item-keys)
-     :decode (domain/map-fn-passthrough (set/map-invert domain-item-keys->jira-item-keys))}))
+    {:encode #(domain-item-keys->jira-item-keys % %)
+     :decode #((set/map-invert domain-item-keys->jira-item-keys) % %)}))
+
 (defn jira-issue->domain-item
   [{:keys [status]
     :as   jira-issue}]
-  (cond-> (m/decode domain/item-schema jira-issue (mt/transformer jira-key-transformer mt/strip-extra-keys-transformer))
-          status (update :item/status (domain/map-fn (set/map-invert domain-item-status->jira-item-status)))))
+  (cond-> (m/decode item/item-schema jira-issue (mt/transformer jira-key-transformer mt/strip-extra-keys-transformer))
+          status (update :item/status (set/map-invert domain-item-status->jira-item-status))))
 
 (defn domain-item->jira-issue [domain-item]
   (as-> domain-item item
-        (m/encode domain/item-schema item jira-key-transformer)
+        (m/encode item/item-schema item jira-key-transformer)
         (m/encode jira-item-schema item mt/strip-extra-keys-transformer)
-        (update item :issue/status (domain/map-fn domain-item-status->jira-item-status "To Do"))))
+        (update item :issue/status #(domain-item-status->jira-item-status % "To Do"))))
 
 (tests
   "domain -> jira"

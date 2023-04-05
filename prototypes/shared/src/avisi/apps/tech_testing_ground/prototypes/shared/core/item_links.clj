@@ -2,6 +2,7 @@
   (:require
     [avisi.apps.tech-testing-ground.prototypes.shared.core.board-links :as board-links]
     [avisi.apps.tech-testing-ground.prototypes.shared.core.boards :as boards]
+    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.integration :as platform]
     [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.board-links :as board-link-db]
     [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.item-links :as item-link-db]
     [clojure.set :as set]))
@@ -16,8 +17,8 @@
   (let [{:keys [board-link-id]} (board-link-db/get-board-link
                                   {:platform source-platform
                                    :board-id source-board-id})
-        source-item-identifier (boards/get-item-identifier source-platform)
-        target-item-identifier (boards/get-item-identifier (boards/opposite-platform source-platform))]
+        source-item-identifier (platform/get-item-identifier source-platform)
+        target-item-identifier (platform/get-item-identifier (platform/opposite-platform source-platform))]
     (item-link-db/create-item-link
       {:board-link-id         board-link-id
        source-item-identifier source-item-id
@@ -30,7 +31,7 @@
     {source-item-id :id
      :as            source-item}
     :item}]
-  (let [source-item-identifier (boards/get-item-identifier source-platform)
+  (let [source-item-identifier (platform/get-item-identifier source-platform)
         {:keys [board-link-id]} (board-link-db/get-board-link
                                   {:platform source-platform
                                    :board-id source-board-id})]
@@ -48,7 +49,7 @@
   (let [{:keys [board-link-id]} (board-link-db/get-board-link
                                   {:platform source-platform
                                    :board-id source-board-id})
-        source-item-identifier (boards/get-item-identifier source-platform)]
+        source-item-identifier (platform/get-item-identifier source-platform)]
     (some->>
       (item-link-db/get-item-link
         {:board-link-id         board-link-id
@@ -61,7 +62,7 @@
       (item-link-db/get-item-links)))
 
 (defn get-unlinked-items [{:keys [platform board-id] :as board}]
-  (let [item-identifier (boards/get-item-identifier platform)
+  (let [item-identifier (platform/get-item-identifier platform)
         item-links (get-item-links board)
         items (boards/get-items board)
         unlinked-item-ids (set/difference (set (map :item/id items)) (set (map item-identifier item-links)))]
@@ -72,7 +73,7 @@
   [{source-board-id           :board-id
     source-platform           :platform
     {source-item-id :item/id} :item}]
-  (let [source-item-identifier (boards/get-item-identifier source-platform)
+  (let [source-item-identifier (platform/get-item-identifier source-platform)
         {:keys [board-link-id]} (board-link-db/get-board-link
                                   {:platform source-platform
                                    :board-id source-board-id})]
@@ -87,8 +88,8 @@
     source-board-id           :board-id
     source-platform           :platform
     {source-item-id :item/id} :item}]
-  (let [source-item-identifier (boards/get-item-identifier source-platform)
-        target-item-identifier (boards/get-item-identifier (boards/opposite-platform source-platform))
+  (let [source-item-identifier (platform/get-item-identifier source-platform)
+        target-item-identifier (platform/get-item-identifier (platform/opposite-platform source-platform))
         {:keys [board-link-id]} (board-link-db/get-board-link
                                   {:platform source-platform
                                    :board-id source-board-id})]

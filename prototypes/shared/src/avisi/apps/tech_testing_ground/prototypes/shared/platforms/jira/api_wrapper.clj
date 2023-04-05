@@ -8,22 +8,14 @@
 
 (def ^:private perform-request (http-client/perform-request-fn "jira"))
 
-(defn res->item [res]
-  (let [{:keys [key]
-         {:keys          [summary description]
-          {:keys [name]} :status}
-         :fields}
-        res]
-    {:item/key         key
-     :item/summary     summary
-     :item/description description
-     :item/status      name}))
-
-;TODO move to destructuring
-(def path-to-issue-key [:key])
-(def path-to-summary [:fields :summary])
-(def path-to-status [:fields :status :name])
-(def path-to-description [:fields :description])
+(defn res->item [{:keys [key]
+                  {:keys          [summary description]
+                   {:keys [name]} :status}
+                  :fields}]
+  {:item/key         key
+   :item/summary     summary
+   :item/description description
+   :item/status      name})
 
 (defn get-items [board-id]
   ; The type of jira-project we're using always has a single board. Issues are found via the project-id instead of the
@@ -35,28 +27,7 @@
       {:method :get
        :url    (str base-url "/rest/api/2/search?jql=project=" board-id)})
     (:issues)
-    (mapv
-      (fn [res]
-        {:issue/key         (get-in res path-to-issue-key)
-         :issue/summary     (get-in res path-to-summary)
-         :issue/status      (get-in res path-to-status)
-         :issue/description (get-in res path-to-description)}))))
-
-(defn ^:private get-item-by-id [{:issue/keys [key]}]
-  (->
-    (perform-request
-      {:method :get
-       :url    (str base-url "/rest/api/2/issue/" key)})
-    (res->item)))
-
-(defn ^:private get-item-by-filters [board-id {:issue/keys [summary]}]
-  (let [jql-string (codec/url-encode (str "project = " board-id " AND summary ~ " (str "\"" summary "" \")))]
-    (->
-      (perform-request
-        {:method :get
-         :url    (str base-url (str "/rest/api/2/search?jql=" jql-string))})
-      #_(res->item))))
-
+    (mapv res->item)))
 
 (defn add-item [board-id {:issue/keys [summary description]}]
   ; As with get-items the board-id in the function signature corresponds to the project-id in the jira-domain.

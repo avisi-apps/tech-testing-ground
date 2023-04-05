@@ -1,33 +1,39 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.item-links
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.core.domain :as domain]
-    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.main :refer [db]]
+    [avisi.apps.tech-testing-ground.prototypes.shared.core.items :as domain]
+    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.config :refer [db]]
     [firestore-clj.core :as f]
     [malli.core :as m]
     [malli.transform :as mt]))
 
+(def item-link-schema
+  [:map
+   [:board-link-id string?]
+   [:jira-item-id string?]
+   [:monday-item-id string?]
+   [:item-representation
+    [:map
+     [:id string?]
+     [:title string?]
+     [:description string?]
+     [:status [:enum "To Do" "In Progres" "Done" "Blocked"]]]]])
+
+; needed to deal with bug in firestore-clj where properties with map values get returned as java hash-maps instead of clojure maps
 (def ^:private fire-store-item-link-schema
   [:map
-   ["board-link-id" string?]
-   ["jira-item-id" string?]
-   ["monday-item-id" int?]
    ["item-representation"
-    [:map {:decode/json #(into {} %)}
-     ["id" string?]
-     ["title" string?]
-     ["description" string?]
-     ["status" [:enum "To Do" "In Progres" "Done" "Blocked"]]]]])
+    [:map {:decode/json #(into {} %)}]]])
 
 (def ^:private item-link-transformer
   (mt/transformer (mt/key-transformer {:encode (comp str symbol)
                                        :decode keyword}) mt/string-transformer))
 (defn ^:private encode-item-link [item-link]
-  (m/encode domain/item-link-schema item-link item-link-transformer))
+  (m/encode item-link-schema item-link item-link-transformer))
 
 (defn ^:private decode-item-link [item-link]
   (as-> item-link il
         (m/decode fire-store-item-link-schema il mt/json-transformer)
-        (m/decode domain/item-link-schema il item-link-transformer)))
+        (m/decode item-link-schema il item-link-transformer)))
 
 (defn create-item-link
   [{:keys [board-link-id jira-item-id monday-item-id item-representation]
@@ -98,5 +104,5 @@
      :monday-item-id 456})
   (get-item-link
     {:board-link-id "hxet7w2KeklGVguP9R3q"
-     :jira-item-id  "EX-69"})
+     :jira-item-id  "ME-120"})
   (delete-item-link {:item-link-id "Zargf93gtvZUxrfWJ8iB"}))

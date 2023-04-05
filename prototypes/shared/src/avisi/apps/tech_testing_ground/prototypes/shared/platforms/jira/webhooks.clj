@@ -1,7 +1,7 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.platforms.jira.webhooks
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.jira.domain-mapping :as domain]
     [avisi.apps.tech-testing-ground.prototypes.shared.core.propagate-change :as propagate]
+    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.jira.domain-mapping :as domain]
     [clojure.edn :as edn]))
 
 (def jira-action->domain-action
@@ -11,8 +11,8 @@
 
 (defn webhook-req->propagation-args
   [{{{{{project-id :id} :project
-       {status :name} :status
-       summary :summary}
+       {status :name}   :status
+       summary          :summary}
       :fields
       key :key}
      :issue}
@@ -22,11 +22,11 @@
    :board-id (edn/read-string project-id)
    :item
    (->
-     {:issue/key key
+     {:issue/key     key
       :issue/summary summary
-      :issue/status status}
+      :issue/status  status}
      (domain/jira-issue->domain-item))
-   :action (jira-action->domain-action action)})
+   :action   (jira-action->domain-action action)})
 
 (def propagate-action
   (propagate/propagate-action-fn webhook-req->propagation-args))

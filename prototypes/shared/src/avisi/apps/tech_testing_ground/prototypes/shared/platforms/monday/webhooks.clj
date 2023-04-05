@@ -42,6 +42,7 @@
 (def propagate-action (propagate/propagate-action-fn webhook-req->propagation-args))
 
 (defn webhook-handler [req]
+  (def _r req)
   (try
     (propagate-action req)
     {:status 200}

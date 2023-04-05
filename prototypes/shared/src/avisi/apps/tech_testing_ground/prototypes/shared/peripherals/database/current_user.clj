@@ -1,6 +1,6 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.current-user
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.main :refer [db]]
+    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.config :refer [db]]
     [firestore-clj.core :as f]))
 
 
