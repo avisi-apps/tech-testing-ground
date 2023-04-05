@@ -5,7 +5,7 @@
 
 (def ^:private api-url "https://api.monday.com/v2/")
 
-(def ^:private sent-query
+(def ^:private send-query!
   (let [perform-request (http-client/perform-request-fn "monday")]
     (fn [query]
       (->
@@ -17,7 +17,7 @@
 
 (defn get-items [board-id]
   (->>
-    (sent-query
+    (send-query!
       {:query
          "query ($board_id: Int) {boards (ids: [$board_id]) {items {id name column_values(ids: \"status\") {text}}}}"
        :variables {:board_id board-id}})
@@ -35,7 +35,7 @@
 
 (defn get-items-by-filter [board-id {:item/keys [title]}]
   (->>
-    (sent-query
+    (send-query!
       {:query
          "query ($board_id: Int!, $item_name: String!) {items_by_column_values (board_id: $board_id, column_id: \"name\", column_value: $item_name) {id}}"
        :variables
@@ -57,7 +57,7 @@
                           (< -1 status-index) (assoc :status {:index status-index})))]
     (let
       [{{:keys [id]} :create_item}
-         (sent-query
+         (send-query!
            {:query
               "mutation ($board_id: Int!, $item_name: String, $column_values: JSON) { create_item(board_id: $board_id, item_name: $item_name, column_values: $column_values){ id }}"
             :variables
@@ -79,7 +79,7 @@
      {{:keys [id name]
        [{status :text}] :column_values}
         :change_multiple_column_values}
-       (sent-query
+       (send-query!
          {:query
             "mutation ($item_id: Int $board_id: Int!, $column_values: JSON!) { change_multiple_column_values(item_id: $item_id, board_id: $board_id, column_values: $column_values ) {id name column_values(ids: \"status\") {text}}}"
           :variables
@@ -98,7 +98,7 @@
     [{{:keys [id name]
        [{status :text}] :column_values}
         :delete_item}
-       (sent-query
+       (send-query!
          {:query
             "mutation($item_id: Int) { delete_item(item_id: $item_id) {id name column_values(ids: \"status\") {text}}}"
           :variables {:item_id id}})]

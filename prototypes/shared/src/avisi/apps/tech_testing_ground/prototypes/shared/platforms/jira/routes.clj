@@ -47,7 +47,6 @@
        {:parameters {:body map?}
         :handler
           (fn [req]
-            (def lc_req req)
             {:status 200
              :headers {"Content-Type" "text/plain"}
              :body "Temporary lifecycle dummy-response"})}}]

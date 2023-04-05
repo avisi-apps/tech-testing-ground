@@ -2,7 +2,6 @@
 
 (def item-schema
   [:map
-   {:decode/json #(into {} %)}
    [:item/id [string? {:encode/string str}]]
    [:item/title string?]
    [:item/description string?]
