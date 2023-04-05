@@ -1,15 +1,14 @@
 (ns avisi.apps.tech-testing-ground.prototypes.htmx.server
   (:require
     [avisi.apps.tech-testing-ground.prototypes.htmx.hello-world :as hello-world]
-    [avisi.apps.tech-testing-ground.prototypes.shared.server :as server]
+    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.server :as server]
     [mount.core :as mount :refer [defstate]]
     [ring.util.response :refer [redirect]]))
 
 (def routes (hello-world/routes))
 
 (def server-config
-  {:port (server/get-port "htmx")
-   :routes routes
+  {:routes routes
    :jira-handlers {:item-view-handler (constantly (redirect "jira-item-view.html"))}
    :monday-handlers {:item-view-handler (constantly (redirect "monday-item-view.html"))}})
 

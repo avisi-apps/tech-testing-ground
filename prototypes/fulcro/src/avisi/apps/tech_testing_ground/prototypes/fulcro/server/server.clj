@@ -1,10 +1,10 @@
 (ns avisi.apps.tech-testing-ground.prototypes.fulcro.server.server
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.server :as server]
     [avisi.apps.tech-testing-ground.prototypes.fulcro.server.parser :as parser]
+    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.server :as server]
     [com.wsscode.pathom3.connect.operation.transit :as pcot]
-    [ring.util.response :refer [redirect]]
-    [mount.core :as mount :refer [defstate]]))
+    [mount.core :as mount :refer [defstate]]
+    [ring.util.response :refer [redirect]]))
 
 (defn pathom-query-handler [{:keys [body-params]}]
   {:status 200
@@ -19,8 +19,7 @@
 (def routes [["/api" {:post {:handler pathom-query-handler}}]])
 
 (def server-config
-  {:port (server/get-port "fulcro")
-   :routes routes
+  {:routes routes
    :custom-content-negotiation pathom-content-negotiation
    :jira-handlers {:item-view-handler (constantly (redirect "jira-item-view.html"))}
    :monday-handlers {:item-view-handler (constantly (redirect "monday-item-view.html"))}})

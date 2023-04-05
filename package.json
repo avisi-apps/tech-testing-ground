@@ -1,7 +1,8 @@
 {
   "name": "tech-testing-ground",
   "packageManager": "yarn@3.2.3",
-  "dependencies": {
-    "ngrok": "4.3.0"
+  "devDependencies": {
+    "firebase-tools": "^11.24.1",
+    "ngrok": "^4.3.3"
   }
 }

@@ -1,16 +1,14 @@
-(ns avisi.apps.tech-testing-ground.prototypes.shared.server
+(ns avisi.apps.tech-testing-ground.prototypes.shared.peripherals.server
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.atlassian-connect :as atlassian-connect]
-    [avisi.apps.tech-testing-ground.prototypes.shared.monday :as monday]
-    [reitit.ring :as ring]
-    ;[ring.adapter.jetty :as jetty]
-    [ring.adapter.jetty9 :as jetty]
-    [ring.middleware.params :refer [wrap-params]]
-    [ring.middleware.resource :refer [wrap-resource]]
-    [ring.middleware.content-type :refer [wrap-content-type]]
+    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.jira.routes :as jira]
+    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.monday.routes :as monday]
     [muuntaja.core :as muuntaja]
     [muuntaja.middleware :as middleware]
-    [mount.core :as mount :refer [defstate]]))
+    [reitit.ring :as ring]
+    [ring.adapter.jetty9 :as jetty]
+    [ring.middleware.content-type :refer [wrap-content-type]]
+    [ring.middleware.params :refer [wrap-params]]
+    [ring.middleware.resource :refer [wrap-resource]]))
 
 (def not-found-response
   {:status 404
@@ -32,6 +30,13 @@
 
 (defn- catch-req-middleware [next-handler] (fn [request] (def _req request) (next-handler request)))
 
+(comment
+  (->
+    (:query-params _mreq)
+    (get "sessionToken"))
+  (->
+    (:query-params _jreq)
+    (get "jwt")))
 (defn muuntaja-options [custom-content-negotiation]
   (reduce-kv (fn [m k v] (update-in m [:formats k] merge v)) muuntaja/default-options custom-content-negotiation))
 
@@ -45,16 +50,17 @@
   (let [content-negotiation (muuntaja-options custom-content-negotiation)]
     (->
       (ring/ring-handler
-        (ring/router [routes ping-route (atlassian-connect/routes jira-handlers) (monday/routes monday-handlers)])
+        (ring/router [routes ping-route (jira/routes jira-handlers) (monday/routes monday-handlers)])
         (constantly not-found-response))
-      (middleware/wrap-format content-negotiation)
       (catch-req-middleware)
+      (middleware/wrap-format content-negotiation)
       (wrap-params)
       (wrap-resource "public")
       (wrap-content-type)
       (wrap-index-as-root)
       (wrap-websocket ws-handler))))
 
+; TODO: everything uses port 3000 till there's an implemented solution for integrating all prototypes with the same
 (defn start-server
   [{:keys [host port resources-path]
     :or
@@ -69,21 +75,3 @@
      :port port
      :resources-path resources-path
      :join? false}))
-
-; TODO: everything uses port 3000 till there's an implemented solution for integrating all prototypes with the same
-; plugin
-(def config
-  {:ports
-     {:central-server 3000
-      :htmx 3000
-      :fulcro 3000
-      :electric 3000}})
-(defn get-port [tech-name] (get-in config [:ports (keyword tech-name)]))
-
-; maybe a central proxy-server is the best solution, will work it out later
-#_(def central-server-config
-    {:port 3000
-     :routes atlassian-connect/routes})
-
-#_(defstate central-server :start (start-server central-server-config) :stop (.stop central-server))
-(comment (mount/start) (mount/stop) (mount/running-states))
