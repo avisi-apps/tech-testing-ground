@@ -22,3 +22,5 @@ app-credentials.json
 firebase-debug.log
 config/.secret.local
 config/.env.local
+doc/.structurizr
+doc/structurizr.properties
