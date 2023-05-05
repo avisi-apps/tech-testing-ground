@@ -3,7 +3,7 @@
     [com.fulcrologic.fulcro.application :as f-app]
     [com.fulcrologic.fulcro.networking.http-remote :as http-remote]))
 
-(defonce ^:private current-app (atom nil))
+(defonce current-app (atom nil))
 
 (defonce ^:private mount-element-id "app")
 
@@ -37,4 +37,5 @@
   (let [root (f-app/root-class @current-app)] (mount-current-app root))
   (js/console.log "Hot reload"))
 
-(comment @current-app (reset! current-app nil))
+(comment @current-app (reset! current-app nil)
+         (f-app/current-state @current-app))

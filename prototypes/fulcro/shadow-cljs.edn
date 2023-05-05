@@ -12,9 +12,22 @@
                                :main {:init-fn avisi.apps.tech-testing-ground.prototypes.fulcro.client.main-page/init
                                       :entries [avisi.apps.tech-testing-ground.prototypes.fulcro.client.main-page]
                                       :depends-on #{:shared}}
-                               :iframe {:init-fn avisi.apps.tech-testing-ground.prototypes.fulcro.client.item-view/init
-                                        :entries [avisi.apps.tech-testing-ground.prototypes.fulcro.client.item-view]
-                                        :depends-on #{:shared}}}
+                               :jira-item-view
+                               {:init-fn avisi.apps.tech-testing-ground.prototypes.fulcro.client.item-view.jira-item-view/init
+                                :entries [avisi.apps.tech-testing-ground.prototypes.fulcro.client.item-view.jira-item-view]
+                                :depends-on #{:shared}}
+                               :monday-item-view
+                               {:init-fn avisi.apps.tech-testing-ground.prototypes.fulcro.client.item-view.monday-item-view/init
+                                :entries [avisi.apps.tech-testing-ground.prototypes.fulcro.client.item-view.monday-item-view]
+                                :depends-on #{:shared}}
+                               :jira-item-link-modal
+                               {:init-fn avisi.apps.tech-testing-ground.prototypes.fulcro.client.item-view.jira-create-item-link-modal/init
+                                :entries [avisi.apps.tech-testing-ground.prototypes.fulcro.client.item-view.jira-create-item-link-modal]
+                                :depends-on #{:shared}}
+                               :monday-item-link-modal
+                               {:init-fn avisi.apps.tech-testing-ground.prototypes.fulcro.client.item-view.monday-create-item-link-modal/init
+                                :entries [avisi.apps.tech-testing-ground.prototypes.fulcro.client.item-view.monday-create-item-link-modal]
+                                :depends-on #{:shared}}}
                      :devtools {:after-load avisi.apps.tech-testing-ground.prototypes.fulcro.client.current-app/refresh
                                 :devtools-url "https://localhost:9630"
                                 :preloads [com.fulcrologic.fulcro.inspect.preload

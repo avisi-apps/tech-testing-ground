@@ -2,9 +2,9 @@
   (:require
     [avisi.apps.tech-testing-ground.prototypes.shared.core.board-links :as board-links]
     [avisi.apps.tech-testing-ground.prototypes.shared.core.boards :as boards]
-    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.integration :as platform]
     [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.board-links :as board-link-db]
     [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.item-links :as item-link-db]
+    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.integration :as platform]
     [clojure.set :as set]))
 
 (defn create-item-link
@@ -12,8 +12,8 @@
     source-platform :platform
     {source-item-id :item/id
      :as source-item}
-      :item}
-   {target-item-id :item/id}]
+    :item :as source}
+   {target-item-id :item/id :as target}]
   (let [{:keys [board-link-id]} (board-link-db/get-board-link
                                   {:platform source-platform
                                    :board-id source-board-id})
@@ -30,7 +30,7 @@
     source-platform :platform
     {source-item-id :id
      :as source-item}
-      :item}]
+    :item}]
   (let [source-item-identifier (platform/get-item-identifier source-platform)
         {:keys [board-link-id]} (board-link-db/get-board-link
                                   {:platform source-platform
@@ -46,15 +46,36 @@
   [{source-board-id :board-id
     source-platform :platform
     {source-item-id :id} :item}]
+  (prn source-board-id)
+  (prn source-platform)
+  (prn source-item-id)
   (let [{:keys [board-link-id]} (board-link-db/get-board-link
                                   {:platform source-platform
                                    :board-id source-board-id})
         source-item-identifier (platform/get-item-identifier source-platform)]
+    (prn board-link-id)
     (some->>
       (item-link-db/get-item-link
         {:board-link-id board-link-id
          source-item-identifier source-item-id})
       (item-link-db/delete-item-link))))
+
+(comment
+
+  (item-link-db/get-item-link
+    {:board-link-id "hxet7w2KeklGVguP9R3q"
+     :jira-item-id source-item-id})
+
+  )
+
+(defn get-item-link
+  [{:keys [platform board-id item-id]
+    :as board}]
+  (->
+    board
+    (board-link-db/get-board-link)
+    (assoc (platform/get-item-identifier platform) item-id)
+    (item-link-db/get-item-link)))
 
 (defn get-item-links
   [{:keys [platform board-id]
@@ -71,7 +92,9 @@
         item-links (get-item-links board)
         items (boards/get-items board)
         unlinked-item-ids (set/difference (set (map :item/id items)) (set (map item-identifier item-links)))]
-    (filter (fn [{:item/keys [id]}] (unlinked-item-ids id)) items)))
+    (->> items
+         (filter (fn [{:item/keys [id]}] (unlinked-item-ids id)))
+         (vec))))
 
 (defn get-item-representation
   [{source-board-id :board-id
@@ -111,6 +134,10 @@
   (get-item-links
     {:platform "monday"
      :board-id 3990111892})
+  (get-item-link
+    {:platform "jira"
+     :board-id 10002
+     :item-id "ME-127"})
   (->
     {:platform "jira"
      :board-id 10002}

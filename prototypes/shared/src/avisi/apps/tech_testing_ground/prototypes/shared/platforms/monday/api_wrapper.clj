@@ -15,32 +15,45 @@
            :body query})
         (:data)))))
 
+(defn res->item
+  [{:keys [id name]
+    [{status :text}] :column_values}]
+  {:item/id id
+   :item/name name
+   :item/status status})
+
+(defn get-item-by-id [board-id {:item/keys [id]}]
+  (->>
+    (send-query!
+      {:query
+       "query ($board_id: Int, $item_id: Int) \n{boards (ids: [$board_id]) \n  {items (ids: [$item_id])\n    {\n      id \n      name\n      column_values(ids: \"status\") {text}\n    }}}"
+       :variables {:board_id board-id :item_id id}})
+    (:boards)
+    (first)
+    (:items)
+    (first)
+    (res->item)))
+
 (defn get-items [board-id]
   (->>
     (send-query!
       {:query
-         "query ($board_id: Int) {boards (ids: [$board_id]) {items {id name column_values(ids: \"status\") {text}}}}"
+       "query ($board_id: Int) {boards (ids: [$board_id]) {items {id name column_values(ids: \"status\") {text}}}}"
        :variables {:board_id board-id}})
     (:boards)
     (first)
     (:items)
     ; TODO with schema
-    (mapv
-      (fn
-        [{:keys [id name]
-          [{status :text}] :column_values}]
-        {:item/id id
-         :item/name name
-         :item/status status}))))
+    (mapv res->item)))
 
 (defn get-items-by-filter [board-id {:item/keys [title]}]
   (->>
     (send-query!
       {:query
-         "query ($board_id: Int!, $item_name: String!) {items_by_column_values (board_id: $board_id, column_id: \"name\", column_value: $item_name) {id}}"
+       "query ($board_id: Int!, $item_name: String!) {items_by_column_values (board_id: $board_id, column_id: \"name\", column_value: $item_name) {id}}"
        :variables
-         {:board_id board-id
-          :item_name title}})
+       {:board_id board-id
+        :item_name title}})
     (:items_by_column_values)))
 
 (def ^:private item-statuses ["Working on it" "Done" "Stuck"])
@@ -54,16 +67,16 @@
   (let [status-index (.indexOf item-statuses status)
         column-values (json/write-str
                         (cond-> {:date4 (current-date-monday-format)}
-                          (< -1 status-index) (assoc :status {:index status-index})))]
+                                (< -1 status-index) (assoc :status {:index status-index})))]
     (let
       [{{:keys [id]} :create_item}
-         (send-query!
-           {:query
-              "mutation ($board_id: Int!, $item_name: String, $column_values: JSON) { create_item(board_id: $board_id, item_name: $item_name, column_values: $column_values){ id }}"
-            :variables
-              {:board_id board-id
-               :item_name name
-               :column_values column-values}})]
+       (send-query!
+         {:query
+          "mutation ($board_id: Int!, $item_name: String, $column_values: JSON) { create_item(board_id: $board_id, item_name: $item_name, column_values: $column_values){ id }}"
+          :variables
+          {:board_id board-id
+           :item_name name
+           :column_values column-values}})]
       {:item/id id
        :item/name name
        :item/status status})))
@@ -74,18 +87,19 @@
     :as item}]
   (let
     [column-values (json/write-str
-                     {:name name
+                     {
+                      ;:name name
                       :status {:label status}})
      {{:keys [id name]
        [{status :text}] :column_values}
-        :change_multiple_column_values}
-       (send-query!
-         {:query
-            "mutation ($item_id: Int $board_id: Int!, $column_values: JSON!) { change_multiple_column_values(item_id: $item_id, board_id: $board_id, column_values: $column_values ) {id name column_values(ids: \"status\") {text}}}"
-          :variables
-            {:board_id board-id
-             :item_id id
-             :column_values column-values}})]
+      :change_multiple_column_values}
+     (send-query!
+       {:query
+        "mutation ($item_id: Int $board_id: Int!, $column_values: JSON!) { change_multiple_column_values(item_id: $item_id, board_id: $board_id, column_values: $column_values ) {id name column_values(ids: \"status\") {text}}}"
+        :variables
+        {:board_id board-id
+         :item_id id
+         :column_values column-values}})]
     {:item/id id
      :item/name name
      :item/status status}))
@@ -97,16 +111,17 @@
   (let
     [{{:keys [id name]
        [{status :text}] :column_values}
-        :delete_item}
-       (send-query!
-         {:query
-            "mutation($item_id: Int) { delete_item(item_id: $item_id) {id name column_values(ids: \"status\") {text}}}"
-          :variables {:item_id id}})]
+      :delete_item}
+     (send-query!
+       {:query
+        "mutation($item_id: Int) { delete_item(item_id: $item_id) {id name column_values(ids: \"status\") {text}}}"
+        :variables {:item_id id}})]
     {:item/id id
      :item/name name
      :item/status status}))
 
 (comment
+  (get-item-by-id 3990111892 {:item/id 4408686514})
   (get-items 3990111892)
   (add-item
     3990111892
@@ -126,8 +141,8 @@
   [{:boards [:id :name]}]
   [{(:boards {:ids [~board-id]}) [{:items [:id :name]}]}]
   [{('create_item
-     {:board_id ~board-id
-      :item_name ~item-name
-      :column_values ~column-values})
-      [:id]}]
+      {:board_id ~board-id
+       :item_name ~item-name
+       :column_values ~column-values})
+    [:id]}]
   [{('delete_item {:item_id ~item-id}) [:id]}])

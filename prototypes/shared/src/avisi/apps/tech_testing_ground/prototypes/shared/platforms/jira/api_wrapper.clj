@@ -1,7 +1,6 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.platforms.jira.api-wrapper
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.http-client :as http-client]
-    [ring.util.codec :as codec]))
+    [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.http-client :as http-client]))
 
 ; TODO: make configurable
 (def ^:private base-url "https://yabmas.atlassian.net")
@@ -12,11 +11,17 @@
   [{:keys [key]
     {:keys [summary description]
      {:keys [name]} :status}
-      :fields}]
-  {:item/key key
-   :item/summary summary
-   :item/description description
-   :item/status name})
+    :fields}]
+  {:issue/key key
+   :issue/summary summary
+   :issue/description description
+   :issue/status name})
+(defn get-item-by-id [board-id {:issue/keys [key]}]
+  (->>
+    (perform-request
+      {:method :get
+       :url (str base-url "/rest/api/2/issue/" key)})
+    (res->item)))
 
 (defn get-items [board-id]
   ; The type of jira-project we're using always has a single board. Issues are found via the project-id instead of the
@@ -30,13 +35,13 @@
     (:issues)
     (mapv res->item)))
 
-(defn add-item [board-id {:issue/keys [summary description]}]
+(defn add-item [board-id {:issue/keys [summary description] :as issue}]
   ; As with get-items the board-id in the function signature corresponds to the project-id in the jira-domain.
   (let [body {:fields
-                {:summary summary
-                 :description description
-                 :project {:id board-id}
-                 :issuetype {:name "Task"}}}
+              {:summary summary
+               :description description
+               :project {:id board-id}
+               :issuetype {:name "Task"}}}
         {:keys [key]} (perform-request
                         {:method :post
                          :url (str base-url "/rest/api/2/issue")
@@ -59,8 +64,8 @@
 
 (defn ^:private update-fields-of-item [{:issue/keys [key summary description]}]
   (let [body {:fields
-                {:summary summary
-                 :description description}}]
+              {:summary summary
+               :description description}}]
     (perform-request
       {:method :put
        :url (str base-url "/rest/api/2/issue/" key)
@@ -70,7 +75,7 @@
   [_
    {:issue/keys [key summary description status]
     :as issue}]
-  (when summary (update-fields-of-item issue))
+  #_(when summary (update-fields-of-item issue))
   (when status (transition-status-of-item issue))
   {:issue/key key
    :issue/summary summary
@@ -84,8 +89,8 @@
   {:issue/key key})
 
 (comment
+  (get-item-by-id 10002 {:issue/key "ME-126"})
   (get-items 10002)
-  (get-item-by-id {:item/key "EX-76"})
   (add-item
     10002
     {:issue/summary "An item"
