@@ -3,4 +3,4 @@ WORKDIR /
 
 COPY target/htmx-prototype.jar /
 
-CMD java -cp htmx-prototype.jar clojure.main -m main
+CMD java -jar htmx-prototype.jar

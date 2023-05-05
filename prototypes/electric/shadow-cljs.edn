@@ -11,13 +11,24 @@
                 :output-dir "resources/public/js"
                 :asset-path "/js"
                 :dev {:asset-path "https://localhost:8000/js"}
-                :modules {:shared {:entries []}
-                          :main {:entries [avisi.apps.tech-testing-ground.prototypes.electric.client.main-page]
-                                 :init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.main-page/init!
-                                 :depends-on #{:shared}}
-                          :iframe {:entries [avisi.apps.tech-testing-ground.prototypes.electric.client.item-view]
-                                   :init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.item-view/init!
-                                   :depends-on #{:shared}}
+                :modules {
+                          :shared {:entries []}
+                          :jira-item-view
+                          {:init-fn avisi.apps.tech-testing-ground.prototypes.electric.components.jira-item-view/init!
+                           :entries [avisi.apps.tech-testing-ground.prototypes.electric.components.jira-item-view]
+                           :depends-on #{:shared}}
+                          :monday-item-view
+                          {:init-fn avisi.apps.tech-testing-ground.prototypes.electric.components.monday-item-view/init!
+                           :entries [avisi.apps.tech-testing-ground.prototypes.electric.components.monday-item-view]
+                           :depends-on #{:shared}}
+                          :jira-create-item-link-modal
+                          {:init-fn avisi.apps.tech-testing-ground.prototypes.electric.components.jira-create-item-link-modal/init!
+                           :entries [avisi.apps.tech-testing-ground.prototypes.electric.components.jira-create-item-link-modal]
+                           :depends-on #{:shared}}
+                          :monday-create-item-link-modal
+                          {:init-fn avisi.apps.tech-testing-ground.prototypes.electric.components.monday-create-item-link-modal/init!
+                           :entries [avisi.apps.tech-testing-ground.prototypes.electric.components.monday-create-item-link-modal]
+                           :depends-on #{:shared}}
                           }
                 :build-hooks [(shadow.cljs.build-report/hook {:output-to "target/build_report.html"})
                               (user/rcf-shadow-hook)]}
@@ -25,4 +36,20 @@
           {:target :browser
            :output-dir "resources/public/js"
            :asset-path "/js"
-           :modules {:main {:entries [user] :init-fn user/start!}}}}}
+           :modules {:shared {:entries []}
+                     :jira-item-view
+                     {:init-fn avisi.apps.tech-testing-ground.prototypes.electric.components.jira-item-view/init!
+                      :entries [avisi.apps.tech-testing-ground.prototypes.electric.components.jira-item-view]
+                      :depends-on #{:shared}}
+                     :monday-item-view
+                     {:init-fn avisi.apps.tech-testing-ground.prototypes.electric.components.monday-item-view/init!
+                      :entries [avisi.apps.tech-testing-ground.prototypes.electric.components.monday-item-view]
+                      :depends-on #{:shared}}
+                     :jira-create-item-link-modal
+                     {:init-fn avisi.apps.tech-testing-ground.prototypes.electric.components.jira-create-item-link-modal/init!
+                      :entries [avisi.apps.tech-testing-ground.prototypes.electric.components.jira-create-item-link-modal]
+                      :depends-on #{:shared}}
+                     :monday-create-item-link-modal
+                     {:init-fn avisi.apps.tech-testing-ground.prototypes.electric.components.monday-create-item-link-modal/init!
+                      :entries [avisi.apps.tech-testing-ground.prototypes.electric.components.monday-create-item-link-modal]
+                      :depends-on #{:shared}}}}}}

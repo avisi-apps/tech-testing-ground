@@ -18,7 +18,7 @@
 (defmethod propagate-action :update
   [{:keys [platform board-id item]
     :as source}]
-  (when-not (= item (item-links/get-item-representation source))
+  (when-not (= (:item/status item) (:status (item-links/get-item-representation source)))
     (let [target-board (board-links/get-connected-board source)
           target-item (item-links/get-connected-item source)]
       (boards/update-item target-board target-item)

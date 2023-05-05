@@ -15,6 +15,27 @@
            :body query})
         (:data)))))
 
+(defn res->item
+  [{:keys [id name]
+    [{status :text}] :column_values}]
+  {:item/id id
+   :item/name name
+   :item/status status})
+
+(defn get-item-by-id [board-id {:item/keys [id]}]
+  (->>
+    (send-query!
+      {:query
+         "query ($board_id: Int, $item_id: Int) \n{boards (ids: [$board_id]) \n  {items (ids: [$item_id])\n    {\n      id \n      name\n      column_values(ids: \"status\") {text}\n    }}}"
+       :variables
+         {:board_id board-id
+          :item_id id}})
+    (:boards)
+    (first)
+    (:items)
+    (first)
+    (res->item)))
+
 (defn get-items [board-id]
   (->>
     (send-query!
@@ -25,13 +46,7 @@
     (first)
     (:items)
     ; TODO with schema
-    (mapv
-      (fn
-        [{:keys [id name]
-          [{status :text}] :column_values}]
-        {:item/id id
-         :item/name name
-         :item/status status}))))
+    (mapv res->item)))
 
 (defn get-items-by-filter [board-id {:item/keys [title]}]
   (->>
@@ -74,7 +89,7 @@
     :as item}]
   (let
     [column-values (json/write-str
-                     {:name name
+                     {;:name name
                       :status {:label status}})
      {{:keys [id name]
        [{status :text}] :column_values}
@@ -107,6 +122,7 @@
      :item/status status}))
 
 (comment
+  (get-item-by-id 3990111892 {:item/id 4408686514})
   (get-items 3990111892)
   (add-item
     3990111892

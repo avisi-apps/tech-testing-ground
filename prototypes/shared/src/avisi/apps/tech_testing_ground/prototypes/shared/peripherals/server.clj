@@ -30,13 +30,16 @@
 
 (defn- catch-req-middleware [next-handler] (fn [request] (def _req request) (next-handler request)))
 
-(comment
-  (->
-    (:query-params _mreq)
-    (get "sessionToken"))
-  (->
-    (:query-params _jreq)
-    (get "jwt")))
+(defn- log-exception-middleware
+  [next-handler]
+  (fn [request]
+    (try
+      (next-handler request)
+      (catch Exception e
+        (prn (ex-message e))
+        {:status 500
+         :body "Something went wrong."}))))
+
 (defn muuntaja-options [custom-content-negotiation]
   (reduce-kv (fn [m k v] (update-in m [:formats k] merge v)) muuntaja/default-options custom-content-negotiation))
 
@@ -53,6 +56,7 @@
         (ring/router [routes ping-route (jira/routes jira-handlers) (monday/routes monday-handlers)])
         (constantly not-found-response))
       (catch-req-middleware)
+      (log-exception-middleware)
       (middleware/wrap-format content-negotiation)
       (wrap-params)
       (wrap-resource "public")
