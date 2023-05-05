@@ -2,6 +2,16 @@
   (:require
     [avisi.apps.tech-testing-ground.prototypes.shared.platforms.integration :as integration]))
 
+(defn get-item-by-id [{:keys [platform board-id]} item]
+  (let [{{:keys [get-item-by-id]} :item-handling-functions
+         {:keys [decode encode]} :domain-mappings}
+        (integration/get-integration-props platform)]
+    (->>
+      item
+      (decode)
+      (get-item-by-id board-id )
+      (encode))))
+
 (defn get-items [{:keys [platform board-id]}]
   (let [{{:keys [get-items]} :item-handling-functions
          {:keys [encode]} :domain-mappings}
@@ -41,6 +51,14 @@
       (encode))))
 
 (comment
+  (get-item-by-id
+    {:platform "jira"
+     :board-id 10002}
+    {:item/id "ME-126"})
+  (get-item-by-id
+    {:platform "monday"
+     :board-id 3990111892}
+    {:item/id 4408686514})
   (get-items
     {:platform "monday"
      :board-id 3990111892})

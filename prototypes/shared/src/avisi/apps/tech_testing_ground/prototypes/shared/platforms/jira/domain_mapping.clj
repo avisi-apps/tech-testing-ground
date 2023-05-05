@@ -48,13 +48,15 @@
 (tests
   "domain -> jira"
   (->
-    {:item/title "Something todo"
+    {:item/id "EX-123"
+     :item/title "Something todo"
      :item/description "A description"
      :item/status "In Progress"
      :item/not-existent-in-jira "shouldn't enter jira-ns"}
     (domain-item->jira-issue))
   :=
-  {:issue/summary "Something todo"
+  {:issue/key "EX-123"
+   :issue/summary "Something todo"
    :issue/description "A description"
    :issue/status "In Progress"}
   ; unknown status defaults to "To Do"
@@ -64,11 +66,13 @@
   := {:issue/status "To Do"}
   "jira -> domain"
   (->
-    {:issue/summary "Something todo"
+    {:issue/key "EX-123"
+     :issue/summary "Something todo"
      :issue/description "A description"
      :issue/status "In Progress"}
     (jira-issue->domain-item))
   :=
-  {:item/title "Something todo"
+  {:item/id "EX-123"
+   :item/title "Something todo"
    :item/description "A description"
    :item/status "In Progress"})

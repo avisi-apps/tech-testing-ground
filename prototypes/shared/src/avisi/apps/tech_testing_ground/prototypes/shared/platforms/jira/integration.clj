@@ -11,7 +11,8 @@
      {:encode domain/jira-issue->domain-item
       :decode domain/domain-item->jira-issue}
    :item-handling-functions
-     {:get-items jira/get-items
+     {:get-item-by-id jira/get-item-by-id
+      :get-items jira/get-items
       :create-item jira/add-item
       :update-item jira/update-item
       :delete-item jira/delete-item}})

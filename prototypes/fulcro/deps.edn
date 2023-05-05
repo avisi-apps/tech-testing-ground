@@ -2,17 +2,20 @@
  :deps {; internal deps
         prototypes/shared {:local/root "../shared"}
         ;fulcro
-        com.fulcrologic/fulcro {:mvn/version "3.5.9"}
+        com.fulcrologic/fulcro {:mvn/version "3.5.23"}
         com.wsscode/pathom3 {:mvn/version "2023.01.31-alpha"}
+        com.fulcrologic/fulcro-garden-css {:mvn/version "3.0.9"}
         ;logging
         com.taoensso/timbre {:mvn/version "4.10.0"}
         ; dev-time state management
         mount/mount {:mvn/version "0.1.17"}}
  :aliases {:cljs {:paths ["src"]
                   :replace-deps {;; frontend deps
+                                 funcool/promesa {:mvn/version "10.0.594"}
                                  thheller/shadow-cljs {:mvn/version "2.17.8"}
                                  org.clojure/clojurescript {:mvn/version "1.11.4"}
-                                 com.fulcrologic/fulcro {:mvn/version "3.5.9"}}}
+                                 com.fulcrologic/fulcro {:mvn/version "3.5.23"}
+                                 com.fulcrologic/fulcro-garden-css {:mvn/version "3.0.9"}}}
            :build {:deps {prototypes/build {:local/root "../build"}}
                    :ns-default build}
            :dev {:extra-paths ["dev"]

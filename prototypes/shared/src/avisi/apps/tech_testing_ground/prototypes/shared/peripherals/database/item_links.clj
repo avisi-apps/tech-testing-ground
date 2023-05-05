@@ -1,6 +1,5 @@
 (ns avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.item-links
   (:require
-    [avisi.apps.tech-testing-ground.prototypes.shared.core.items :as domain]
     [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.config :refer [db]]
     [firestore-clj.core :as f]
     [malli.core :as m]
@@ -32,8 +31,8 @@
 
 (defn ^:private decode-item-link [item-link]
   (as-> item-link il
-    (m/decode fire-store-item-link-schema il mt/json-transformer)
-    (m/decode item-link-schema il item-link-transformer)))
+        (m/decode fire-store-item-link-schema il mt/json-transformer)
+        (m/decode item-link-schema il item-link-transformer)))
 
 (defn create-item-link
   [{:keys [board-link-id jira-item-id monday-item-id item-representation]
@@ -41,7 +40,8 @@
   (->
     db
     (f/coll "item-links")
-    (f/add! (encode-item-link item-link))))
+    (f/add! (encode-item-link item-link))
+    (f/pull)))
 
 (defn update-item-link
   [{:keys [board-link-id jira-item-id monday-item-id item-link-id item-representation]
@@ -61,8 +61,8 @@
   [{:keys [board-link-id jira-item-id monday-item-id]
     :as item}]
   (let [filter (cond-> {"board-link-id" board-link-id}
-                 jira-item-id (assoc "jira-item-id" jira-item-id)
-                 monday-item-id (assoc "monday-item-id" (str monday-item-id)))]
+                       jira-item-id (assoc "jira-item-id" jira-item-id)
+                       monday-item-id (assoc "monday-item-id" (str monday-item-id)))]
     (when-let [[document-id item-link] (->
                                          db
                                          (f/coll "item-links")
@@ -94,8 +94,8 @@
      :jira-item-id "456CD"
      :monday-item-id 123
      :item-representation
-       {:item/title "Example item"
-        :item/status "To Do"}}))
+     {:item/title "Example item"
+      :item/status "To Do"}}))
 (comment
   (create-item-link
     {:board-link-id 123
