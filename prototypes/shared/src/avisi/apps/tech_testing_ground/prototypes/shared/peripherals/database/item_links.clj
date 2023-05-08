@@ -55,7 +55,8 @@
   (->
     db
     (f/doc (str "item-links/" item-link-id))
-    (f/delete!)))
+    (f/delete!))
+  nil)
 
 (defn get-item-link
   [{:keys [board-link-id jira-item-id monday-item-id]

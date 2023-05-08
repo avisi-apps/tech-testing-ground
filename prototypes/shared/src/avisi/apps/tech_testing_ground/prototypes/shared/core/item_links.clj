@@ -53,20 +53,11 @@
                                   {:platform source-platform
                                    :board-id source-board-id})
         source-item-identifier (platform/get-item-identifier source-platform)]
-    (prn board-link-id)
     (some->>
       (item-link-db/get-item-link
         {:board-link-id board-link-id
          source-item-identifier source-item-id})
       (item-link-db/delete-item-link))))
-
-(comment
-
-  (item-link-db/get-item-link
-    {:board-link-id "hxet7w2KeklGVguP9R3q"
-     :jira-item-id source-item-id})
-
-  )
 
 (defn get-item-link
   [{:keys [platform board-id item-id]

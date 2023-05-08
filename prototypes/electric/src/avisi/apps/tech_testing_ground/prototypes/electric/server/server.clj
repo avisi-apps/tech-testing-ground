@@ -8,8 +8,11 @@
 (def server-config
   {:routes []
    :ws-handler (fn [req] (adapter/electric-ws-adapter (partial adapter/electric-ws-message-handler req)))
-   :jira-handlers {:item-view-handler (constantly (redirect "jira-item-view.html"))}
-   :monday-handlers {:item-view-handler (constantly (redirect "monday-item-view.html"))}})
+   :jira-handlers {:item-view-handler (constantly (redirect "jira-item-view.html"))
+                   :create-item-link-modal-handler (constantly (redirect "jira-create-item-link-modal.html"))}
+   :monday-handlers {:item-view-handler (constantly (redirect "monday-item-view.html"))
+                     :create-item-link-modal-handler
+                     (constantly (redirect "monday-create-item-link-modal.html"))}})
 
 (defn start-server [] (server/start-server server-config))
 

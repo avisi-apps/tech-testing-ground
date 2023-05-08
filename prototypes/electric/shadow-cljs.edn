@@ -15,10 +15,22 @@
                           :main {:entries [avisi.apps.tech-testing-ground.prototypes.electric.client.main-page]
                                  :init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.main-page/init!
                                  :depends-on #{:shared}}
-                          :iframe {:entries [avisi.apps.tech-testing-ground.prototypes.electric.client.item-view]
-                                   :init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.item-view/init!
-                                   :depends-on #{:shared}}
-                          }
+                          :jira-item-view
+                          {:init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.item-view.jira-item-view/init!
+                           :entries [avisi.apps.tech-testing-ground.prototypes.electric.client.item-view.jira-item-view]
+                           :depends-on #{:shared}}
+                          :monday-item-view
+                          {:init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.item-view.monday-item-view/init!
+                           :entries [avisi.apps.tech-testing-ground.prototypes.electric.client.item-view.monday-item-view]
+                           :depends-on #{:shared}}
+                          :jira-item-link-modal
+                          {:init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.item-view.jira-create-item-link-modal/init!
+                           :entries [avisi.apps.tech-testing-ground.prototypes.electric.client.item-view.jira-create-item-link-modal]
+                           :depends-on #{:shared}}
+                          :monday-item-link-modal
+                          {:init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.item-view.monday-create-item-link-modal/init!
+                           :entries [avisi.apps.tech-testing-ground.prototypes.electric.client.item-view.monday-create-item-link-modal]
+                           :depends-on #{:shared}}}
                 :build-hooks [(shadow.cljs.build-report/hook {:output-to "target/build_report.html"})
                               (user/rcf-shadow-hook)]}
           :prod
