@@ -41,7 +41,8 @@
     db
     (f/coll "item-links")
     (f/add! (encode-item-link item-link))
-    (f/pull)))
+    (f/pull)
+    (update-keys keyword)))
 
 (defn update-item-link
   [{:keys [board-link-id jira-item-id monday-item-id item-link-id item-representation]

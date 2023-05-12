@@ -23,11 +23,11 @@
                           {:init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.item-view.monday-item-view/init!
                            :entries [avisi.apps.tech-testing-ground.prototypes.electric.client.item-view.monday-item-view]
                            :depends-on #{:shared}}
-                          :jira-item-link-modal
+                          :jira-create-item-link-modal
                           {:init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.item-view.jira-create-item-link-modal/init!
                            :entries [avisi.apps.tech-testing-ground.prototypes.electric.client.item-view.jira-create-item-link-modal]
                            :depends-on #{:shared}}
-                          :monday-item-link-modal
+                          :monday-create-item-link-modal
                           {:init-fn avisi.apps.tech-testing-ground.prototypes.electric.client.item-view.monday-create-item-link-modal/init!
                            :entries [avisi.apps.tech-testing-ground.prototypes.electric.client.item-view.monday-create-item-link-modal]
                            :depends-on #{:shared}}}

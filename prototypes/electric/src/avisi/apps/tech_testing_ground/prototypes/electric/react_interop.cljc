@@ -1,5 +1,5 @@
 (ns avisi.apps.tech-testing-ground.prototypes.electric.react-interop
-  #?(:cljs (:require-macros [avisi.apps.tech-testing-ground.prototypes.electric.react-interop :refer [with-reagent]]))
+  #?(:cljs (:require-macros [avisi.apps.tech-testing-ground.prototypes.electric.react-interop :refer [with-reagent action-dispatch-props]]))
   #?(:clj
      (:require
        [hyperfiddle.electric-dom2 :as dom]))
@@ -8,6 +8,7 @@
        [hyperfiddle.electric :as e]
        [hyperfiddle.electric-dom2 :as dom]
        [reagent.core :as r]
+       [missionary.core :as m]
        ["react-dom/client" :as ReactDom])))
 
 #?(:cljs (def ReactRootWrapper
@@ -37,3 +38,35 @@
        (new (e/hook react-root-hook dom/node
                     (e/fn [] dom/keepalive
                       (render dom/node ~@args)))))))
+
+#?(:cljs
+   (defn react-event-subscription [node]
+     (->> (m/observe (fn mount [emit!]
+                       (let [f (fn [e] (prn "emitting") (emit! e))]
+                         (.addEventListener node "react-event" f)
+                         (fn unmount []
+                           (.removeEventListener node "react-event" f)))))
+          (m/reductions {} nil))))
+
+#_(defmacro react-event-subscription [event-handlers]
+    `(let [react-events (->> (m/observe (fn mount [emit!]
+                                          (let [f (fn [e] (emit! e))]
+                                            (.addEventListener dom/node "react-event" f)
+                                            (fn unmount []
+                                              (.removeEventListener dom/node "react-event" f)))))
+                             (m/reductions {} nil)
+                             (new))]
+       (when react-events
+         (let [event (js->clj (.-detail react-events) :keywordize-keys true)]
+           ~(->
+              (mapcat identity event-handlers)
+              (conj 'cljs.core/case '(:action event)))))))
+(defmacro action-dispatch-props [{:keys [label data]}]
+  `(hash-map
+     :id ~label
+     :onClick #(->
+                 (.getElementById js/document ~label)
+                 (.dispatchEvent (js/CustomEvent. "react-event"
+                                                  (cljs.core/clj->js {:bubbles true
+                                                                      :detail {:action ~label
+                                                                               :data ~data}}))))))

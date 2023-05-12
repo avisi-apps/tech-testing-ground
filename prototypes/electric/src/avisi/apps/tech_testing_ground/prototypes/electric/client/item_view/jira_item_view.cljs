@@ -14,5 +14,5 @@
             (js->clj res :keywordize-keys true)]
         (current-app/initialize-app
           (e/boot (binding [dom/node js/document.body]
-                    (item-view/HelloWorld.
+                    (item-view/ItemView.
                       (edn/read-string project-id) issue-key))))))))

@@ -23,7 +23,8 @@
             :extra-deps
             {binaryage/devtools {:mvn/version "1.0.6"}
              thheller/shadow-cljs {:mvn/version "2.20.1"}
-             reagent/reagent {:mvn/version "1.2.0"}}
+             reagent/reagent {:mvn/version "1.2.0"}
+             funcool/promesa {:mvn/version "10.0.594"}}
             :jvm-opts
             ["-Xss2m"                                       ; https://github.com/hyperfiddle/photon/issues/11
              "-Dclojure.tools.logging.factory=clojure.tools.logging.impl/slf4j-factory"

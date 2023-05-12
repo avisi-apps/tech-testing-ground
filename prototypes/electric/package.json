@@ -4,6 +4,11 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@atlaskit/button": "^16.6.0",
+    "@atlaskit/dropdown-menu": "^11.7.3",
+    "@atlaskit/form": "^8.9.1",
+    "@atlaskit/modal-dialog": "^12.4.12",
+    "@atlaskit/select": "^16.1.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "recharts": "^2.5.0",
