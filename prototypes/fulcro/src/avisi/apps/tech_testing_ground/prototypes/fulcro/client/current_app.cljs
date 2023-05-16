@@ -9,11 +9,11 @@
 
 (def ^:private remotes
   {:remote
-     (http-remote/fulcro-http-remote
-       {:request-middleware
-          (->
-            (http-remote/wrap-fulcro-request
-              (fn [req] (assoc-in req [:headers "Accept"] "application/transit+json"))))})})
+   (http-remote/fulcro-http-remote
+     {:request-middleware
+      (->
+        (http-remote/wrap-fulcro-request
+          (fn [req] (assoc-in req [:headers "Accept"] "application/transit+json"))))})})
 
 (defn ^:private reset-current-app [{:keys [client-did-mount]}]
   (reset!
@@ -34,8 +34,11 @@
   "During development, shadow-cljs will call this on every hot reload of source. See shadow-cljs.edn"
   []
   ;; re-mounting will cause forced UI refresh, update internals, etc.
-  (let [root (f-app/root-class @current-app)] (mount-current-app root))
+  (let [root (f-app/root-class @current-app)]
+    (mount-current-app root))
   (js/console.log "Hot reload"))
 
-(comment @current-app (reset! current-app nil)
-         (f-app/current-state @current-app))
+(comment
+  @current-app
+  (reset! current-app nil)
+  (f-app/current-state @current-app))

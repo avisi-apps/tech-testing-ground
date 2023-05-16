@@ -23,11 +23,6 @@
 (defn item->option [{:item/keys [id]}]
   {:label (str id) :value (str id)})
 
-(defmutation select-item
-  [{:item/keys [item-id board-id] :as item}]
-  (action [{:keys [state]}]
-          (swap! state assoc :selected-item item)))
-
 (defmutation create-item-link
   [_]
   (action [{:keys [app]}]
@@ -39,10 +34,13 @@
              (df/remove-load-marker! app :item-link)
              (monday.execute "closeAppFeatureModal")))
 (defsc ItemLinkModal [this {:keys [selected-item available-items] :as props}]
-  {:query [:selected-item :available-items [df/marker-table :item-link]]
+  {:query [{:selected-item (comp/get-query domain/SelectedItem)}
+           {:available-items (comp/get-query domain/Item)}
+           [df/marker-table :item-link]]
    :initLocalState (fn [_ _] {:jira-item-id ""})
    :css
-   [[:.button-container
+   [[:.modal-body {:height "40h"}]
+    [:.button-container
      {:margin "12px 0px"
       :display "flex"
       :justify-content "space-around"}]]}
@@ -50,6 +48,7 @@
         monday-item-id (:item-id selected-item)
         board-id (:board-id selected-item)
         item-link-marker (get props [df/marker-table :item-link])]
+    (inj/style-element {:component ItemLinkModal})
     (modal-dialog/ui-modal
       {}
       (modal-dialog/ui-modal-header
@@ -57,31 +56,22 @@
         (modal-dialog/ui-modal-title {} "Create ItemLink"))
       (modal-dialog/ui-modal-body
         {}
-        (dom/div
-          {:style {:height "40vh"}}
+        (dom/div :.modal-body
+                 (form/ui-field
+                   {:label "Jira-item"
+                    :name "jira-item"}
+                   (fn []
+                     (select/ui-select
+                       {:options (mapv item->option available-items)
+                        :onChange (fn [e] (comp/update-state! this assoc :jira-item-id (.-value e)))})))
 
-          (form/ui-field
-            {:label "Jira-item"
-             :name "jira-item"}
-            (fn []
-              (select/ui-select
-                {:options (mapv item->option available-items)
-                 :onChange (fn [e] (comp/update-state! this assoc :jira-item-id (.-value e)))})))
-
-          (form/ui-field
-            {:label "Monday-item"
-             :name "monday-item"}
-            (fn []
-              (select/ui-select
-                {:inputValue monday-item-id
-                 :isDisabled true})))
-
-          (prn item-link-marker)
-          (prn (df/loading? item-link-marker))
-
-          (when (df/loading? item-link-marker)
-            (dom/p "Creating item-link...."))))
-
+                 (form/ui-field
+                   {:label "Monday-item"
+                    :name "monday-item"}
+                   (fn []
+                     (select/ui-select
+                       {:inputValue monday-item-id
+                        :isDisabled true})))))
       (modal-dialog/ui-modal-footer
         {}
         (dom/div
@@ -108,22 +98,12 @@
 
 (def ui-item-link-modal (comp/factory ItemLinkModal))
 
-(defsc Root
-  [_ {:keys [available-items selected-item]}]
-  (dom/div
-    {:style
-     {:height "100%"}}
-    (inj/style-element {:component Root})
-    (ui-item-link-modal {:selected-item selected-item
-                         :available-items available-items})))
-
-
 (defn ^:export init []
   (p/let [{board-id :boardId item-id :itemId} (get-monday-context)]
     (current-app/initialize-app
-      {:root Root
+      {:root ItemLinkModal
        :client-did-mount
        (fn [app]
-         (comp/transact! app [(select-item {:item-id item-id :board-id board-id})])
+         (comp/transact! app [(domain/select-item {:item-id item-id :board-id board-id})])
          (df/load! app :available-items domain/Item {:params {:platform "monday" :board-id board-id}})
          (js/console.log "Loaded modal"))})))

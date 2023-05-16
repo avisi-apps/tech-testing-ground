@@ -16,10 +16,6 @@
 (defn item->option [{:item/keys [id]}]
   {:label (str id) :value (str id)})
 
-(defmutation select-item
-  [{:item/keys [item-id board-id] :as item}]
-  (action [{:keys [state]}]
-          (swap! state assoc :selected-item item)))
 (defmutation create-item-link
   [{{monday-item-id :item/id} :target {{jira-item-id :item/id} :item} :source}]
   (action [{:keys [state]}]
@@ -34,11 +30,14 @@
              (js/AP.dialog.close)))
 
 (defsc ItemLinkModal [this {:keys [selected-item available-items]}]
-  {:query [:selected-item :available-items]
+  {:query [{:selected-item (comp/get-query domain/SelectedItem)}
+           {:available-items (comp/get-query domain/Item)}
+           [df/marker-table :item-link]]
    :initLocalState
    (fn [_ _] {:monday-item-id ""})
    :css
-   [[:.button-container
+   [[:.modal-body {:height "40h"}]
+    [:.button-container
      {:margin "12px 0px"
       :display "flex"
       :justify-content "space-around"}]]}
@@ -46,6 +45,7 @@
   (let [monday-item-id (comp/get-state this :monday-item-id)
         jira-item-id (:item-id selected-item)
         board-id (:board-id selected-item)]
+    (inj/style-element {:component ItemLinkModal})
     (modal-dialog/ui-modal
       {}
       (modal-dialog/ui-modal-header
@@ -53,9 +53,7 @@
         (modal-dialog/ui-modal-title {} "Create ItemLink"))
       (modal-dialog/ui-modal-body
         {}
-        (dom/div
-          {:style {:height "40vh"}}
-
+        (dom/div :.modal-body
           (form/ui-field
             {:label "Jira-item"
              :name "jira-item"}
@@ -98,25 +96,16 @@
 
 (def ui-item-link-modal (comp/factory ItemLinkModal))
 
-(defsc Root
-  [_ {:keys [available-items selected-item]}]
-  (dom/div
-    {:style
-     {:height "100%"}}
-    (inj/style-element {:component Root})
-    (ui-item-link-modal {:selected-item selected-item
-                         :available-items available-items})))
-
 (defn ^:export init []
   (js/AP.context.getContext
     (fn [res]
       (let [{{{issue-key :key} :issue {project-id :id} :project} :jira}
             (js->clj res :keywordize-keys true)]
         (current-app/initialize-app
-          {:root Root
+          {:root ItemLinkModal
            :client-did-mount
            (fn [app]
-             (comp/transact! app [(select-item {:item-id issue-key :board-id (edn/read-string project-id)})])
+             (comp/transact! app [(domain/select-item {:item-id issue-key :board-id (edn/read-string project-id)})])
              (df/load! app :available-items domain/Item
                        {:params {:platform "jira" :board-id (edn/read-string project-id)}})
              (js/console.log "Loaded modal"))})))))

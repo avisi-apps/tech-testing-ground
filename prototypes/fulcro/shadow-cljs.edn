@@ -9,9 +9,6 @@
                      :asset-path "/js"
                      :dev {:asset-path "https://localhost:8000/js"}
                      :modules {:shared {:entries []}
-                               :main {:init-fn avisi.apps.tech-testing-ground.prototypes.fulcro.client.main-page/init
-                                      :entries [avisi.apps.tech-testing-ground.prototypes.fulcro.client.main-page]
-                                      :depends-on #{:shared}}
                                :jira-item-view
                                {:init-fn avisi.apps.tech-testing-ground.prototypes.fulcro.client.item-view.jira-item-view/init
                                 :entries [avisi.apps.tech-testing-ground.prototypes.fulcro.client.item-view.jira-item-view]

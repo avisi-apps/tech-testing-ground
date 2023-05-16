@@ -22,11 +22,9 @@
   {:routes routes
    :custom-content-negotiation pathom-content-negotiation
    :jira-handlers {:item-view-handler (constantly (redirect "jira-item-view.html"))
-                   :create-item-link-modal-handler (constantly (redirect "jira-item-link-modal.html"))
-                   }
+                   :create-item-link-modal-handler (constantly (redirect "jira-item-link-modal.html"))}
    :monday-handlers {:item-view-handler (constantly (redirect "monday-item-view.html"))
-                     :create-item-link-modal-handler (constantly (redirect "monday-item-link-modal.html"))
-                     }})
+                     :create-item-link-modal-handler (constantly (redirect "monday-item-link-modal.html"))}})
 (defn start-server [] (server/start-server server-config))
 
 (defstate fulcro-server :start (start-server) :stop (.stop fulcro-server))
