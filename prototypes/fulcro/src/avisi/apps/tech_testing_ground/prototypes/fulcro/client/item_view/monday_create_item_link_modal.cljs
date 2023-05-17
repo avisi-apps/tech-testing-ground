@@ -35,8 +35,7 @@
              (monday.execute "closeAppFeatureModal")))
 (defsc ItemLinkModal [this {:keys [selected-item available-items] :as props}]
   {:query [{:selected-item (comp/get-query domain/SelectedItem)}
-           {:available-items (comp/get-query domain/Item)}
-           [df/marker-table :item-link]]
+           {:available-items (comp/get-query domain/Item)}]
    :initLocalState (fn [_ _] {:jira-item-id ""})
    :css
    [[:.modal-body {:height "40h"}]
@@ -46,55 +45,45 @@
       :justify-content "space-around"}]]}
   (let [jira-item-id (comp/get-state this :jira-item-id)
         monday-item-id (:item-id selected-item)
-        board-id (:board-id selected-item)
-        item-link-marker (get props [df/marker-table :item-link])]
+        board-id (:board-id selected-item)]
     (inj/style-element {:component ItemLinkModal})
-    (modal-dialog/ui-modal
-      {}
-      (modal-dialog/ui-modal-header
-        {}
-        (modal-dialog/ui-modal-title {} "Create ItemLink"))
-      (modal-dialog/ui-modal-body
-        {}
-        (dom/div :.modal-body
-                 (form/ui-field
-                   {:label "Jira-item"
-                    :name "jira-item"}
-                   (fn []
-                     (select/ui-select
-                       {:options (mapv item->option available-items)
-                        :onChange (fn [e] (comp/update-state! this assoc :jira-item-id (.-value e)))})))
-
-                 (form/ui-field
-                   {:label "Monday-item"
-                    :name "monday-item"}
-                   (fn []
-                     (select/ui-select
-                       {:inputValue monday-item-id
-                        :isDisabled true})))))
-      (modal-dialog/ui-modal-footer
-        {}
-        (dom/div
-          {:style {:margin "12px 0px"
-                   :width "100%"
-                   :display "flex"
-                   :justify-content "space-around"}}
-          (button/ui-button
-            {:style {:margin "12px 0px"}
-             :type "submit"
-             :appearance "primary"
-             :onClick
-             #(comp/transact! this [(create-item-link
-                                      {:source
-                                       {:platform "monday" :board-id board-id :item {:item/id (str monday-item-id)}}
-                                       :target {:item/id jira-item-id}})])}
-            "Submit")
-          (button/ui-button
-            {:style {:margin "12px 0px"}
-             :type "submit"
-             :appearance "primary"
-             :onClick #(monday.execute "closeAppFeatureModal")}
-            "Cancel"))))))
+    (modal-dialog/ui-modal {}
+                           (modal-dialog/ui-modal-header {}
+                                                         (modal-dialog/ui-modal-title {} "Create ItemLink"))
+                           (modal-dialog/ui-modal-body {}
+                                                       (dom/div :.modal-body
+                                                                (form/ui-field
+                                                                  {:label "Jira-item"
+                                                                   :name "jira-item"}
+                                                                  (fn []
+                                                                    (select/ui-select
+                                                                      {:options (mapv item->option available-items)
+                                                                       :onChange (fn [e] (comp/update-state! this assoc :jira-item-id (.-value e)))})))
+                                                                (form/ui-field
+                                                                  {:label "Monday-item"
+                                                                   :name "monday-item"}
+                                                                  (fn []
+                                                                    (select/ui-select
+                                                                      {:inputValue monday-item-id
+                                                                       :isDisabled true})))))
+                           (modal-dialog/ui-modal-footer {}
+                                                         (dom/div :.button-container
+                                                                  (button/ui-button
+                                                                    {:style {:margin "12px 0px"}
+                                                                     :type "submit"
+                                                                     :appearance "primary"
+                                                                     :onClick
+                                                                     #(comp/transact! this [(create-item-link
+                                                                                              {:source
+                                                                                               {:platform "monday" :board-id board-id :item {:item/id (str monday-item-id)}}
+                                                                                               :target {:item/id jira-item-id}})])}
+                                                                    "Submit")
+                                                                  (button/ui-button
+                                                                    {:style {:margin "12px 0px"}
+                                                                     :type "submit"
+                                                                     :appearance "primary"
+                                                                     :onClick #(monday.execute "closeAppFeatureModal")}
+                                                                    "Cancel"))))))
 
 (def ui-item-link-modal (comp/factory ItemLinkModal))
 
