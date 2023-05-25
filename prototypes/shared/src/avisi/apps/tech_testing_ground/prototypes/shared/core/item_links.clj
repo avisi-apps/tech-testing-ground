@@ -45,7 +45,7 @@
 (defn delete-item-link
   [{source-board-id :board-id
     source-platform :platform
-    {source-item-id :id} :item}]
+    {source-item-id :id} :item :as item-link}]
   (let [{:keys [board-link-id]} (board-link-db/get-board-link
                                   {:platform source-platform
                                    :board-id source-board-id})

@@ -40,7 +40,7 @@
         :target
         {:type "web_panel"
          :url "/jira-item-view?project-id={project.id}&issue-key={issue.key}"}}]
-      :dialogs [{:url "/create-item-link-modal",
+      :dialogs [{:url "/create-item-link-modal?project-id={project.id}&issue-key={issue.key}",
                  :options {:size "large",
                            :chrome false},
                  :key "create-item-link-modal-module-key"}]}}))
