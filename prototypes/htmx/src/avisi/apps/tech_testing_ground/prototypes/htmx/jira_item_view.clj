@@ -85,7 +85,7 @@
     {:post
      {:handler
       (fn [req]
-        (formats/partial-update [:dropdown-item-custom-element {:class "dropdown-item shadow-node" :label "Added"} "Added"]))}
+        (formats/partial-update [:dropdown-item-custom-element {:class "dropdown-item" :label "Added"} "Added"]))}
      :delete
      {:handler
       (fn [_]

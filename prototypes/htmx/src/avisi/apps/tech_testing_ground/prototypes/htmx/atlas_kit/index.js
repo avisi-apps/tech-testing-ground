@@ -52,10 +52,14 @@ class CustomDropdownMenu extends React.Component {
     super(props);
   }
 
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    return false;
+  }
+
   render() {
-    // console.log("rendering dropdown");
+    console.log("rendering dropdown");
     return <DropdownMenu trigger={this.props.trigger}>
-      {/*{this.props.dropdownItem}*/}
+      {console.log(this.props)}
       {this.props.dropdownItems}
     </DropdownMenu>
   }
