@@ -16,7 +16,7 @@
 
 (defn api-parser [{:keys [request query]}]
   (log/info "Process" query)
-  (try (p.eql/process (assoc env :request request) query) (catch Exception e (prn (ex-message e)))))
+  (try (p.eql/process (assoc env :request request) query) (catch Exception e (log/info "Process" (ex-message e)))))
 
 
 (comment
@@ -24,13 +24,13 @@
   (api-parser {:query [{:x [:message]}]})
   (api-parser
     {:query
-       [({:available-items [:item/id]}
-         {:platform "jira"
-          :board-id 10002})]})
+     [({:available-items [:item/id]}
+       {:platform "jira"
+        :board-id 10002})]})
   (api-parser
     {:query
-       [({:item [:item/id]}
-         {:board
-            {:platform "jira"
-             :board-id 10002}
-          :item {:item/id "ME-126"}})]}))
+     [({:item [:item/id]}
+       {:board
+        {:platform "jira"
+         :board-id 10002}
+        :item {:item/id "ME-126"}})]}))

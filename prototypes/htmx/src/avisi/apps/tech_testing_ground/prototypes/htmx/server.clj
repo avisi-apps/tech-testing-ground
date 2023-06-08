@@ -16,7 +16,6 @@
   (str "?" "board-id=" project-id "&" "item-id=" issue-key))
 
 (defn monday-req->domain-query-string [{{:strs [boardId itemId]} :query-params}]
-  ; TODO: find out and fix monday sometimes sending query-params double in an array
   (let [boardId (if (sequential? boardId) (first boardId) boardId)
         itemId (if (sequential? itemId) (first itemId) itemId)]
     (str "?" "board-id=" boardId "&" "item-id=" itemId)))

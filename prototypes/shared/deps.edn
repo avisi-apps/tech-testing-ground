@@ -13,5 +13,7 @@
         mount/mount {:mvn/version "0.1.17"}
         ;domain mapping
         metosin/malli {:mvn/version "0.9.2"}
+        ;logging
+        com.taoensso/timbre {:mvn/version "4.10.0"}
         ; testing
         com.hyperfiddle/rcf {:mvn/version "20220926-202227"}}}

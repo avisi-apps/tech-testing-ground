@@ -6,7 +6,7 @@
 
 (pco/defmutation create-item-link [env {:keys [source target]}]
   {::pco/op-name 'create-item-link}
-  (-> source #_(update :item (partial boards/get-item-by-id source)) (item-link/create-item-link target)))
+  (-> source (item-link/create-item-link target)))
 
 (pco/defmutation delete-item-link
   [env

@@ -16,6 +16,7 @@
    :issue/summary summary
    :issue/description description
    :issue/status name})
+
 (defn get-item-by-id [board-id {:issue/keys [key]}]
   (->>
     (perform-request
@@ -78,7 +79,6 @@
   [_
    {:issue/keys [key summary description status]
     :as issue}]
-  #_(when summary (update-fields-of-item issue))
   (when status (transition-status-of-item issue))
   {:issue/key key
    :issue/summary summary
