@@ -1,0 +1,1135 @@
+{
+  "id" : 1,
+  "name" : "Tech-testing-ground",
+  "description" : "Description",
+  "lastModifiedDate" : "2023-04-23T10:13:55Z",
+  "properties" : {
+    "structurizr.dsl" : "d29ya3NwYWNlICJUZWNoLXRlc3RpbmctZ3JvdW5kIiB7CgogICAgIWlkZW50aWZpZXJzIGhpZXJhcmNoaWNhbAogICAgIWltcGxpZWRSZWxhdGlvbnNoaXBzIGZhbHNlCgogICAgIWRvY3MgZG9jcwoKICAgIG1vZGVsIHsKCiAgICAgICAgLy8gZ2VuZXJhbCBtb2RlbAoKICAgICAgICB1c2VyID0gcGVyc29uICJVc2VyIgoKICAgICAgICBqaXJhID0gc29mdHdhcmVTeXN0ZW0gIkppcmEiIHsKICAgICAgICAgICAgZGVzY3JpcHRpb24gIlBsYXRmb3JtIGZvciBwcm9qZWN0LW1hbmFnZW1lbnQuIgogICAgICAgICAgICB1aSA9IGNvbnRhaW5lciAiU2luZ2xlIFBhZ2UgQXBwbGljYXRpb24iIHsKICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uICJQcm92aWRlcyBhbGwgZnVuY3Rpb25hbGl0eSBvZiB0aGUgcGxhdGZvcm0gdmlhIGEgZ3JhcGhpY2FsIGludGVyZmFjZSBpbiB0aGUgYnJvd3Nlci4gUHJvdmlkZXMgZXh0ZXJuYWwgc3lzdGVtIHRoZSBvcHRpb24gdG8gdmlzdWFsbHkgaW50ZWdyYXRlIHZpYSBpZnJhbWVzLiIKICAgICAgICAgICAgfQogICAgICAgICAgICB3ZWJBcHAgPSBjb250YWluZXIgIldlYkFwcCIgewogICAgICAgICAgICAgICAgZGVzY3JpcHRpb24gIkRlbGl2ZXJzIHRoZSBhc3Nlc3RzIG9mIHRoZSBDbGllbnQgU2lkZSBBcHBsaWNhdGlvbi4gUHJvdmlkZXMgYW4gQVBJIGZvciB0aGUgY29yZS1mdW5jdGlvbmFsaXR5LiBQcm92aWRlcyB3ZWJob29rLWludGVncmF0aW9uIHRvIGV4dGVybmFsIHN5c3RlbXMuIgogICAgICAgICAgICAgICAgLT4gdWkgIlNlcnZlcyIgIiIgImNvbnRhaW5lci1kZXBlbmRlbmN5IgogICAgICAgICAgICAgICAgdWkgLT4gdGhpcyAiTWFrZXMgQVBJLWNhbGxzIHRvIiAiIiAiY29udGFpbmVyLWRlcGVuZGVuY3kiCiAgICAgICAgICAgIH0KICAgICAgICAgICAgdXNlciAtPiB1aSAiSW50ZXJhY3RzIHdpdGgiCiAgICAgICAgfQoKICAgICAgICBtb25kYXkgPSBzb2Z0d2FyZVN5c3RlbSAiTW9uZGF5IiB7CiAgICAgICAgICAgIGRlc2NyaXB0aW9uICJQbGF0Zm9ybSBmb3IgcHJvamVjdC1tYW5hZ2VtZW50LiIKICAgICAgICAgICAgdWkgPSBjb250YWluZXIgIlNpbmdsZSBQYWdlIEFwcGxpY2F0aW9uIiB7CiAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbiAiUHJvdmlkZXMgYWxsIGZ1bmN0aW9uYWxpdHkgb2YgdGhlIHBsYXRmb3JtIHZpYSBhIGdyYXBoaWNhbCBpbnRlcmZhY2UgaW4gdGhlIGJyb3dzZXIuIFByb3ZpZGVzIGV4dGVybmFsIHN5c3RlbSB0aGUgb3B0aW9uIHRvIHZpc3VhbGx5IGludGVncmF0ZSB2aWEgaWZyYW1lcy4iCiAgICAgICAgICAgIH0KICAgICAgICAgICAgd2ViQXBwID0gY29udGFpbmVyICJXZWJBcHAiIHsKICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uICJEZWxpdmVycyB0aGUgYXNzZXN0cyBvZiB0aGUgQ2xpZW50IFNpZGUgQXBwbGljYXRpb24uIFByb3ZpZGVzIGFuIEFQSSBmb3IgdGhlIGNvcmUtZnVuY3Rpb25hbGl0eS4gUHJvdmlkZXMgd2ViaG9vay1pbnRlZ3JhdGlvbiB0byBleHRlcm5hbCBzeXN0ZW1zLiIKICAgICAgICAgICAgICAgIC0+IHVpICJTZXJ2ZXMiICIiICJjb250YWluZXItZGVwZW5kZW5jeSIKICAgICAgICAgICAgICAgIHVpIC0+IHRoaXMgIk1ha2VzIEFQSS1jYWxscyB0byIgIiIgImNvbnRhaW5lci1kZXBlbmRlbmN5IgogICAgICAgICAgICB9CiAgICAgICAgICAgIHVzZXIgLT4gdWkgIkludGVyYWN0cyB3aXRoIgogICAgICAgIH0KCiAgICAgICAgbW9uZGF5SmlyYVN5bmMgPSBzb2Z0d2FyZVN5c3RlbSAiTW9uZGF5SmlyYVN5bmMiIHsKICAgICAgICAgICAgIWFkcnMgZGVjaXNpb25zL2dlbmVyYWwKICAgICAgICAgICAgZGVzY3JpcHRpb24gIkFwcGxpY2F0aW9uIHRoYXQgZW5hYmxlcyB1c2VycyB0byBzeW5jaHJvbml6ZSBpdGVtcyBiZXR3ZWVuIHRoZWlyIGJvYXJkcyBpbiB0aGUgSmlyYSBhbmQgTW9uZGF5IHBsYXRmb3JtLiIKICAgICAgICAgICAgd2ViQXBwID0gY29udGFpbmVyICJXZWJBcHAiIHsKICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uICJEZWxpdmVycyB0aGUgYXNzZXN0cyBvZiB0aGUgQ2xpZW50IFNpZGUgQXBwbGljYXRpb25zIHRvIHRoZSBleHRlcm5hbCBzeXN0ZW1zLiBQcm92aWRlcyBjb3JlLWZ1bmN0aW9uYWxpdHkgdmlhIGFuIEFQSS4gSXMgc3Vic2NyaWJlZCB0byB3ZWJob29rcyBvZiBjb25uZWN0ZWQgcGxhdGZvcm1zLiIKICAgICAgICAgICAgICAgIGRiID0gY29tcG9uZW50ICJEYXRhYmFzZSBGYWNhZGUiIHsKICAgICAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbiAiUHJvdmlkZXMgYXBwbGljYXRpb24tc3BlY2lmaWMgQVBJIGZvciBkYXRhYmFzZS4iCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICBjb3JlID0gY29tcG9uZW50ICJDb3JlIiB7CiAgICAgICAgICAgICAgICAgICAgZGVzY3JpcHRpb24gIlByb3ZpZGVzIGFsbCBjb3JlLWZ1bmN0aW9uYWxpdHkgaW4gYW4gcGxhdGZvcm0taW5kZXBlbmRlbnQgd2F5LgogICAgICAgICAgICAgICAgICAgIC0+IGRiICJBY2Nlc3NlcyBkYXRhYmFzZSB2aWEiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICBhcGkgPSBjb21wb25lbnQgIkFQSSIgewogICAgICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uICJQcm92aWRlcyBhbiBpbnRlcmZhY2UgdG8gdGhlIGNvcmUtZnVuY3Rpb25hbGl0eSBmb3IgZXh0ZXJuYWwgc3lzdGVtcyIKICAgICAgICAgICAgICAgICAgICAtPiBjb3JlICJVc2VzIHRvIGZ1bGZpbGwgcmVxdWVzdHMiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICBqaXJhSW50ZWdyYXRpb24gPSBjb21wb25lbnQgIkppcmEtaW50ZWdyYXRpb24iIHsKICAgICAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbiAiRW5jYXBzdWxhdGVzIGZ1bmN0aW9uYWxpdHkgZm9yIGludGVncmF0aW9uIHdpdGggSmlyYS4iCiAgICAgICAgICAgICAgICAgICAgLT4gamlyYS53ZWJBcHAgIkVuYWJsZXMgaW50ZWdyYXRpb24gd2l0aCIKICAgICAgICAgICAgICAgICAgICBjb3JlIC0+IHRoaXMgIkludGVncmF0ZXMgd2l0aCBwbGF0Zm9ybSB2aWEiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICBtb25kYXlJbnRlZ3JhdGlvbiA9IGNvbXBvbmVudCAiTW9uZGF5LWludGVncmF0aW9uIiB7CiAgICAgICAgICAgICAgICAgICAgZGVzY3JpcHRpb24gIkVuY2Fwc3VsYXRlcyBmdW5jdGlvbmFsaXR5IGZvciBpbnRlZ3JhdGlvbiB3aXRoIE1vbmRheS4iCiAgICAgICAgICAgICAgICAgICAgLT4gbW9uZGF5LndlYkFwcCAiRW5hYmxlcyBpbnRlZ3JhdGlvbiB3aXRoIgogICAgICAgICAgICAgICAgICAgIGNvcmUgLT4gdGhpcyAiSW50ZWdyYXRlcyB3aXRoIHBsYXRmb3JtIHZpYSIKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIC0+IGppcmEud2ViQXBwICJNYWtlcyBBUEktY2FsbHMgdG8iICIiICJjb250YWluZXItZGVwZW5kZW5jeSIKICAgICAgICAgICAgICAgIC0+IG1vbmRheS53ZWJBcHAgIk1ha2VzIEFQSS1jYWxscyB0byIgIiIgImNvbnRhaW5lci1kZXBlbmRlbmN5IgogICAgICAgICAgICAgICAgamlyYS53ZWJBcHAgLT4gdGhpcyAiTWFrZXMgd2ViaG9vayBjYWxsLWJhY2tzIHRvIiAiIiAiY29udGFpbmVyLWRlcGVuZGVuY3kiCiAgICAgICAgICAgICAgICBtb25kYXkud2ViQXBwIC0+IHRoaXMgIk1ha2VzIHdlYmhvb2sgY2FsbC1iYWNrcyB0byIgIiIgImNvbnRhaW5lci1kZXBlbmRlbmN5IgogICAgICAgICAgICAgICAgamlyYS51aSAtPiB0aGlzICJSZXF1ZXN0cyBpZnJhbWUtY29udGVudCIgIiIgImNvbnRhaW5lci1kZXBlbmRlbmN5IgogICAgICAgICAgICAgICAgbW9uZGF5LnVpIC0+IHRoaXMgIlJlcXVlc3RzIGlmcmFtZS1jb250ZW50IiAiIiAiY29udGFpbmVyLWRlcGVuZGVuY3kiCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZGIgPSBjb250YWluZXIgIkRhdGFiYXNlIiB7CiAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbiAiU3RvcmVzIGFwcGxpY2F0aW9uIGRhdGEuIgogICAgICAgICAgICAgICAgd2ViQXBwIC0+IHRoaXMgIlJlYWRzIGZyb20gYW5kIHdyaXRlcyB0byIKICAgICAgICAgICAgfQoKICAgICAgICAgICAgdWlXZWJzaXRlID0gY29udGFpbmVyICJDbGllbnQgU2lkZSBBcHBsaWNhdGlvbiBXZWJzaXRlIiB7CiAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbiAiRW5hYmxlcyB1c2VycyB0byB2aWV3IGFuZCBtYW5pcHVsYXRlIGFsbCBvZiB0aGVpciBib2FyZC0gYW5kIGl0ZW0tbGlua3MgdmlhIGFuIGFkbWluLXdlYnNpdGUuIgogICAgICAgICAgICAgICAgd2ViQXBwIC0+IHRoaXMgIlNlcnZlcyIgIiIgImNvbnRhaW5lci1kZXBlbmRlbmN5IgogICAgICAgICAgICAgICAgdGhpcyAtPiB3ZWJBcHAgIk1ha2VzIEFQSS1jYWxscyB0byIgIiIgImNvbnRhaW5lci1kZXBlbmRlbmN5IgogICAgICAgICAgICAgICAgLT4gd2ViQXBwLmFwaSAiQ29tbXVuaWNhdGVzIHdpdGgiCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIHVpSmlyYUludGVncmF0aW9uID0gY29udGFpbmVyICJDbGllbnQgU2lkZSBBcHBsaWNhdGlvbiBKaXJhLWludGVncmF0aW9uIiB7CiAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbiAiRW5hYmxlcyB1c2VycyB0byB2aWV3IGFuZCBtYW5pcHVsYXRlIGEgbGltaXRlZCBzdWJzZXQgb2YgdGhlaXIgaXRlbS1saW5rcyBiYXNlZCBvbiB0aGUgaXRlbS12aWV3IGl0J3MgcmVuZGVyZWQgaW4uIgogICAgICAgICAgICAgICAgLT4gamlyYS51aSAiSXMgcmVuZGVyZWQgaW5zaWRlIiAiaWZyYW1lIiAiY29udGFpbmVyLWRlcGVuZGVuY3kiCiAgICAgICAgICAgICAgICB3ZWJBcHAgLT4gdGhpcyAiU2VydmVzIiAiIiAiY29udGFpbmVyLWRlcGVuZGVuY3kiCiAgICAgICAgICAgICAgICB0aGlzIC0+IHdlYkFwcCAiTWFrZXMgQVBJLWNhbGxzIHRvIiAiIiAiY29udGFpbmVyLWRlcGVuZGVuY3kiCiAgICAgICAgICAgICAgICAtPiB3ZWJBcHAuYXBpICJDb21tdW5pY2F0ZXMgd2l0aCIKICAgICAgICAgICAgfQoKICAgICAgICAgICAgdWlNb25kYXlJbnRlZ3JhdGlvbiA9IGNvbnRhaW5lciAiQ2xpZW50IFNpZGUgQXBwbGljYXRpb24gTW9uZGF5LWludGVncmF0aW9uIiB7CiAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbiAiRW5hYmxlcyB1c2VycyB0byB2aWV3IGFuZCBtYW5pcHVsYXRlIGEgbGltaXRlZCBzdWJzZXQgb2YgdGhlaXIgaXRlbSBsaW5rcyBiYXNlZCBvbiB0aGUgaW50ZWdyYXRpb24gcG9pbnQuIgogICAgICAgICAgICAgICAgLT4gbW9uZGF5LnVpICJJcyByZW5kZXJlZCBpbnNpZGUiICJpZnJhbWUiICJjb250YWluZXItZGVwZW5kZW5jeSIKICAgICAgICAgICAgICAgIHdlYkFwcCAtPiB0aGlzICJTZXJ2ZXMiICIiICJjb250YWluZXItZGVwZW5kZW5jeSIKICAgICAgICAgICAgICAgIHRoaXMgLT4gd2ViQXBwICJNYWtlcyBBUEktY2FsbHMgdG8iICIiICJjb250YWluZXItZGVwZW5kZW5jeSIKICAgICAgICAgICAgICAgIC0+IHdlYkFwcC5hcGkgIkNvbW11bmljYXRlcyB3aXRoIgogICAgICAgICAgICB9CiAgICAgICAgfQoKICAgICAgICB1c2VyIC0+IG1vbmRheUppcmFTeW5jICJDb25maWd1cmVzIHN5bmNocm9uaXNhdGlvbiIKICAgICAgICB1c2VyIC0+IEppcmEgIk1hbmFnZXMgcHJvamVjdCBpbiIKICAgICAgICB1c2VyIC0+IE1vbmRheSAiTWFuYWdlcyBwcm9qZWN0IGluIgogICAgICAgIG1vbmRheUppcmFTeW5jIC0+IG1vbmRheSAiU3luY2hyb25pemVzIgogICAgICAgIG1vbmRheUppcmFTeW5jIC0+IGppcmEgIlN5bmNocm9uaXplcyIKCiAgICAgICAgLy8gZGVwbG95bWVudAoKICAgICAgICBkZXBsb3ltZW50RW52aXJvbm1lbnQgTGl2ZSB7CiAgICAgICAgICAgIGRlcGxveW1lbnROb2RlICJHb29nbGUgQ2xvdWQgUGxhdGZvcm0iIHsKICAgICAgICAgICAgICAgIHRhZ3MgIkNsb3VkIFBsYXRmb3JtIgogICAgICAgICAgICAgICAgZGVwbG95bWVudE5vZGUgIkNsb3VkIFJ1biIgewogICAgICAgICAgICAgICAgICAgIHRhZ3MgIkdvb2dsZSBDbG91ZCBQbGF0Zm9ybSAtIENsb3VkIFJ1biIKCiAgICAgICAgICAgICAgICAgICAgZGVwbG95bWVudE5vZGUgIkRvY2tlciBDb250YWluZXIiIHsKICAgICAgICAgICAgICAgICAgICAgICAgdGFncyAiRG9ja2VyIENvbnRhaW5lciIKICAgICAgICAgICAgICAgICAgICAgICAgY29udGFpbmVySW5zdGFuY2UgbW9uZGF5SmlyYVN5bmMud2ViQXBwCiAgICAgICAgICAgICAgICAgICAgfQoKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIGRlcGxveW1lbnROb2RlICJGaXJlc3RvcmUiIHsKICAgICAgICAgICAgICAgICAgICB0YWdzICJHb29nbGUgQ2xvdWQgUGxhdGZvcm0gLSBDbG91ZCBGaXJlc3RvcmUiCiAgICAgICAgICAgICAgICAgICAgZGJJbnN0YW5jZSA9IGNvbnRhaW5lckluc3RhbmNlIG1vbmRheUppcmFTeW5jLmRiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgICAgZGVwbG95bWVudE5vZGUgIlVzZXIncyBjb21wdXRlciIgewogICAgICAgICAgICAgICAgZGVwbG95bWVudE5vZGUgIldlYiBCcm93c2VyIiB7CiAgICAgICAgICAgICAgICAgICAgY29udGFpbmVySW5zdGFuY2UgbW9uZGF5SmlyYVN5bmMudWlXZWJzaXRlCiAgICAgICAgICAgICAgICAgICAgY29udGFpbmVySW5zdGFuY2UgbW9uZGF5SmlyYVN5bmMudWlKaXJhSW50ZWdyYXRpb24KICAgICAgICAgICAgICAgICAgICBjb250YWluZXJJbnN0YW5jZSBtb25kYXlKaXJhU3luYy51aU1vbmRheUludGVncmF0aW9uCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICB9CgogICAgdmlld3MgewoKICAgICAgICBzeXN0ZW1Db250ZXh0IG1vbmRheUppcmFTeW5jIGhpZ2gtbGV2ZWwtc3RhdGljLW92ZXJ2aWV3IHsKICAgICAgICAgICAgZGVzY3JpcHRpb24gIkhpZ2gtbGV2ZWwgb3ZlcnZpZXcgb2YgdGhlIGFwcGxpY2F0aW9uIGluIHJlbGF0aW9uIHRvIHRoZSBwbGF0Zm9ybXMgaXQgaW50ZXJhY3RzIHdpdGgiCiAgICAgICAgICAgIGluY2x1ZGUgTW9uZGF5SmlyYVN5bmMgSmlyYSBNb25kYXkgVXNlcgogICAgICAgIH0KCiAgICAgICAgZHluYW1pYyAqIGhpZ2gtbGV2ZWwtZHluYW1pYy1kYXRhLXN5bmNocm9uaXNhdGlvbiB7CiAgICAgICAgICAgIGRlc2NyaXB0aW9uICJIaWdoLWxldmVsIG92ZXJ2aWV3IG9mIHRoZSBzdGVwcyBpbnZvbHZlZCBmb3Igc3luY2hyb25pc2F0aW9uIgogICAgICAgICAgICB1c2VyIC0+IGppcmEgIlBlcmZvcm1zIGFjdGlvbiBpbiIKICAgICAgICAgICAgamlyYSAtPiBtb25kYXlKaXJhU3luYyAiTm90aWZpZXMgYWJvdXQgdXBkYXRlIgogICAgICAgICAgICBtb25kYXlKaXJhU3luYyAtPiBtb25kYXkgIlN5bmNocm9uaXplcyB1cGRhdGUgaW4iCiAgICAgICAgICAgIG1vbmRheSAtPiB1c2VyICJTaG93cyB1cGRhdGVkIHN0YXRlIHRvIgogICAgICAgIH0KCiAgICAgICAgY29udGFpbmVyIG1vbmRheUppcmFTeW5jIGNvbnRhaW5lci1zeXN0ZW0tb3ZlcnZpZXcgewogICAgICAgICAgICBpbmNsdWRlICogZWxlbWVudC5wYXJlbnQ9PWppcmEgZWxlbWVudC5wYXJlbnQ9PW1vbmRheQogICAgICAgICAgICBleGNsdWRlIG1vbmRheUppcmFTeW5jLmRiIHVzZXIKICAgICAgICB9CgogICAgICAgIGZpbHRlcmVkIGNvbnRhaW5lci1zeXN0ZW0tb3ZlcnZpZXcgaW5jbHVkZSBFbGVtZW50LGNvbnRhaW5lci1kZXBlbmRlbmN5IGNvbnRhaW5lci1zeXN0ZW0tb3ZlcnZpZXctZGVwZW5kZW5jeS1vdmVydmlldyAiT3ZlcnZpZXcgb2YgdGhlIGRlcGVuZGVuY2llcyBiZXR3ZWVuIHRoZSB2YXJpb3VzIGNvbnRhaW5lcnMgaW4gdGhlIHN5c3RlbXMuIE5vdCBleGhhdXN0aXZlLCBzb21lIGRlcGVuZGVuY2llcyBhcmUgbGVmdG91dCBvciBidW5kbGVkIGZvciBjbGVhcml0eSIKCiAgICAgICAgZHluYW1pYyBtb25kYXlKaXJhU3luYyBjb250YWluZXItbW9uZGF5LWppcmEtc3luYy1mb2N1cy11cGRhdGUtc3luY2hyb25pc2F0aW9uIHsKICAgICAgICAgICAgZGVzY3JpcHRpb24gIk92ZXJ2aWV3IG9mIHRoZSBzdGVwcyBpbnZvbHZlZCBmb3Igc3luY2hyb25pc2F0aW9uIG9uIHRoZSBjb250YWluZXItbGV2ZWwiCiAgICAgICAgICAgIHVzZXIgLT4gamlyYS51aSAiUGVyZm9ybXMgYWN0aW9uIGluIgogICAgICAgICAgICBqaXJhLnVpIC0+IGppcmEud2ViQXBwICJGb3J3YXJkcyBhY3Rpb24gdG8iCiAgICAgICAgICAgIGppcmEud2ViQXBwIC0+IG1vbmRheUppcmFTeW5jLndlYkFwcCAiTm90aWZpZXMgYWJvdXQgdXBkYXRlIgogICAgICAgICAgICBtb25kYXlKaXJhU3luYy53ZWJBcHAgLT4gbW9uZGF5LndlYkFwcCAiU3luY3Jvbml6ZXMgdXBkYXRlIGluIgogICAgICAgICAgICBtb25kYXkud2ViQXBwIC0+IG1vbmRheS51aSAiUHVzaGVzIHVwZGF0ZSB0byIKICAgICAgICAgICAgbW9uZGF5LnVpIC0+IHVzZXIgIlNob3dzIHVwZGF0ZWQgc3RhdGUgdG8iCiAgICAgICAgfQoKICAgICAgICBjb21wb25lbnQgbW9uZGF5SmlyYVN5bmMud2ViQXBwIGNvbXBvbmVudC1tb25kYXktamlyYS1zeW5jLXdlYi1hcHAgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiT3ZlcnZpZXcgb2YgdGhlIG1vbmRheUppcmFTeW5jLWFydGlmYWN0cyBmb3IgYSBkaXNjdXNzaW9uIGFib3V0IHdoaWNoIHBhcnRzIGFyZSBnZW5lcmljIG9yIHVuaXF1ZSBwZXIgcHJvdG90eXBlIgogICAgICAgICAgICBpbmNsdWRlIGVsZW1lbnQucGFyZW50PT1tb25kYXlKaXJhU3luYy53ZWJBcHAKICAgICAgICB9CgogICAgICAgIGNvbXBvbmVudCBtb25kYXlKaXJhU3luYy53ZWJBcHAgY29tcG9uZW50LW1vbmRheS1qaXJhLXN5bmMtd2ViLWFwcC1mb2N1cy11bmlxdWUtZm9yLXByb3RvdHlwZXMgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiT3ZlcnZpZXcgb2YgdGhlIG1vbmRheUppcmFTeW5jLWFydGlmYWN0cyBmb3IgYSBkaXNjdXNzaW9uIGFib3V0IHdoaWNoIHBhcnRzIGFyZSBnZW5lcmljIG9yIHVuaXF1ZSBwZXIgcHJvdG90eXBlIgogICAgICAgICAgICBpbmNsdWRlIGVsZW1lbnQucGFyZW50PT1tb25kYXlKaXJhU3luYy53ZWJBcHAgbW9uZGF5SmlyYVN5bmMudWlNb25kYXlJbnRlZ3JhdGlvbiBtb25kYXlKaXJhU3luYy51aUppcmFJbnRlZ3JhdGlvbiBtb25kYXlKaXJhU3luYy51aVdlYnNpdGUKICAgICAgICB9CgogICAgICAgIGR5bmFtaWMgbW9uZGF5SmlyYVN5bmMud2ViQXBwIGNvbXBvbmVudC1tb25kYXktamlyYS1zeW5jLWZvY3VzLXVwZGF0ZS1zeW5jaHJvbmlzYXRpb24gewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiT3ZlcnZpZXcgb2YgdGhlIHN0ZXBzIGludm9sdmVkIGZvciBzeW5jaHJvbmlzYXRpb24gb24gdGhlIGNvbXBvbmVudC1sZXZlbCBvZiB0aGUgbW9uZGF5SmlyYVN5bmMgd2ViQXBwIgogICAgICAgICAgICBqaXJhLndlYkFwcCAtPiBtb25kYXlKaXJhU3luYy53ZWJBcHAuamlyYUludGVncmF0aW9uICJOb3RpZmllcyBhYm91dCB1cGRhdGUiCiAgICAgICAgICAgIG1vbmRheUppcmFTeW5jLndlYkFwcC5qaXJhSW50ZWdyYXRpb24gLT4gbW9uZGF5SmlyYVN5bmMud2ViQXBwLmNvcmUgIk5vdGlmaWVzIGFib3V0IHVwZGF0ZSIKICAgICAgICAgICAgbW9uZGF5SmlyYVN5bmMud2ViQXBwLmNvcmUgLT4gbW9uZGF5SmlyYVN5bmMud2ViQXBwLmRiICJMb2FkcyBzeW5jaHJvbmlzYXRpb24gY29uZmlndXJhdGlvbiB2aWEiCiAgICAgICAgICAgIG1vbmRheUppcmFTeW5jLndlYkFwcC5jb3JlIC0+IG1vbmRheUppcmFTeW5jLndlYkFwcC5tb25kYXlJbnRlZ3JhdGlvbiAiUHJvcGFnYXRlcyB1cGRhdGUgdG8iCiAgICAgICAgICAgIG1vbmRheUppcmFTeW5jLndlYkFwcC5tb25kYXlJbnRlZ3JhdGlvbiAtPiBtb25kYXkud2ViQXBwICJTeW5jaHJvbml6ZXMgdXBkYXRlIGluIgogICAgICAgIH0KCiAgICAgICAgZGVwbG95bWVudCAqIExpdmUgewogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICB9CgogICAgICAgIHN0eWxlcyB7CiAgICAgICAgICAgIGVsZW1lbnQgIkVsZW1lbnQiIHsKICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uIGZhbHNlCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiRG9ja2VyIENvbnRhaW5lciIgewogICAgICAgICAgICAgICAgc3Ryb2tlICM0Mjg1ZjQKICAgICAgICAgICAgICAgIGNvbG9yICM0Mjg1ZjQKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJDbG91ZCBQbGF0Zm9ybSIgewogICAgICAgICAgICAgICAgc3Ryb2tlICM0Mjg1ZjQKICAgICAgICAgICAgICAgIGNvbG9yICM0Mjg1ZjQKICAgICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgdGhlbWUgZGVmYXVsdAogICAgICAgIHRoZW1lIGh0dHBzOi8vc3RhdGljLnN0cnVjdHVyaXpyLmNvbS90aGVtZXMvZ29vZ2xlLWNsb3VkLXBsYXRmb3JtLXYxLjUvdGhlbWUuanNvbgogICAgfQoKfQo="
+  },
+  "configuration" : { },
+  "model" : {
+    "people" : [ {
+      "id" : "1",
+      "tags" : "Element,Person",
+      "properties" : {
+        "structurizr.dsl.identifier" : "user"
+      },
+      "name" : "User",
+      "relationships" : [ {
+        "id" : "7",
+        "tags" : "Relationship",
+        "sourceId" : "1",
+        "destinationId" : "3",
+        "description" : "Interacts with"
+      }, {
+        "id" : "13",
+        "tags" : "Relationship",
+        "sourceId" : "1",
+        "destinationId" : "9",
+        "description" : "Interacts with"
+      }, {
+        "id" : "49",
+        "tags" : "Relationship",
+        "sourceId" : "1",
+        "destinationId" : "14",
+        "description" : "Configures synchronisation"
+      }, {
+        "id" : "50",
+        "tags" : "Relationship",
+        "sourceId" : "1",
+        "destinationId" : "2",
+        "description" : "Manages project in"
+      }, {
+        "id" : "51",
+        "tags" : "Relationship",
+        "sourceId" : "1",
+        "destinationId" : "8",
+        "description" : "Manages project in"
+      } ],
+      "location" : "Unspecified"
+    } ],
+    "softwareSystems" : [ {
+      "id" : "2",
+      "tags" : "Element,Software System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "jira"
+      },
+      "name" : "Jira",
+      "description" : "Platform for project-management.",
+      "location" : "Unspecified",
+      "containers" : [ {
+        "id" : "4",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "jira.webapp"
+        },
+        "name" : "WebApp",
+        "description" : "Delivers the assests of the Client Side Application. Provides an API for the core-functionality. Provides webhook-integration to external systems.",
+        "relationships" : [ {
+          "id" : "5",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "4",
+          "destinationId" : "3",
+          "description" : "Serves"
+        }, {
+          "id" : "29",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "4",
+          "destinationId" : "15",
+          "description" : "Makes webhook call-backs to"
+        } ],
+        "documentation" : { }
+      }, {
+        "id" : "3",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "jira.ui"
+        },
+        "name" : "Single Page Application",
+        "description" : "Provides all functionality of the platform via a graphical interface in the browser. Provides external system the option to visually integrate via iframes.",
+        "relationships" : [ {
+          "id" : "6",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "3",
+          "destinationId" : "4",
+          "description" : "Makes API-calls to"
+        }, {
+          "id" : "31",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "3",
+          "destinationId" : "15",
+          "description" : "Requests iframe-content"
+        } ],
+        "documentation" : { }
+      } ],
+      "documentation" : { }
+    }, {
+      "id" : "8",
+      "tags" : "Element,Software System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "monday"
+      },
+      "name" : "Monday",
+      "description" : "Platform for project-management.",
+      "location" : "Unspecified",
+      "containers" : [ {
+        "id" : "10",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "monday.webapp"
+        },
+        "name" : "WebApp",
+        "description" : "Delivers the assests of the Client Side Application. Provides an API for the core-functionality. Provides webhook-integration to external systems.",
+        "relationships" : [ {
+          "id" : "11",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "10",
+          "destinationId" : "9",
+          "description" : "Serves"
+        }, {
+          "id" : "30",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "10",
+          "destinationId" : "15",
+          "description" : "Makes webhook call-backs to"
+        } ],
+        "documentation" : { }
+      }, {
+        "id" : "9",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "monday.ui"
+        },
+        "name" : "Single Page Application",
+        "description" : "Provides all functionality of the platform via a graphical interface in the browser. Provides external system the option to visually integrate via iframes.",
+        "relationships" : [ {
+          "id" : "12",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "9",
+          "destinationId" : "10",
+          "description" : "Makes API-calls to"
+        }, {
+          "id" : "32",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "9",
+          "destinationId" : "15",
+          "description" : "Requests iframe-content"
+        } ],
+        "documentation" : { }
+      } ],
+      "documentation" : { }
+    }, {
+      "id" : "14",
+      "tags" : "Element,Software System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "mondayjirasync"
+      },
+      "name" : "MondayJiraSync",
+      "description" : "Application that enables users to synchronize items between their boards in the Jira and Monday platform.",
+      "relationships" : [ {
+        "id" : "52",
+        "tags" : "Relationship",
+        "sourceId" : "14",
+        "destinationId" : "8",
+        "description" : "Synchronizes"
+      }, {
+        "id" : "53",
+        "tags" : "Relationship",
+        "sourceId" : "14",
+        "destinationId" : "2",
+        "description" : "Synchronizes"
+      } ],
+      "location" : "Unspecified",
+      "containers" : [ {
+        "id" : "35",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "mondayjirasync.uiwebsite"
+        },
+        "name" : "Client Side Application Website",
+        "description" : "Enables users to view and manipulate all of their board- and item-links via an admin-website.",
+        "relationships" : [ {
+          "id" : "37",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "35",
+          "destinationId" : "15",
+          "description" : "Makes API-calls to"
+        }, {
+          "id" : "38",
+          "tags" : "Relationship",
+          "sourceId" : "35",
+          "destinationId" : "19",
+          "description" : "Communicates with"
+        } ],
+        "documentation" : { }
+      }, {
+        "id" : "15",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "mondayjirasync.webapp"
+        },
+        "name" : "WebApp",
+        "description" : "Delivers the assests of the Client Side Applications to the external systems. Provides core-functionality via an API. Is subscribed to webhooks of connected platforms.",
+        "relationships" : [ {
+          "id" : "27",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "15",
+          "destinationId" : "4",
+          "description" : "Makes API-calls to"
+        }, {
+          "id" : "28",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "15",
+          "destinationId" : "10",
+          "description" : "Makes API-calls to"
+        }, {
+          "id" : "34",
+          "tags" : "Relationship",
+          "sourceId" : "15",
+          "destinationId" : "33",
+          "description" : "Reads from and writes to"
+        }, {
+          "id" : "36",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "15",
+          "destinationId" : "35",
+          "description" : "Serves"
+        }, {
+          "id" : "41",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "15",
+          "destinationId" : "39",
+          "description" : "Serves"
+        }, {
+          "id" : "46",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "15",
+          "destinationId" : "44",
+          "description" : "Serves"
+        } ],
+        "components" : [ {
+          "id" : "21",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "mondayjirasync.webapp.jiraintegration"
+          },
+          "name" : "Jira-integration",
+          "description" : "Encapsulates functionality for integration with Jira.",
+          "relationships" : [ {
+            "id" : "22",
+            "tags" : "Relationship",
+            "sourceId" : "21",
+            "destinationId" : "4",
+            "description" : "Enables integration with"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "24",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "mondayjirasync.webapp.mondayintegration"
+          },
+          "name" : "Monday-integration",
+          "description" : "Encapsulates functionality for integration with Monday.",
+          "relationships" : [ {
+            "id" : "25",
+            "tags" : "Relationship",
+            "sourceId" : "24",
+            "destinationId" : "10",
+            "description" : "Enables integration with"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "16",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "mondayjirasync.webapp.db"
+          },
+          "name" : "Database Facade",
+          "description" : "Provides application-specific API for database.",
+          "documentation" : { }
+        }, {
+          "id" : "19",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "mondayjirasync.webapp.api"
+          },
+          "name" : "API",
+          "description" : "Provides an interface to the core-functionality for external systems",
+          "relationships" : [ {
+            "id" : "20",
+            "tags" : "Relationship",
+            "sourceId" : "19",
+            "destinationId" : "17",
+            "description" : "Uses to fulfill requests"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "17",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "mondayjirasync.webapp.core"
+          },
+          "name" : "Core",
+          "description" : "Provides all core-functionality in an platform-independent way.",
+          "relationships" : [ {
+            "id" : "18",
+            "tags" : "Relationship",
+            "sourceId" : "17",
+            "destinationId" : "16",
+            "description" : "Accesses database via"
+          }, {
+            "id" : "23",
+            "tags" : "Relationship",
+            "sourceId" : "17",
+            "destinationId" : "21",
+            "description" : "Integrates with platform via"
+          }, {
+            "id" : "26",
+            "tags" : "Relationship",
+            "sourceId" : "17",
+            "destinationId" : "24",
+            "description" : "Integrates with platform via"
+          } ],
+          "documentation" : { }
+        } ],
+        "documentation" : { }
+      }, {
+        "id" : "33",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "mondayjirasync.db"
+        },
+        "name" : "Database",
+        "description" : "Stores application data.",
+        "documentation" : { }
+      }, {
+        "id" : "39",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "mondayjirasync.uijiraintegration"
+        },
+        "name" : "Client Side Application Jira-integration",
+        "description" : "Enables users to view and manipulate a limited subset of their item-links based on the item-view it's rendered in.",
+        "relationships" : [ {
+          "id" : "40",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "39",
+          "destinationId" : "3",
+          "description" : "Is rendered inside",
+          "technology" : "iframe"
+        }, {
+          "id" : "42",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "39",
+          "destinationId" : "15",
+          "description" : "Makes API-calls to"
+        }, {
+          "id" : "43",
+          "tags" : "Relationship",
+          "sourceId" : "39",
+          "destinationId" : "19",
+          "description" : "Communicates with"
+        } ],
+        "documentation" : { }
+      }, {
+        "id" : "44",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "mondayjirasync.uimondayintegration"
+        },
+        "name" : "Client Side Application Monday-integration",
+        "description" : "Enables users to view and manipulate a limited subset of their item links based on the integration point.",
+        "relationships" : [ {
+          "id" : "45",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "44",
+          "destinationId" : "9",
+          "description" : "Is rendered inside",
+          "technology" : "iframe"
+        }, {
+          "id" : "47",
+          "tags" : "Relationship,container-dependency",
+          "sourceId" : "44",
+          "destinationId" : "15",
+          "description" : "Makes API-calls to"
+        }, {
+          "id" : "48",
+          "tags" : "Relationship",
+          "sourceId" : "44",
+          "destinationId" : "19",
+          "description" : "Communicates with"
+        } ],
+        "documentation" : { }
+      } ],
+      "documentation" : {
+        "decisions" : [ {
+          "content" : "# 1. Record architecture decisions\n\nDate: 2023-03-08\n\n## Status\n\nApproved\n\n## Context\n\nWe need to record the architectural decisions made on this project.\n\n## Decision\n\nWe will use Architecture Decision Records, as [described by Michael Nygard](http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions).\n\n## Consequences\n\nSee Michael Nygard's article, linked above. For a lightweight ADR toolset, see Nat Pryce's [adr-tools](https://github.com/npryce/adr-tools).\n",
+          "format" : "Markdown",
+          "id" : "1",
+          "title" : "Record architecture decisions",
+          "date" : "2023-03-08T00:00:00Z",
+          "status" : "Approved"
+        }, {
+          "content" : "# 2. backend runtime\n\nDate: 2023-03-08\n\n## Status\n\nAccepted\n\n## Context\n\nAs we're building a web-application we need to choose a runtime for our backend.\n\nThis project is meant to be used as a way to evaluate the usefulness of different technologies for avisi-apps by comparing them on several metrics. One of them is performance. As runtimes differ in performance, the choice for one influences the performance of the application as a whole. This project intends to measure the perfomance of other parts of the stack, so it's key we use the same runtime in all prototypes to get any meaningful results. \n\n## Considered\n\nJVM, NodeJS\n\nClojures main-dialect runs on the JVM, the second most popular dialect is ClojureScript which compiles to JS so can target all js-runtimes (e.g. NodeJS).\n\nAvisi-apps currently targets NodeJS for most apps. As a goal of this project is to show how well the technologies integrate with the current stack it makes sense to target NodeJS in this project aswell.\n\nIt's not guaranteed that all clojure related technologies can target all runtimes though. In this case one of the considered technologies, electric, is unable to run on NodeJS, although there are no fundamentals blocks so it might be supported at some point in the future (see [slack-archive](https://clojurians.slack.com/archives/C7Q9GSHFV/p1670936419811549)) \n\n## Decision\n\nJVM\n\nThe goal of being able to meaningfully compare the performance of the technologies is considered more important than targeting the currently most-used runtime. \n\n## Consequences\n\nBy targeting the JVM the performance and resource-utilitations of the technologies can meaningfuly be compared, but the resulting setup is less representative for the currently most-used stack. \n",
+          "format" : "Markdown",
+          "id" : "2",
+          "title" : "backend runtime",
+          "date" : "2023-03-08T00:00:00Z",
+          "status" : "Accepted"
+        }, {
+          "content" : "# 3. web-server\n\nDate: 2023-03-08\n\n## Status\n\nAccepted\n\n## Context\n\nAs we're building a web-application we need to chose a web-server to serve our assests from. \n\nThis project is meant to be used as a way to evaluate the usefulness of different technologies for avisi-apps by comparing them on several metrics. One of them is performance. As web-servers differ in performance, the choice for one influences the performance of the application as a whole. This project intends to measure the perfomance of other parts of the stack, so it's key we use the same web-server in all prototypes to get any meaningful results. \n\n## Considered\n\nRing-jetty\n\n## Decision\n\nThere really only was one sensical choice. At the time of writing one of the considered technologies, electric, requires jetty (see [slack-archive](https://clojurians.slack.com/archives/C7Q9GSHFV/p1676710002591129?thread_ts=1676703159.659469&cid=C7Q9GSHFV)). In theory it would be possible to use jetty without the ring-wrapper via direct interop, but ring is very convenient and widely recommended as a Clojure web-server even if there are no extra constraints like in this project (e.g. see [Eric Nordmand blog-post on Clojure web-servers](https://ericnormand.me/mini-guide/clojure-web-servers)).\n\n## Consequences\n\nBy choosing ring-jetty as a web-server we have a convenient setup that can be used for all considered technologies, enabling us to make meaningful measurements regarding performance.\n",
+          "format" : "Markdown",
+          "id" : "3",
+          "title" : "web-server",
+          "date" : "2023-03-08T00:00:00Z",
+          "status" : "Accepted"
+        } ]
+      }
+    } ],
+    "deploymentNodes" : [ {
+      "id" : "54",
+      "tags" : "Element,Deployment Node,Cloud Platform",
+      "name" : "Google Cloud Platform",
+      "environment" : "Live",
+      "instances" : "1",
+      "children" : [ {
+        "id" : "58",
+        "tags" : "Element,Deployment Node,Google Cloud Platform - Cloud Firestore",
+        "name" : "Firestore",
+        "environment" : "Live",
+        "instances" : "1",
+        "containerInstances" : [ {
+          "id" : "59",
+          "tags" : "Container Instance",
+          "properties" : {
+            "structurizr.dsl.identifier" : "null.dbinstance"
+          },
+          "environment" : "Live",
+          "deploymentGroups" : [ "Default" ],
+          "instanceId" : 1,
+          "containerId" : "33"
+        } ]
+      }, {
+        "id" : "55",
+        "tags" : "Element,Deployment Node,Google Cloud Platform - Cloud Run",
+        "name" : "Cloud Run",
+        "environment" : "Live",
+        "instances" : "1",
+        "children" : [ {
+          "id" : "56",
+          "tags" : "Element,Deployment Node,Docker Container",
+          "name" : "Docker Container",
+          "environment" : "Live",
+          "instances" : "1",
+          "containerInstances" : [ {
+            "id" : "57",
+            "tags" : "Container Instance",
+            "relationships" : [ {
+              "id" : "60",
+              "sourceId" : "57",
+              "destinationId" : "59",
+              "description" : "Reads from and writes to",
+              "linkedRelationshipId" : "34"
+            }, {
+              "id" : "65",
+              "sourceId" : "57",
+              "destinationId" : "63",
+              "description" : "Serves",
+              "linkedRelationshipId" : "36"
+            }, {
+              "id" : "68",
+              "sourceId" : "57",
+              "destinationId" : "66",
+              "description" : "Serves",
+              "linkedRelationshipId" : "41"
+            }, {
+              "id" : "71",
+              "sourceId" : "57",
+              "destinationId" : "69",
+              "description" : "Serves",
+              "linkedRelationshipId" : "46"
+            } ],
+            "environment" : "Live",
+            "deploymentGroups" : [ "Default" ],
+            "instanceId" : 1,
+            "containerId" : "15"
+          } ]
+        } ]
+      } ]
+    }, {
+      "id" : "61",
+      "tags" : "Element,Deployment Node",
+      "name" : "User's computer",
+      "environment" : "Live",
+      "instances" : "1",
+      "children" : [ {
+        "id" : "62",
+        "tags" : "Element,Deployment Node",
+        "name" : "Web Browser",
+        "environment" : "Live",
+        "instances" : "1",
+        "containerInstances" : [ {
+          "id" : "69",
+          "tags" : "Container Instance",
+          "relationships" : [ {
+            "id" : "70",
+            "sourceId" : "69",
+            "destinationId" : "57",
+            "description" : "Makes API-calls to",
+            "linkedRelationshipId" : "47"
+          } ],
+          "environment" : "Live",
+          "deploymentGroups" : [ "Default" ],
+          "instanceId" : 1,
+          "containerId" : "44"
+        }, {
+          "id" : "66",
+          "tags" : "Container Instance",
+          "relationships" : [ {
+            "id" : "67",
+            "sourceId" : "66",
+            "destinationId" : "57",
+            "description" : "Makes API-calls to",
+            "linkedRelationshipId" : "42"
+          } ],
+          "environment" : "Live",
+          "deploymentGroups" : [ "Default" ],
+          "instanceId" : 1,
+          "containerId" : "39"
+        }, {
+          "id" : "63",
+          "tags" : "Container Instance",
+          "relationships" : [ {
+            "id" : "64",
+            "sourceId" : "63",
+            "destinationId" : "57",
+            "description" : "Makes API-calls to",
+            "linkedRelationshipId" : "37"
+          } ],
+          "environment" : "Live",
+          "deploymentGroups" : [ "Default" ],
+          "instanceId" : 1,
+          "containerId" : "35"
+        } ]
+      } ]
+    } ]
+  },
+  "documentation" : {
+    "sections" : [ {
+      "content" : "## Inleiding\n\nDit document bevat \n\n## System context\n\nThe application synchronizes boards between the Monday and Jira platforms. See the interactive example below for a\nhigh-level overview of the intended functionality.\n\n![](embed:high-level-static-overview)\n\n## Container\n\n### MondayJiraSync\n\n#### Elements\n\n![](embed:container-monday-jira-sync-elements-only)\n\n#### Visual integration\n\n![](embed:container-monday-jira-sync-focus-ui-integration)\n\n### Board action synchronisation\n\n![](embed:container-monday-jira-sync-focus-update-synchronisation)\n\n![](embed:component-monday-jira-sync-focus-update-synchronisation)\n\n\n\n### Platform\n\n![](embed:container-jira-elements-only)\n",
+      "format" : "Markdown",
+      "filename" : "technical-description-of-system.md",
+      "order" : 1,
+      "title" : ""
+    } ]
+  },
+  "views" : {
+    "systemContextViews" : [ {
+      "key" : "high-level-static-overview",
+      "order" : 1,
+      "description" : "High-level overview of the application in relation to the platforms it interacts with",
+      "softwareSystemId" : "14",
+      "dimensions" : {
+        "width" : 2255,
+        "height" : 1390
+      },
+      "enterpriseBoundaryVisible" : true,
+      "relationships" : [ {
+        "id" : "50"
+      }, {
+        "id" : "51"
+      }, {
+        "id" : "52"
+      }, {
+        "id" : "53"
+      }, {
+        "id" : "49"
+      } ],
+      "elements" : [ {
+        "id" : "1",
+        "x" : 905,
+        "y" : 200
+      }, {
+        "id" : "2",
+        "x" : 1605,
+        "y" : 865
+      }, {
+        "id" : "14",
+        "x" : 882,
+        "y" : 873
+      }, {
+        "id" : "8",
+        "x" : 200,
+        "y" : 890
+      } ]
+    } ],
+    "containerViews" : [ {
+      "key" : "container-system-overview",
+      "order" : 3,
+      "softwareSystemId" : "14",
+      "dimensions" : {
+        "width" : 3740,
+        "height" : 1841
+      },
+      "externalSoftwareSystemBoundariesVisible" : true,
+      "relationships" : [ {
+        "id" : "40"
+      }, {
+        "id" : "41",
+        "vertices" : [ {
+          "x" : 2235,
+          "y" : 945
+        } ]
+      }, {
+        "id" : "42",
+        "vertices" : [ {
+          "x" : 2045,
+          "y" : 948
+        } ]
+      }, {
+        "id" : "32"
+      }, {
+        "id" : "31"
+      }, {
+        "id" : "30",
+        "vertices" : [ {
+          "x" : 1114,
+          "y" : 1230
+        } ]
+      }, {
+        "id" : "29",
+        "vertices" : [ {
+          "x" : 2564,
+          "y" : 1120
+        } ]
+      }, {
+        "id" : "28",
+        "vertices" : [ {
+          "x" : 1124,
+          "y" : 1100
+        } ]
+      }, {
+        "id" : "27",
+        "vertices" : [ {
+          "x" : 2609,
+          "y" : 1245
+        } ]
+      }, {
+        "id" : "37",
+        "vertices" : [ {
+          "x" : 1744,
+          "y" : 900
+        } ]
+      }, {
+        "id" : "36",
+        "vertices" : [ {
+          "x" : 1879,
+          "y" : 900
+        } ]
+      }, {
+        "id" : "5",
+        "vertices" : [ {
+          "x" : 3370,
+          "y" : 620
+        } ]
+      }, {
+        "id" : "6",
+        "vertices" : [ {
+          "x" : 3205,
+          "y" : 625
+        } ]
+      }, {
+        "id" : "11",
+        "vertices" : [ {
+          "x" : 515,
+          "y" : 660
+        } ]
+      }, {
+        "id" : "12",
+        "vertices" : [ {
+          "x" : 355,
+          "y" : 655
+        } ]
+      }, {
+        "id" : "45"
+      }, {
+        "id" : "46",
+        "vertices" : [ {
+          "x" : 1489,
+          "y" : 830
+        } ]
+      }, {
+        "id" : "47",
+        "vertices" : [ {
+          "x" : 1399,
+          "y" : 945
+        } ]
+      } ],
+      "elements" : [ {
+        "id" : "44",
+        "x" : 979,
+        "y" : 230
+      }, {
+        "id" : "35",
+        "x" : 1594,
+        "y" : 250
+      }, {
+        "id" : "3",
+        "x" : 3069,
+        "y" : 219
+      }, {
+        "id" : "15",
+        "x" : 1600,
+        "y" : 1249
+      }, {
+        "id" : "4",
+        "x" : 3069,
+        "y" : 740
+      }, {
+        "id" : "39",
+        "x" : 2239,
+        "y" : 230
+      }, {
+        "id" : "9",
+        "x" : 219,
+        "y" : 240
+      }, {
+        "id" : "10",
+        "x" : 219,
+        "y" : 760
+      } ]
+    } ],
+    "componentViews" : [ {
+      "key" : "component-monday-jira-sync-web-app",
+      "order" : 6,
+      "description" : "Overview of the mondayJiraSync-artifacts for a discussion about which parts are generic or unique per prototype",
+      "dimensions" : {
+        "width" : 2365,
+        "height" : 1716
+      },
+      "containerId" : "15",
+      "externalContainerBoundariesVisible" : true,
+      "relationships" : [ {
+        "id" : "18"
+      }, {
+        "id" : "26"
+      }, {
+        "id" : "23"
+      }, {
+        "id" : "20"
+      } ],
+      "elements" : [ {
+        "id" : "24",
+        "x" : 1695,
+        "y" : 669
+      }, {
+        "id" : "16",
+        "x" : 990,
+        "y" : 1124
+      }, {
+        "id" : "17",
+        "x" : 974,
+        "y" : 672
+      }, {
+        "id" : "19",
+        "x" : 970,
+        "y" : 219
+      }, {
+        "id" : "21",
+        "x" : 220,
+        "y" : 674
+      } ]
+    }, {
+      "key" : "component-monday-jira-sync-web-app-focus-unique-for-prototypes",
+      "order" : 7,
+      "description" : "Overview of the mondayJiraSync-artifacts for a discussion about which parts are generic or unique per prototype",
+      "dimensions" : {
+        "width" : 2370,
+        "height" : 2316
+      },
+      "containerId" : "15",
+      "externalContainerBoundariesVisible" : true,
+      "relationships" : [ {
+        "id" : "18"
+      }, {
+        "id" : "26"
+      }, {
+        "id" : "23"
+      }, {
+        "id" : "43"
+      }, {
+        "id" : "20"
+      }, {
+        "id" : "48"
+      }, {
+        "id" : "38"
+      } ],
+      "elements" : [ {
+        "id" : "44",
+        "x" : 955,
+        "y" : 199
+      }, {
+        "id" : "24",
+        "x" : 1695,
+        "y" : 1269
+      }, {
+        "id" : "35",
+        "x" : 1720,
+        "y" : 204
+      }, {
+        "id" : "16",
+        "x" : 990,
+        "y" : 1724
+      }, {
+        "id" : "17",
+        "x" : 974,
+        "y" : 1272
+      }, {
+        "id" : "39",
+        "x" : 200,
+        "y" : 204
+      }, {
+        "id" : "19",
+        "x" : 970,
+        "y" : 819
+      }, {
+        "id" : "21",
+        "x" : 220,
+        "y" : 1274
+      } ]
+    } ],
+    "dynamicViews" : [ {
+      "key" : "container-monday-jira-sync-focus-update-synchronisation",
+      "order" : 5,
+      "description" : "Overview of the steps involved for synchronisation on the container-level",
+      "dimensions" : {
+        "width" : 2640,
+        "height" : 1841
+      },
+      "elementId" : "14",
+      "externalBoundariesVisible" : true,
+      "relationships" : [ {
+        "id" : "7",
+        "description" : "Performs action in",
+        "order" : "1",
+        "response" : false
+      }, {
+        "id" : "6",
+        "description" : "Forwards action to",
+        "order" : "2",
+        "response" : false
+      }, {
+        "id" : "29",
+        "description" : "Notifies about update",
+        "order" : "3",
+        "response" : false
+      }, {
+        "id" : "28",
+        "description" : "Syncronizes update in",
+        "order" : "4",
+        "response" : false
+      }, {
+        "id" : "11",
+        "description" : "Pushes update to",
+        "order" : "5",
+        "response" : false
+      }, {
+        "id" : "13",
+        "description" : "Shows updated state to",
+        "order" : "6",
+        "response" : true
+      } ],
+      "elements" : [ {
+        "id" : "1",
+        "x" : 1079,
+        "y" : 199
+      }, {
+        "id" : "3",
+        "x" : 219,
+        "y" : 739
+      }, {
+        "id" : "4",
+        "x" : 219,
+        "y" : 1249
+      }, {
+        "id" : "15",
+        "x" : 1059,
+        "y" : 1229
+      }, {
+        "id" : "9",
+        "x" : 1969,
+        "y" : 724
+      }, {
+        "id" : "10",
+        "x" : 1959,
+        "y" : 1224
+      } ]
+    }, {
+      "key" : "component-monday-jira-sync-focus-update-synchronisation",
+      "order" : 8,
+      "description" : "Overview of the steps involved for synchronisation on the component-level of the mondayJiraSync webApp",
+      "dimensions" : {
+        "width" : 3785,
+        "height" : 1331
+      },
+      "elementId" : "15",
+      "externalBoundariesVisible" : true,
+      "relationships" : [ {
+        "id" : "22",
+        "description" : "Notifies about update",
+        "order" : "1",
+        "response" : true
+      }, {
+        "id" : "23",
+        "description" : "Notifies about update",
+        "order" : "2",
+        "response" : true
+      }, {
+        "id" : "18",
+        "description" : "Loads synchronisation configuration via",
+        "order" : "3",
+        "response" : false
+      }, {
+        "id" : "26",
+        "description" : "Propagates update to",
+        "order" : "4",
+        "response" : false
+      }, {
+        "id" : "25",
+        "description" : "Synchronizes update in",
+        "order" : "5",
+        "response" : false
+      } ],
+      "elements" : [ {
+        "id" : "24",
+        "x" : 2375,
+        "y" : 228
+      }, {
+        "id" : "4",
+        "x" : 200,
+        "y" : 210
+      }, {
+        "id" : "16",
+        "x" : 1685,
+        "y" : 739
+      }, {
+        "id" : "17",
+        "x" : 1680,
+        "y" : 228
+      }, {
+        "id" : "21",
+        "x" : 935,
+        "y" : 219
+      }, {
+        "id" : "10",
+        "x" : 3135,
+        "y" : 219
+      } ]
+    }, {
+      "key" : "high-level-dynamic-data-synchronisation",
+      "order" : 2,
+      "description" : "High-level overview of the steps involved for synchronisation",
+      "dimensions" : {
+        "width" : 2370,
+        "height" : 1401
+      },
+      "externalBoundariesVisible" : true,
+      "relationships" : [ {
+        "id" : "50",
+        "description" : "Performs action in",
+        "order" : "1",
+        "response" : false
+      }, {
+        "id" : "53",
+        "description" : "Notifies about update",
+        "order" : "2",
+        "response" : true
+      }, {
+        "id" : "52",
+        "description" : "Synchronizes update in",
+        "order" : "3",
+        "response" : false
+      }, {
+        "id" : "51",
+        "description" : "Shows updated state to",
+        "order" : "4",
+        "response" : true
+      } ],
+      "elements" : [ {
+        "id" : "1",
+        "x" : 955,
+        "y" : 200
+      }, {
+        "id" : "2",
+        "x" : 200,
+        "y" : 900
+      }, {
+        "id" : "14",
+        "x" : 951,
+        "y" : 901
+      }, {
+        "id" : "8",
+        "x" : 1720,
+        "y" : 895
+      } ]
+    } ],
+    "deploymentViews" : [ {
+      "key" : "Deployment-001",
+      "order" : 9,
+      "dimensions" : {
+        "width" : 2210,
+        "height" : 2623
+      },
+      "environment" : "Live",
+      "relationships" : [ {
+        "id" : "70"
+      }, {
+        "id" : "60"
+      }, {
+        "id" : "71",
+        "vertices" : [ {
+          "x" : 1555,
+          "y" : 905
+        } ]
+      }, {
+        "id" : "65",
+        "vertices" : [ {
+          "x" : 1015,
+          "y" : 840
+        } ]
+      }, {
+        "id" : "64",
+        "vertices" : [ {
+          "x" : 1185,
+          "y" : 835
+        } ]
+      }, {
+        "id" : "67",
+        "vertices" : [ {
+          "x" : 685,
+          "y" : 870
+        } ]
+      }, {
+        "id" : "68",
+        "vertices" : [ {
+          "x" : 835,
+          "y" : 805
+        } ]
+      } ],
+      "elements" : [ {
+        "id" : "55",
+        "x" : 350,
+        "y" : 350
+      }, {
+        "id" : "66",
+        "x" : 240,
+        "y" : 240
+      }, {
+        "id" : "56",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "57",
+        "x" : 883,
+        "y" : 1125
+      }, {
+        "id" : "58",
+        "x" : 350,
+        "y" : 350
+      }, {
+        "id" : "69",
+        "x" : 1520,
+        "y" : 270
+      }, {
+        "id" : "59",
+        "x" : 886,
+        "y" : 1941
+      }, {
+        "id" : "61",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "62",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "63",
+        "x" : 850,
+        "y" : 250
+      }, {
+        "id" : "54",
+        "x" : 350,
+        "y" : 350
+      } ]
+    } ],
+    "filteredViews" : [ {
+      "key" : "container-system-overview-dependency-overview",
+      "order" : 4,
+      "description" : "Overview of the dependencies between the various containers in the systems. Not exhaustive, some dependencies are leftout or bundled for clearity",
+      "baseViewKey" : "container-system-overview",
+      "mode" : "Include",
+      "tags" : [ "Element", "container-dependency" ]
+    } ],
+    "configuration" : {
+      "branding" : { },
+      "styles" : {
+        "elements" : [ {
+          "tag" : "Element",
+          "description" : false
+        }, {
+          "tag" : "Docker Container",
+          "stroke" : "#4285f4",
+          "color" : "#4285f4"
+        }, {
+          "tag" : "Cloud Platform",
+          "stroke" : "#4285f4",
+          "color" : "#4285f4"
+        } ]
+      },
+      "themes" : [ "https://static.structurizr.com/themes/default/theme.json", "https://static.structurizr.com/themes/google-cloud-platform-v1.5/theme.json" ],
+      "terminology" : { },
+      "lastSavedView" : "container-system-overview-elements-only"
+    }
+  }
+}
