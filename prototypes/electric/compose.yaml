@@ -1,0 +1,8 @@
+version: "3.7"
+services:
+  backend:
+    image: prototype-electric
+    ports:
+      - '3000:3000'
+    environment:
+      - FIRESTORE_EMULATOR_HOST=localhost:8080

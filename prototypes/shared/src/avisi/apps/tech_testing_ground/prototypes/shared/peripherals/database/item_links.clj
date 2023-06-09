@@ -41,7 +41,9 @@
   (->
     db
     (f/coll "item-links")
-    (f/add! (encode-item-link item-link))))
+    (f/add! (encode-item-link item-link))
+    (f/pull)
+    (update-keys keyword)))
 
 (defn update-item-link
   [{:keys [board-link-id jira-item-id monday-item-id item-link-id item-representation]
@@ -51,11 +53,14 @@
     (f/doc (str "item-links/" item-link-id))
     (f/set! (encode-item-link item-link))))
 
-(defn delete-item-link [{:keys [item-link-id]}]
+(defn delete-item-link
+  [{:keys [item-link-id]
+    :as item-link}]
   (->
     db
     (f/doc (str "item-links/" item-link-id))
-    (f/delete!)))
+    (f/delete!))
+  item-link)
 
 (defn get-item-link
   [{:keys [board-link-id jira-item-id monday-item-id]

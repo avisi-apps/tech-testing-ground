@@ -5,5 +5,7 @@
 (def build-config
   {:tech-name "electric"
    :main 'avisi.apps.tech-testing-ground.prototypes.electric.main
-   :cljs {:build :prod}})
+   ;TODO: fix release builds
+   ;:cljs {:build :prod}
+   })
 (defn uberjar [_] (build/uberjar build-config))

@@ -3,4 +3,4 @@ WORKDIR /
 
 COPY target/fulcro-prototype.jar /
 
-CMD java -cp fulcro-prototype.jar clojure.main -m server.main
+CMD java -jar fulcro-prototype.jar

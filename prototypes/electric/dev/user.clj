@@ -11,6 +11,8 @@
 
 (comment
   (setup-shadow-cljs-watch)
+  (@shadow-start!)
+  (@shadow-watch :dev)
   (hyperfiddle.rcf/enable!)                                 ; turn on RCF after all transitive deps have loaded
   (shadow.cljs.devtools.api/repl :dev)                      ; shadow server hosts the cljs repl
   ; connect a second REPL instance to it

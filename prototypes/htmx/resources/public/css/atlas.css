@@ -1,0 +1,36 @@
+:root {
+    --atlas-primary-blue: #0052CC;
+
+    --atlas-blue-100: #E9F2FF;
+    --atlas-blue-200: #CCE0FF;
+    --atlas-blue-300: #0052CC;
+    --atlas-blue-400: #85B8FF;
+    --atlas-blue-500: #388BFF;
+    --atlas-blue-600: #1D7AFC;
+    --atlas-blue-700: #0C66E4;
+    --atlas-blue-800: #0055CC;
+    --atlas-blue-900: #09326C;
+    --atlas-blue-1000: #082145;
+
+    --sl-color-primary-50: var(--atlas-blue-100);
+    --sl-color-primary-100: var(--atlas-blue-100);
+    --sl-color-primary-200: var(--atlas-blue-200);
+    --sl-color-primary-300: var(--atlas-blue-300);
+    --sl-color-primary-400: var(--atlas-blue-400);
+    --sl-color-primary-500: var(--atlas-blue-500);
+    --sl-color-primary-600: var(--atlas-blue-600);
+    --sl-color-primary-700: var(--atlas-blue-700);
+    --sl-color-primary-800: var(--atlas-blue-800);
+    --sl-color-primary-900: var(--atlas-blue-900);
+    --sl-color-primary-950: var(--atlas-blue-1000);
+
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif
+}
+
+/* avoiding "flash of unstyled content" from unregistered web-components */
+:not(:defined) {
+    display: inline-block;
+    height: 100vh;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}

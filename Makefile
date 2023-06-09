@@ -10,3 +10,6 @@ ngrok: yarn.lock
 
 dev-firebase: yarn.lock
 	yarn firebase emulators:start --import=./target --export-on-exit --project tech-testing-ground
+
+activate-prototype:
+	 java -jar prototypes/${tech}/target/${tech}-prototype.jar

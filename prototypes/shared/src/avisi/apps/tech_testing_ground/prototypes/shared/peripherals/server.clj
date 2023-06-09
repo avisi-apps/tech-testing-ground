@@ -30,13 +30,6 @@
 
 (defn- catch-req-middleware [next-handler] (fn [request] (def _req request) (next-handler request)))
 
-(comment
-  (->
-    (:query-params _mreq)
-    (get "sessionToken"))
-  (->
-    (:query-params _jreq)
-    (get "jwt")))
 (defn muuntaja-options [custom-content-negotiation]
   (reduce-kv (fn [m k v] (update-in m [:formats k] merge v)) muuntaja/default-options custom-content-negotiation))
 

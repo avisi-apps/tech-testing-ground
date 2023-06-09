@@ -2,9 +2,9 @@
   (:require
     [avisi.apps.tech-testing-ground.prototypes.shared.core.board-links :as board-links]
     [avisi.apps.tech-testing-ground.prototypes.shared.core.boards :as boards]
-    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.integration :as platform]
     [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.board-links :as board-link-db]
     [avisi.apps.tech-testing-ground.prototypes.shared.peripherals.database.item-links :as item-link-db]
+    [avisi.apps.tech-testing-ground.prototypes.shared.platforms.integration :as platform]
     [clojure.set :as set]))
 
 (defn create-item-link
@@ -56,6 +56,15 @@
          source-item-identifier source-item-id})
       (item-link-db/delete-item-link))))
 
+(defn get-item-link
+  [{:keys [platform board-id item-id]
+    :as board}]
+  (->
+    board
+    (board-link-db/get-board-link)
+    (assoc (platform/get-item-identifier platform) item-id)
+    (item-link-db/get-item-link)))
+
 (defn get-item-links
   [{:keys [platform board-id]
     :as board}]
@@ -71,7 +80,10 @@
         item-links (get-item-links board)
         items (boards/get-items board)
         unlinked-item-ids (set/difference (set (map :item/id items)) (set (map item-identifier item-links)))]
-    (filter (fn [{:item/keys [id]}] (unlinked-item-ids id)) items)))
+    (->>
+      items
+      (filter (fn [{:item/keys [id]}] (unlinked-item-ids id)))
+      (vec))))
 
 (defn get-item-representation
   [{source-board-id :board-id
@@ -111,6 +123,10 @@
   (get-item-links
     {:platform "monday"
      :board-id 3990111892})
+  (get-item-link
+    {:platform "jira"
+     :board-id 10002
+     :item-id "ME-127"})
   (->
     {:platform "jira"
      :board-id 10002}

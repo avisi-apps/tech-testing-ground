@@ -11,7 +11,8 @@
      {:encode domain/monday-item->domain-item
       :decode domain/domain-item->monday-item}
    :item-handling-functions
-     {:get-items monday/get-items
+     {:get-item-by-id monday/get-item-by-id
+      :get-items monday/get-items
       :create-item monday/add-item
       :update-item monday/update-item
       :delete-item monday/delete-item}})

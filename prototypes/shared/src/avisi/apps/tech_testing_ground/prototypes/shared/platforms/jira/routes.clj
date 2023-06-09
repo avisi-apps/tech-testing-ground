@@ -39,9 +39,15 @@
                :label {:value "JiraMondaySync"}}
             :target
               {:type "web_panel"
-               :url "/jira-item-view"}}]}}))
+               :url "/jira-item-view?project-id={project.id}&issue-key={issue.key}"}}]
+        :dialogs
+          [{:url "/create-item-link-modal"
+            :options
+              {:size "large"
+               :chrome false}
+            :key "create-item-link-modal-module-key"}]}}))
 
-(defn routes [{:keys [item-view-handler]}]
+(defn routes [{:keys [item-view-handler create-item-link-modal-handler]}]
   [["/atlassian/lifecycle/:lifecycle"
     {:post
        {:parameters {:body map?}
@@ -71,6 +77,13 @@
            :path-to-jwt [:query-params "jwt"]
            :path-to-user-id ["sub"]})]
      :get {:handler item-view-handler}}]
+   ["/create-item-link-modal"
+    {:middleware
+       [(authentication/identify-current-user-middleware
+          {:platform "jira"
+           :path-to-jwt [:query-params "jwt"]
+           :path-to-user-id ["sub"]})]
+     :get {:handler create-item-link-modal-handler}}]
    #_["/atlassian/jira/modules/issue-panel"
       {:get
          {:handler
